@@ -6,7 +6,6 @@ import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 import {DomSanitizer} from '@angular/platform-browser';
 import { Person } from '../../classes/person';
-import * as moment from 'moment';
 import { InterComponentMessageService } from '../../services/intercomponentmessage.service';
 
 @Component({
@@ -22,12 +21,10 @@ export class MessagesWithComponent implements OnInit {
   newMessage: string;
   with: Person;
   params = {};
-  moment;
   constructor(public messageService: MessageService,
     public interComponentMessageService: InterComponentMessageService,
     private sanitizer:DomSanitizer,
     private route: ActivatedRoute) {
-    this.moment = moment
   }
 
   getMessages() {

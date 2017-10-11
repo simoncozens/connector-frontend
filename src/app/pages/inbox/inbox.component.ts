@@ -5,7 +5,6 @@ import { PagedResults } from '../../classes/pagedresults';
 import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 import {DomSanitizer} from '@angular/platform-browser';
-import * as moment from 'moment';
 
 @Component({
   selector: 'inbox',
@@ -18,11 +17,9 @@ export class InboxComponent implements OnInit {
   result: PagedResults<Message>;
   _page = 1;
   params = {};
-  moment;
   constructor(public messageService: MessageService,
     private sanitizer:DomSanitizer,
     private route: ActivatedRoute) {
-    this.moment = moment
   }
   getMessages() {
     this.messageService.getInbox(this._page, this.params)

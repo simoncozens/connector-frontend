@@ -26,6 +26,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import {NgxPaginationModule} from 'ngx-pagination';
 import { ViewportModule } from 'angular2-viewport';
+import { MomentModule } from 'angular2-moment';
 
 @NgModule({
   declarations: [
@@ -50,7 +51,8 @@ import { ViewportModule } from 'angular2-viewport';
     NgxPaginationModule,
     AuthModule,
     ReactiveFormsModule,
-    ViewportModule
+    ViewportModule,
+    MomentModule
   ],
   providers: [ PersonService, AuthService, AuthGuard, MessageService, InterComponentMessageService ],
   bootstrap: [AppComponent]

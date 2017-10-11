@@ -8,7 +8,7 @@
       <span *ngIf="thread.incoming" class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span>
       <a [routerLink]="['/messages/with',thread.user.id]">{{thread.message.content}}</a>
       <span *ngIf="thread.message.status == 'Read'" class="glyphicon glyphicon-ok" aria-hidden="true"></span>
-      <div class="small text-muted text-right">{{moment(thread.message.created_at).fromNow()}}</div>
+      <div class="small text-muted text-right">{{thread.message.created_at | amTimeAgo }}</div>
 
     <div class="strut"></div>
   </div>
