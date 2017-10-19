@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { AuthHttp, AuthConfig } from 'angular2-jwt';
+import { AuthHttp } from 'angular2-jwt';
 import { AppSettings } from '../app.settings';
 import { PagedResults } from '../classes/pagedresults';
 
@@ -37,30 +37,32 @@ export class PersonService {
     return this.getPeople(page, {}, this.recentUrl);
   }
 
-  getPerson(id: string) {
+  getPerson(id: string): Promise<Person> {
     return this.authHttp
       .get(this.personUrl + id)
       .toPromise()
       .then(response => response.json() as Person)
-      .catch(this.handleError);
   }
 
-  follow(id: string) {
+  follow(id: string): Promise<any> {
     return this.authHttp.get(this.personUrl + id + '/follow')
-      .toPromise()
-      .then(response => response.json() as Person)
-      .catch(this.handleError);
-
+      .toPromise().then( response => {
+         var r = response.json()
+         if (r["ok"]) { return true; }
+         throw new Error(r)
+      })
   }
 
-  unfollow(id: string) {
+  unfollow(id: string): Promise<any> {
     return this.authHttp.get(this.personUrl + id + '/unfollow')
-      .toPromise()
-      .then(response => response.json() as Person)
-      .catch(this.handleError);
+      .toPromise().then( response => {
+         var r = response.json()
+         if (r["ok"]) { return true; }
+         throw new Error(r)
+      })
   }
 
-  saveProfile(profileData):Promise<any> {
+  saveProfile(profileData): Promise<any> {
     return this.authHttp
       .put(this.personUrl, profileData)
       .toPromise()
