@@ -3,10 +3,10 @@ import { Nav, Platform } from 'ionic-angular';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 
-import { HomePage } from '../pages/home/home';
-import { PeopleComponent } from '../pages/people/people';
-import { LoginComponent } from '../pages/login/login.component';
-import { AuthService } from '../services/auth.service';
+import { HomePage } from './pages/home/home';
+import { PeopleComponent } from './pages/people/people';
+import { LoginComponent } from './pages/login/login.component';
+import { AuthService } from './services/auth.service';
 
 @Component({
   templateUrl: 'app.html'
