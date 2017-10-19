@@ -4,19 +4,19 @@ import { IonicApp, IonicErrorHandler, IonicModule } from 'ionic-angular';
 import { HttpModule } from '@angular/http';
 
 import { MyApp } from './app.component';
-import { HomePage } from '../pages/home/home';
-import { ListPage } from '../pages/list/list';
-import { LoginComponent } from '../pages/login/login.component';
-import { PeopleComponent } from '../pages/people/people';
+import { HomePage } from './pages/home/home';
+import { ListPage } from './pages/list/list';
+import { LoginComponent } from './pages/login/login.component';
+import { PeopleComponent } from './pages/people/people';
 
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 
-import { PersonService } from '../services/person.service';
-import { OfflinePersonService } from '../services/offline.person.service';
-import { AuthModule } from '../services/auth.module';
-import { AuthService } from '../services/auth.service';
-import { AuthGuard } from '../services/auth-guard.service';
+import { PersonService } from './services/person.service';
+import { OfflinePersonService } from './services/offline.person.service';
+import { AuthModule } from './services/auth.module';
+import { AuthService } from './services/auth.service';
+import { AuthGuard } from './services/auth-guard.service';
 import { SQLite } from '@ionic-native/sqlite';
 
 @NgModule({
