@@ -1,10 +1,10 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { AuthService } from '../../services/auth.service';
 import { Response } from '@angular/http';
 import 'rxjs/add/operator/toPromise';
-import { Router, ActivatedRoute } from '@angular/router';
-import { InterComponentMessageService } from '../../services/intercomponentmessage.service';
+import { NavController, NavParams } from 'ionic-angular';
+import { HomePage } from '../../pages/home/home';
 
 @Component({
   selector: 'login',
@@ -13,18 +13,15 @@ import { InterComponentMessageService } from '../../services/intercomponentmessa
 export class LoginComponent {
   loginForm: FormGroup;
   loginFail: boolean;
-  constructor(private auth: AuthService,
-    public interComponentMessageService: InterComponentMessageService,
-    private router: Router, private route: ActivatedRoute, fb: FormBuilder) {
+  constructor(private auth: AuthService, fb: FormBuilder, public navCtrl: NavController, public navParams: NavParams) {
     this.loginForm = fb.group({
       'email': '',
       'password': ''
     });
-    if (this.auth.loggedIn()) {
-      this.gotoNext();
-    }
+    if (this.auth.loggedIn()) { this.gotoNext(); }
   }
   submitForm(credentials: any) {
+    console.log("Login attempt", credentials)
     this.loginFail = false;
     return this.auth.makeLoginAttempt(credentials)
       .then(s => this.handleLoginSuccess(s))
@@ -35,22 +32,16 @@ export class LoginComponent {
     const parsed = response.json();
     this.auth.stashJWT(parsed['token']);
     this.auth.setLoggedInUser(parsed);
-    this.interComponentMessageService.sendMessage('navbar','check read');
     this.gotoNext();
   }
 
   private gotoNext() {
-    console.log(this.route.snapshot.queryParams['continue']);
-    const next = this.route.snapshot.queryParams['continue'] || '';
-    this.router.navigate([next]);
+    this.navCtrl.setRoot( this.navParams.get("next") || HomePage)
+
   }
 
   private handleLoginError(error: any) {
     this.loginFail = true;
-  }
-
-  changeLocale(locale: string) {
-    localStorage.setItem('localeId', locale);
   }
 
 }

@@ -1,21 +1,33 @@
+<ion-header>
+  <ion-navbar>
+    <button ion-button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+    <ion-title>List</ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content>
 <h1>The Connector </h1>
     <h1 i18n="@@loginHeader">Log In To Your Account</h1>
-      <div>
-          <form [formGroup]="loginForm" (ngSubmit)="submitForm(loginForm.value)">
-          <div class="form-group">
-          <input type="text" [formControl]="loginForm.controls['email']" placeholder="Email" class="form-control" required pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$">
-          </div>
-          <div class="form-group">
-          <input type="password" [formControl]="loginForm.controls['password']"  placeholder="Password" class="form-control" required>
-          </div>
+    <ion-list inset>
+        <form [formGroup]="loginForm" >
+          <ion-item>
+            <ion-label>Username</ion-label>
+            <ion-input type="email" [formControl]="loginForm.controls['email']" placeholder="Email" class="form-control" required pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$"></ion-input>
+          </ion-item>
+          <ion-item>
+            <ion-label>Password</ion-label>
+            <ion-input type="password" [formControl]="loginForm.controls['password']"  placeholder="Password" class="form-control" required></ion-input>
+          </ion-item>
           <p class="text-danger" *ngIf="loginFail">
             Username and password were not correct.
           </p>
-          <div class="form-group">
-          <input type="submit" name="login" class="login loginmodal-submit" value="Login">
-          </div>
-          </form>
-      </div>
+          <ion-item>
+            <button ion-button type="submit" name="login" (click)="submitForm(loginForm.value)">Login</button>
+          </ion-item>
+        </form>
+    </ion-list>
 <div>
 <span i18n="@@languageSelect">Select language</span>: <select name="selectLocale" (change)="changeLocale($event.target.value)">
 <option value="en">English</option>
@@ -24,3 +36,4 @@
 <option value="fr">Français</option>
 </select>
 </div>
+</ion-content>
