@@ -1,6 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { Person } from '../../classes/person';
-import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 import { PersonService } from '../../services/person.service';
 import {DomSanitizer} from '@angular/platform-browser';
 
@@ -16,19 +15,18 @@ export class PersonComponent implements OnInit {
   person: Person;
   annotation: string;
   constructor(private personService: PersonService,
-        private router: Router,
-        private sanitizer:DomSanitizer,
-        private route: ActivatedRoute
+        private sanitizer:DomSanitizer
   ) {}
   ngOnInit(): void {
-    this.route.paramMap.subscribe(params => {
-      this.personService.getPerson(params.get('id'))
-        .then((person: Person) => {
-          this.person = person
-          this.annotation = person.annotation && person.annotation.content
-        })
-        .catch((error) => console.log(error));
-    });
+    // XXX Needs rewrite for ionic
+    // this.route.paramMap.subscribe(params => {
+    //   this.personService.getPerson(params.get('id'))
+    //     .then((person: Person) => {
+    //       this.person = person
+    //       this.annotation = person.annotation && person.annotation.content
+    //     })
+    //     .catch((error) => console.log(error));
+    // });
   }
 
   sanitize(url:string){return this.sanitizer.bypassSecurityTrustUrl(url); }
@@ -42,7 +40,8 @@ export class PersonComponent implements OnInit {
     this.personService.unfollow(this.person.id);
   }
   sendMessage(): void {
-    this.router.navigate(['messages', {'sendTo': this.person.id }])
+    // Needs rewrite for Ionic
+    // this.router.navigate(['messages', {'sendTo': this.person.id }])
   }
 
   saveAnnotation(): void {

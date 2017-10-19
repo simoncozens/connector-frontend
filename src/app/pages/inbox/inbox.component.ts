@@ -2,7 +2,6 @@ import { Component, OnInit, Input } from '@angular/core';
 import { Message } from '../../classes/message';
 import { MessageService } from '../../services/message.service';
 import { PagedResults } from '../../classes/pagedresults';
-import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 import {DomSanitizer} from '@angular/platform-browser';
 
@@ -18,8 +17,7 @@ export class InboxComponent implements OnInit {
   _page = 1;
   params = {};
   constructor(public messageService: MessageService,
-    private sanitizer:DomSanitizer,
-    private route: ActivatedRoute) {
+    private sanitizer:DomSanitizer) {
   }
   getMessages() {
     this.messageService.getInbox(this._page, this.params)
@@ -27,11 +25,12 @@ export class InboxComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.route.params.subscribe(params => {
+    // XXX
+    // this.route.params.subscribe(params => {
       this.result = null
-      this.params = params
+      // this.params = params
       this.page = 1
-    })
+    // })
   }
 
   @Input() set page(value: number) {

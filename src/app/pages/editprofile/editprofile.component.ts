@@ -5,8 +5,6 @@ import { PersonService } from '../../services/person.service';
 import { Person, Affiliation } from '../../classes/person';
 import { Response } from '@angular/http';
 import 'rxjs/add/operator/toPromise';
-import { ModalDirective } from 'ngx-bootstrap/modal';
-import { Router, ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'login',
@@ -15,9 +13,8 @@ import { Router, ActivatedRoute } from '@angular/router';
 export class EditProfileComponent implements OnInit {
     public profileForm: FormGroup;
 
-  @ViewChild('autoShownModal') public autoShownModal: ModalDirective;
   person: Person;  public alerts: any = [];
-  constructor(public personService: PersonService, private _fb: FormBuilder, private auth: AuthService, private router: Router, private route: ActivatedRoute) {
+  constructor(public personService: PersonService, private _fb: FormBuilder, private auth: AuthService) {
     this.person = this.auth.loggedInUser();
   }
   ngOnInit() {

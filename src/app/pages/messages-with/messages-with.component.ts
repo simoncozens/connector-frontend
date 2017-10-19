@@ -2,7 +2,6 @@ import { Component, OnInit, Input } from '@angular/core';
 import { Message } from '../../classes/message';
 import { MessageService } from '../../services/message.service';
 import { PagedResults } from '../../classes/pagedresults';
-import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 import {DomSanitizer} from '@angular/platform-browser';
 import { Person } from '../../classes/person';
@@ -23,8 +22,7 @@ export class MessagesWithComponent implements OnInit {
   params = {};
   constructor(public messageService: MessageService,
     public interComponentMessageService: InterComponentMessageService,
-    private sanitizer:DomSanitizer,
-    private route: ActivatedRoute) {
+    private sanitizer:DomSanitizer) {
   }
 
   getMessages() {
@@ -34,10 +32,11 @@ export class MessagesWithComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.route.paramMap.subscribe(params => {
-      this.withId = params.get('id')
-      this.getMessages()
-    });
+    // XXX Needs rewrite for ionic
+    // this.route.paramMap.subscribe(params => {
+      // this.withId = params.get('id')
+      // this.getMessages()
+    // });
   }
 
   @Input() set page(value: number) {
