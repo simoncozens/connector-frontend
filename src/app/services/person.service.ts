@@ -17,7 +17,7 @@ export class PersonService {
 
   constructor(public authHttp: AuthHttp) { }
 
-  getPeople(page: number = 1, params = {}, url = this.peopleListUrl) {
+  getPeople(page: number = 1, params = {}, url = this.peopleListUrl) :Promise<PagedResults<Person>> {
     const myParams: any = Object.assign({'page': page}, params);
     return this.authHttp
       .get(url,
@@ -30,10 +30,10 @@ export class PersonService {
       .catch(this.handleError);
   }
 
-  getFollows(page: number = 1) {
+  getFollows(page: number = 1) :Promise<PagedResults<Person>> {
     return this.getPeople(page, {}, this.followUrl);
   }
-  getRecent(page: number = 1) {
+  getRecent(page: number = 1) :Promise<PagedResults<Person>> {
     return this.getPeople(page, {}, this.recentUrl);
   }
 
@@ -44,8 +44,8 @@ export class PersonService {
       .then(response => response.json() as Person)
   }
 
-  follow(id: string): Promise<any> {
-    return this.authHttp.get(this.personUrl + id + '/follow')
+  follow(id: string) {
+    this.authHttp.get(this.personUrl + id + '/follow')
       .toPromise().then( response => {
          var r = response.json()
          if (r["ok"]) { return true; }
@@ -53,8 +53,8 @@ export class PersonService {
       })
   }
 
-  unfollow(id: string): Promise<any> {
-    return this.authHttp.get(this.personUrl + id + '/unfollow')
+  unfollow(id: string) {
+    this.authHttp.get(this.personUrl + id + '/unfollow')
       .toPromise().then( response => {
          var r = response.json()
          if (r["ok"]) { return true; }
@@ -62,14 +62,14 @@ export class PersonService {
       })
   }
 
-  saveProfile(profileData): Promise<any> {
+  saveProfile(profileData) {
     return this.authHttp
       .put(this.personUrl, profileData)
       .toPromise()
   }
 
   annotate(id: string, content: string) {
-    return this.authHttp.post(this.personUrl + id + '/annotate', { content: content})
+    this.authHttp.post(this.personUrl + id + '/annotate', { content: content})
       .toPromise()
       .then(response => response.json() as Person)
       .catch(this.handleError);
