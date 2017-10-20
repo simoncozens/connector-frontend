@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { Platform } from 'ionic-angular';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { AuthService } from '../../services/auth.service';
 import { Response } from '@angular/http';
@@ -19,6 +20,7 @@ export class LoginComponent {
     public loadingCtrl: LoadingController,
     public alertCtrl: AlertController,
     fb: FormBuilder,
+    public platform: Platform,
     public navCtrl: NavController,
     public navParams: NavParams) {
     this.loginForm = fb.group({
@@ -48,7 +50,11 @@ export class LoginComponent {
     const parsed = response.json();
     this.auth.stashJWT(parsed['token']);
     this.auth.setLoggedInUser(parsed);
-    this.sync()
+    if (this.platform.is('cordova')) {
+      this.sync()
+    } else {
+      this.gotoNext()
+    }
   }
 
   private gotoNext() {
@@ -67,6 +73,7 @@ export class LoginComponent {
     loading.present();
     this.ops.sync().then( () => {
       loading.dismiss();
+      this.gotoNext();
     }, (err) => {
       loading.dismiss();
       this.dammit(err);

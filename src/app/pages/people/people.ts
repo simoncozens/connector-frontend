@@ -1,6 +1,8 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { Person } from '../../classes/person';
+import { Platform } from 'ionic-angular';
 import { OfflinePersonService } from '../../services/offline.person.service';
+import { PersonService } from '../../services/person.service';
 import { AuthService } from '../../services/auth.service';
 import { PagedResults } from '../../classes/pagedresults';
 // import { Router, ActivatedRoute, ParamMap } from '@angular/router';
@@ -18,13 +20,17 @@ export class PeopleComponent implements OnInit {
   result: PagedResults<Person>;
   _page = 1;
   params = {};
-  // Look carefully at this next line of code.
-  // We are using the offline implementation of the person service API.
-  constructor(public personService: OfflinePersonService,
+  constructor(
+    public personService: PersonService,
+    public ops: OfflinePersonService,
+    public platform: Platform,
     private sanitizer:DomSanitizer,
     public alertCtrl: AlertController,
     public auth: AuthService, public navParams: NavParams
     ) {
+    if (this.platform.is('cordova')) {
+      personService = ops;
+    }
   }
 
   ionViewCanEnter() {

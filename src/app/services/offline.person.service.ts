@@ -3,13 +3,14 @@ import { AuthHttp } from 'angular2-jwt';
 import { AppSettings } from '../app.settings';
 import { PagedResults } from '../classes/pagedresults';
 import { SQLite, SQLiteObject } from '@ionic-native/sqlite';
+import { PersonService } from './person.service';
 
 import 'rxjs/add/operator/toPromise';
 
 import { Person } from '../classes/person';
 
 @Injectable()
-export class OfflinePersonService {
+export class OfflinePersonService extends PersonService {
   // Define the routes we are going to interact with
   private bulkUpdateUrl = AppSettings.API_ENDPOINT + '/offline/people';
 
@@ -21,7 +22,7 @@ export class OfflinePersonService {
   private key = "7326A638-3BB5-4E2C-B85F-B2DB4B4AFEF1"
 
   constructor(public authHttp: AuthHttp,
-    private sqlite: SQLite) { }
+    private sqlite: SQLite) { super(authHttp); }
 
   setLastSynced(synctime: string) { localStorage.setItem('lastSynced', synctime); }
   getLastSynced() : string { return localStorage.getItem('lastSynced'); }
@@ -146,7 +147,7 @@ export class OfflinePersonService {
     })
   }
 
-  saveProfile(profileData) {
+  saveProfile(profileData): Promise<any> {
     // You can't do this offline
     throw new Error("Offline")
   }
