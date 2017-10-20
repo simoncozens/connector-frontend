@@ -96,8 +96,12 @@ export class OfflinePersonService {
   getPeople(page: number = 1, params = {}, clause="1=1") :Promise<PagedResults<Person>> {
     if (!this.dbHandle) { Promise.reject( new Error("No DB connection"))}
     var offset = (page-1) * this.per_page
-    return this.dbHandle.executeSql('SELECT jsonblob FROM profiles LIMIT ? OFFSET ? WHERE ?',
-      [ this.per_page, offset, clause ]).then( (rs) => {
+    // This +clause thing is horrible and we need to be very careful about
+    // where we generate the SQL.
+    var sql = 'SELECT jsonblob FROM profiles WHERE '+clause + ' LIMIT ? OFFSET ?'
+    console.log(sql)
+    return this.dbHandle.executeSql(sql,
+      [ this.per_page, offset ]).then( (rs) => {
         console.log(rs);
         if (rs.rows.length < 1) { throw new Error("Person not found!") }
         var cursor = Array.from(Array(rs.rows.length-1).keys())
