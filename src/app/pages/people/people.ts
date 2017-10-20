@@ -5,7 +5,7 @@ import { AuthService } from '../../services/auth.service';
 import { PagedResults } from '../../classes/pagedresults';
 // import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 import {DomSanitizer} from '@angular/platform-browser';
-import { NavController, NavParams } from 'ionic-angular';
+import { NavController, NavParams, AlertController } from 'ionic-angular';
 
 // XXX Need to get params from somewhere in Ionic
 
@@ -22,6 +22,7 @@ export class PeopleComponent implements OnInit {
   // We are using the offline implementation of the person service API.
   constructor(public personService: OfflinePersonService,
     private sanitizer:DomSanitizer,
+    public alertCtrl: AlertController,
     public auth: AuthService, public navParams: NavParams
     ) {
   }
@@ -32,14 +33,15 @@ export class PeopleComponent implements OnInit {
 
   getPeople() {
     this.personService.getPeople(this._page, this.params)
-        .then(result => this.addMorePeople(result));
+        .then(result => this.addMorePeople(result),
+          error => this.dammit(error));
   }
 
   ngOnInit(): void {
     // this.route.params.subscribe(params => {
       this.result = null
       this.params = this.navParams.get("params")
-      console.log(this.params)
+      // console.log(this.params)
       // this.params = params
       this.page = 1
     // })
@@ -71,6 +73,15 @@ export class PeopleComponent implements OnInit {
 
   sanitize(url:string){return this.sanitizer.bypassSecurityTrustUrl(url); }
 
+  dammit(e) {
+    console.log(e);
+    const alert = this.alertCtrl.create({
+      title: 'Something went wrong',
+      subTitle: 'Error' + JSON.stringify(e),
+      buttons: ['Dismiss']
+    });
+    alert.present();
+  }
 }
 
 // @Component({

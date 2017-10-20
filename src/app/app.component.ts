@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { Nav, Platform, LoadingController } from 'ionic-angular';
+import { Nav, Platform, LoadingController, AlertController } from 'ionic-angular';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { Network } from '@ionic-native/network';
@@ -24,6 +24,7 @@ export class MyApp {
     public statusBar: StatusBar,
     public splashScreen: SplashScreen,
     public loadingCtrl: LoadingController,
+    public alertCtrl: AlertController,
     private network: Network,
     public ops: OfflinePersonService,
     private auth: AuthService) {
@@ -60,7 +61,10 @@ export class MyApp {
     loading.present();
     this.ops.sync().then( () => {
       loading.dismiss();
-    })
+    }, (err) => {
+      loading.dismiss();
+      this.dammit(err);
+      })
   }
 
   openPage(page) {
@@ -69,5 +73,14 @@ export class MyApp {
     this.nav.setRoot(page.component).then(cando => {
       if(!cando) this.nav.setRoot(LoginComponent, {"next": page.component} )
     });
+  }
+
+  dammit(e) {
+    const alert = this.alertCtrl.create({
+      title: 'Something went wrong',
+      subTitle: 'Error' + JSON.stringify(e),
+      buttons: ['Dismiss']
+    });
+    alert.present();
   }
 }

@@ -3,7 +3,7 @@ import { FormGroup, FormBuilder } from '@angular/forms';
 import { AuthService } from '../../services/auth.service';
 import { Response } from '@angular/http';
 import 'rxjs/add/operator/toPromise';
-import { NavController, NavParams, LoadingController } from 'ionic-angular';
+import { NavController, NavParams, LoadingController, AlertController } from 'ionic-angular';
 import { HomePage } from '../../pages/home/home';
 import { OfflinePersonService } from '../../services/offline.person.service';
 
@@ -17,6 +17,7 @@ export class LoginComponent {
   constructor(private auth: AuthService,
     public ops: OfflinePersonService,
     public loadingCtrl: LoadingController,
+    public alertCtrl: AlertController,
     fb: FormBuilder,
     public navCtrl: NavController,
     public navParams: NavParams) {
@@ -27,11 +28,20 @@ export class LoginComponent {
     if (this.auth.loggedIn()) { this.gotoNext(); }
   }
   submitForm(credentials: any) {
+    const loading = this.loadingCtrl.create({
+      content: 'Logging in...'
+    });
     console.log("Login attempt", credentials)
     this.loginFail = false;
     return this.auth.makeLoginAttempt(credentials)
-      .then(s => this.handleLoginSuccess(s))
-      .catch(e => this.handleLoginError(e));
+      .then(s => {
+        loading.dismiss();
+        this.handleLoginSuccess(s)
+      })
+      .catch(e => {
+        loading.dismiss();
+        this.handleLoginError(e);
+      });
   }
 
   private handleLoginSuccess(response: Response) {
@@ -57,8 +67,18 @@ export class LoginComponent {
     loading.present();
     this.ops.sync().then( () => {
       loading.dismiss();
-      this.gotoNext();
-    })
+    }, (err) => {
+      loading.dismiss();
+      this.dammit(err);
+      })
   }
 
+  dammit(e) {
+    const alert = this.alertCtrl.create({
+      title: 'Something went wrong',
+      subTitle: 'Error' + JSON.stringify(e),
+      buttons: ['Dismiss']
+    });
+    alert.present();
+  }
 }
