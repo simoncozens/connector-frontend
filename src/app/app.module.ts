@@ -2,6 +2,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { ErrorHandler, NgModule } from '@angular/core';
 import { IonicApp, IonicErrorHandler, IonicModule } from 'ionic-angular';
 import { HttpModule } from '@angular/http';
+import { Network } from '@ionic-native/network';
 
 import { MyApp } from './app.component';
 import { HomePage } from './pages/home/home';
@@ -43,7 +44,7 @@ import { SQLite } from '@ionic-native/sqlite';
   ],
   providers: [
     PersonService, AuthService, AuthGuard, OfflinePersonService,
-    StatusBar,
+    StatusBar, Network,
     SplashScreen,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
     SQLite
