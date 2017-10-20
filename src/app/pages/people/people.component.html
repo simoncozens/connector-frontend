@@ -12,12 +12,13 @@
   </ion-searchbar>
   <ion-list *ngIf="result">
     <button ion-item *ngFor="let person of result?.entries" (click)="gotoPerson(person)">
+      <ion-avatar item-start>
         <img width="80" height="80" item-left [src]="sanitize(person.picture)"/>
+      </ion-avatar>
         <ion-icon name="star" item-right *ngIf="person.followed"></ion-icon>
         <ion-icon name="star-outline" item-right *ngIf="!person.followed"></ion-icon>
-        <div class="person-name">{{person.name}}</div>
-        <br/>
-        {{person.country}}
+        <h2>{{person.name}}</h2>
+        <p>{{person.country}}</p>
     </button>
   </ion-list>
 
