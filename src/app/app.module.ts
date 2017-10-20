@@ -9,6 +9,7 @@ import { HomePage } from './pages/home/home';
 import { ListPage } from './pages/list/list';
 import { LoginComponent } from './pages/login/login.component';
 import { PeopleComponent } from './pages/people/people';
+import { PersonComponent } from './pages/person/person.component';
 
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
@@ -26,6 +27,7 @@ import { SQLite } from '@ionic-native/sqlite';
     HomePage,
     ListPage,
     PeopleComponent,
+    PersonComponent,
     LoginComponent
   ],
   imports: [
@@ -40,6 +42,7 @@ import { SQLite } from '@ionic-native/sqlite';
     HomePage,
     ListPage,
     PeopleComponent,
+    PersonComponent,
     LoginComponent
   ],
   providers: [

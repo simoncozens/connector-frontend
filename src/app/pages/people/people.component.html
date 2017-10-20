@@ -11,7 +11,7 @@
   <ion-searchbar (ionInput)="doSearch($event)">
   </ion-searchbar>
   <ion-list *ngIf="result">
-    <button ion-item *ngFor="let person of result?.entries">
+    <button ion-item *ngFor="let person of result?.entries" (click)="gotoPerson(person)">
         <img width="80" height="80" item-left [src]="sanitize(person.picture)"/>
         <ion-icon name="star" item-right *ngIf="person.followed"></ion-icon>
         <ion-icon name="star-outline" item-right *ngIf="!person.followed"></ion-icon>

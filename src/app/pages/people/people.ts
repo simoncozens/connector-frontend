@@ -3,6 +3,7 @@ import { Person } from '../../classes/person';
 import { Platform } from 'ionic-angular';
 import { OfflinePersonService } from '../../services/offline.person.service';
 import { PersonService } from '../../services/person.service';
+import { PersonComponent } from '../person/person.component';
 import { AuthService } from '../../services/auth.service';
 import { PagedResults } from '../../classes/pagedresults';
 // import { Router, ActivatedRoute, ParamMap } from '@angular/router';
@@ -26,6 +27,7 @@ export class PeopleComponent implements OnInit {
     public platform: Platform,
     private sanitizer:DomSanitizer,
     public alertCtrl: AlertController,
+    public navCtrl: NavController,
     public auth: AuthService, public navParams: NavParams
     ) {
     if (this.platform.is('cordova')) {
@@ -76,6 +78,12 @@ export class PeopleComponent implements OnInit {
   onScroll (infiniteScroll) {
     this._page = this._page + 1;
     this.getPeople().then( () => { infiniteScroll.complete() })
+  }
+
+  gotoPerson(person) {
+    this.navCtrl.push(PersonComponent, {
+      id: person.id,
+    })
   }
 
   sanitize(url:string){return this.sanitizer.bypassSecurityTrustUrl(url); }
