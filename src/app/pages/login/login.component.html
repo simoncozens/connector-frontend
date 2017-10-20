@@ -3,14 +3,12 @@
     <button ion-button menuToggle>
       <ion-icon name="menu"></ion-icon>
     </button>
-    <ion-title>Login</ion-title>
+    <ion-title i18n="@@loginHeader">Log In</ion-title>
   </ion-navbar>
 </ion-header>
 
 <ion-content>
-<h1>The Connector </h1>
-    <h1 i18n="@@loginHeader">Log In To Your Account</h1>
-    <ion-list inset>
+    <ion-list >
         <form [formGroup]="loginForm" >
           <ion-item>
             <ion-label>Username</ion-label>
@@ -20,20 +18,20 @@
             <ion-label>Password</ion-label>
             <ion-input type="password" [formControl]="loginForm.controls['password']"  placeholder="Password" class="form-control" required></ion-input>
           </ion-item>
-          <p class="text-danger" *ngIf="loginFail">
+          <ion-item class="text-danger" *ngIf="loginFail">
             Username and password were not correct.
-          </p>
+          </ion-item>
           <ion-item>
             <button ion-button type="submit" name="login" (click)="submitForm(loginForm.value)">Login</button>
           </ion-item>
+        <ion-item>
+<ion-label i18n="@@languageSelect">Select language</ion-label> <ion-select name="selectLocale" (change)="changeLocale($event.target.value)">
+<ion-option value="en">English</ion-option>
+<ion-option value="es">Español</ion-option>
+<ion-option value="po">Português</ion-option>
+<ion-option value="fr">Français</ion-option>
+</ion-select>
+      </ion-item>
         </form>
     </ion-list>
-<div>
-<span i18n="@@languageSelect">Select language</span>: <select name="selectLocale" (change)="changeLocale($event.target.value)">
-<option value="en">English</option>
-<option value="es">Español</option>
-<option value="po">Português</option>
-<option value="fr">Français</option>
-</select>
-</div>
 </ion-content>
