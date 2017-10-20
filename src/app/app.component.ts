@@ -1,12 +1,14 @@
 import { Component, ViewChild } from '@angular/core';
-import { Nav, Platform } from 'ionic-angular';
+import { Nav, Platform, LoadingController } from 'ionic-angular';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
+import { Network } from '@ionic-native/network';
 
 import { HomePage } from './pages/home/home';
 import { PeopleComponent } from './pages/people/people';
 import { LoginComponent } from './pages/login/login.component';
 import { AuthService } from './services/auth.service';
+import { OfflinePersonService } from './services/offline.person.service';
 
 @Component({
   templateUrl: 'app.html'
@@ -21,6 +23,9 @@ export class MyApp {
   constructor(public platform: Platform,
     public statusBar: StatusBar,
     public splashScreen: SplashScreen,
+    public loadingCtrl: LoadingController,
+    private network: Network,
+    public ops: OfflinePersonService,
     private auth: AuthService) {
     this.initializeApp();
 
@@ -29,7 +34,6 @@ export class MyApp {
       { title: 'Home', component: HomePage },
       { title: 'Profiles', component: PeopleComponent }
     ];
-
   }
 
   initializeApp() {
@@ -40,9 +44,23 @@ export class MyApp {
       this.splashScreen.hide();
       if (!this.auth.loggedIn()) {
         this.rootPage = LoginComponent;
+      } else {
+        console.log("Hello!")
+        this.ops.openDb().then( () => {
+          if (this.network.type != "none") { this.sync(); }
+        });
       }
-      console.log("Hello!")
     });
+  }
+
+  sync() {
+    const loading = this.loadingCtrl.create({
+      content: 'Syncing...'
+    });
+    loading.present();
+    this.ops.sync().then( () => {
+      loading.dismiss();
+    })
   }
 
   openPage(page) {

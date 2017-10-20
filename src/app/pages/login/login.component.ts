@@ -3,8 +3,9 @@ import { FormGroup, FormBuilder } from '@angular/forms';
 import { AuthService } from '../../services/auth.service';
 import { Response } from '@angular/http';
 import 'rxjs/add/operator/toPromise';
-import { NavController, NavParams } from 'ionic-angular';
+import { NavController, NavParams, LoadingController } from 'ionic-angular';
 import { HomePage } from '../../pages/home/home';
+import { OfflinePersonService } from '../../services/offline.person.service';
 
 @Component({
   selector: 'login',
@@ -13,7 +14,12 @@ import { HomePage } from '../../pages/home/home';
 export class LoginComponent {
   loginForm: FormGroup;
   loginFail: boolean;
-  constructor(private auth: AuthService, fb: FormBuilder, public navCtrl: NavController, public navParams: NavParams) {
+  constructor(private auth: AuthService,
+    public ops: OfflinePersonService,
+    public loadingCtrl: LoadingController,
+    fb: FormBuilder,
+    public navCtrl: NavController,
+    public navParams: NavParams) {
     this.loginForm = fb.group({
       'email': '',
       'password': ''
@@ -32,7 +38,7 @@ export class LoginComponent {
     const parsed = response.json();
     this.auth.stashJWT(parsed['token']);
     this.auth.setLoggedInUser(parsed);
-    this.gotoNext();
+    this.sync()
   }
 
   private gotoNext() {
@@ -42,6 +48,17 @@ export class LoginComponent {
 
   private handleLoginError(error: any) {
     this.loginFail = true;
+  }
+
+  sync() {
+    const loading = this.loadingCtrl.create({
+      content: 'Syncing...'
+    });
+    loading.present();
+    this.ops.sync().then( () => {
+      loading.dismiss();
+      this.gotoNext();
+    })
   }
 
 }
