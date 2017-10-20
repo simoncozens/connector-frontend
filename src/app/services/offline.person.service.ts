@@ -11,9 +11,11 @@ import { Person } from '../classes/person';
 @Injectable()
 export class OfflinePersonService {
   // Define the routes we are going to interact with
-  private peopleListUrl = AppSettings.API_ENDPOINT + '/offline/people';
+  private bulkUpdateUrl = AppSettings.API_ENDPOINT + '/offline/people';
+
   private dbHandle :SQLiteObject;
 
+  private per_page = 10;
   // XXX Don't actually use this. At the very least it needs to be merged
   // with a unique device ID.
   private key = "7326A638-3BB5-4E2C-B85F-B2DB4B4AFEF1"
@@ -31,10 +33,10 @@ export class OfflinePersonService {
         location: "default"
       }).then((db: SQLiteObject) => {
         this.dbHandle = db;
-        db.executeSql('create table if not exists profiles (id primary key, following, last_viewed, name, jsonblob)', {})
+        db.executeSql('create table if not exists profiles (id primary key, followed, last_viewed, name, jsonblob)', {})
         return db;
       }).then((db: SQLiteObject) => {
-        db.executeSql('create table if not exists workqueue (url string)', {})
+        db.executeSql('create table if not exists workqueue (url string, payload)', {})
         return db;
       })
   }
@@ -42,13 +44,13 @@ export class OfflinePersonService {
   updateUser(p: Person): Promise<any> {
     // There's a terrible inefficiency here in restringifying what we
     // just destringified. CPU time is cheap, programmer time is expensive...
-    return this.dbHandle.executeSql("REPLACE INTO profiles (id, name,jsonblob) VALUES (?,?,?)", [p.id, p.name, JSON.stringify(p)])
+    return this.dbHandle.executeSql("REPLACE INTO profiles (id, name,jsonblob, followed) VALUES (?,?,?)", [p.id, p.name, JSON.stringify(p), p.followed])
   }
 
   // This should eventually move to a streaming-aware HTTP API,
   // but that can come later
   sync() : Promise<any> {
-    var syncUrl = this.peopleListUrl
+    var syncUrl = this.bulkUpdateUrl
     var lastSynced = this.getLastSynced()
     if (lastSynced) { syncUrl += "?since=" + lastSynced }
     return this.authHttp.get(syncUrl)
@@ -77,16 +79,77 @@ export class OfflinePersonService {
     )
   }
 
-  getPerson(id: string): Promise<Person> {
+  _getPerson(id: string): Promise<Person> {
     if (!this.dbHandle) { Promise.reject( new Error("No DB connection"))}
-    return this.visitPerson(id).then( () => {
-      return this.dbHandle.executeSql('SELECT jsonblob FROM profiles WHERE id = ?',
-      [ id ]).then( (rs) => {
-        console.log(rs);
-        if (rs.rows.length < 1) { throw new Error("Person not found!") }
-        return JSON.parse(rs.rows.item(0).jsonblob)
-      })
+    return this.dbHandle.executeSql('SELECT jsonblob FROM profiles WHERE id = ?',
+    [ id ]).then( (rs) => {
+      console.log(rs);
+      if (rs.rows.length < 1) { throw new Error("Person not found!") }
+      return JSON.parse(rs.rows.item(0).jsonblob)
     })
   }
 
+  getPerson(id: string): Promise<Person> {
+    return this.visitPerson(id).then( () => { return this._getPerson(id) })
+  }
+
+  getPeople(page: number = 1, params = {}, clause="1=1") :Promise<PagedResults<Person>> {
+    if (!this.dbHandle) { Promise.reject( new Error("No DB connection"))}
+    var offset = (page-1) * this.per_page
+    return this.dbHandle.executeSql('SELECT jsonblob FROM profiles LIMIT ? OFFSET ? WHERE ?',
+      [ this.per_page, offset, clause ]).then( (rs) => {
+        console.log(rs);
+        if (rs.rows.length < 1) { throw new Error("Person not found!") }
+        var cursor = Array.from(Array(rs.rows.length-1).keys())
+        //           0, 1, 2, .., rs.rows.length-1
+        var results:PagedResults<Person> = {
+          current_page: page,
+          total_entries: 0, // Do we ever even use this?
+          entries: cursor.map((n) => JSON.parse(rs.rows.item(n).jsonblob) as Person)
+        }
+        return results
+      })
+    // XXX Search
+  }
+
+  getFollows(page: number = 1) :Promise<PagedResults<Person>> {
+    return this.getPeople(page, {}, "followed is not null")
+  }
+
+  getRecent(page: number = 1) :Promise<PagedResults<Person>> {
+    return this.getPeople(page, {}, "1=1 ORDER BY last_viewed DESC")
+    // Did you really name your son "Robert'); DROP TABLE Students;--"?
+  }
+
+
+  follow(id: string) {
+    this.dbHandle.executeSql(
+      "UPDATE profiles SET followed = 1 WHERE id = ?", [id])
+    .then( () => {
+      var url = id + '/follow'
+      this.dbHandle.executeSql(
+      "INSERT INTO workqueue (url, payload) VALUES (?,'')", [url])
+    })
+  }
+
+  unfollow(id: string) {
+    this.dbHandle.executeSql(
+      "UPDATE profiles SET followed = NULL WHERE id = ?", [id])
+    .then( () => {
+      var url = id + '/unfollow'
+      this.dbHandle.executeSql(
+      "INSERT INTO workqueue (url, payload) VALUES (?,'')", [url])
+    })
+  }
+
+  saveProfile(profileData) {
+    // You can't do this offline
+    throw new Error("Offline")
+  }
+
+
+  annotate(id: string, content: string) {
+    // Alter locally
+    // Add to workqueue
+  }
 }

@@ -1,6 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { Person } from '../../classes/person';
-import { PersonService } from '../../services/person.service';
 import { OfflinePersonService } from '../../services/offline.person.service';
 import { AuthService } from '../../services/auth.service';
 import { PagedResults } from '../../classes/pagedresults';
@@ -19,8 +18,9 @@ export class PeopleComponent implements OnInit {
   result: PagedResults<Person>;
   _page = 1;
   params = {};
-  constructor(public personService: PersonService,
-    public offlinePersonService: OfflinePersonService,
+  // Look carefully at this next line of code.
+  // We are using the offline implementation of the person service API.
+  constructor(public personService: OfflinePersonService,
     private sanitizer:DomSanitizer,
     public auth: AuthService, public navParams: NavParams
     ) {
