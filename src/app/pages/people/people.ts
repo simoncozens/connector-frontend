@@ -38,7 +38,7 @@ export class PeopleComponent implements OnInit {
   }
 
   getPeople() {
-    this.personService.getPeople(this._page, this.params)
+    return this.personService.getPeople(this._page, this.params)
         .then(result => this.addMorePeople(result),
           error => this.dammit(error));
   }
@@ -73,8 +73,9 @@ export class PeopleComponent implements OnInit {
     }
   }
 
-  onScroll () {
-    this.page = this.page + 1;
+  onScroll (infiniteScroll) {
+    this._page = this._page + 1;
+    this.getPeople().then( () => { infiniteScroll.complete() })
   }
 
   sanitize(url:string){return this.sanitizer.bypassSecurityTrustUrl(url); }
