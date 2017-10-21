@@ -9,6 +9,7 @@ import { PeopleComponent } from './pages/people/people';
 import { LoginComponent } from './pages/login/login.component';
 import { AuthService } from './services/auth.service';
 import { OfflinePersonService } from './services/offline.person.service';
+import {TranslateService} from '@ngx-translate/core';
 
 @Component({
   templateUrl: 'app.html'
@@ -27,8 +28,11 @@ export class MyApp {
     public alertCtrl: AlertController,
     private network: Network,
     public ops: OfflinePersonService,
+    public translate: TranslateService,
     private auth: AuthService) {
     this.initializeApp();
+    translate.setDefaultLang('en');
+    translate.use('en');
 
     // used for an example of ngFor and navigation
     this.pages = [
@@ -82,5 +86,10 @@ export class MyApp {
       buttons: ['Dismiss']
     });
     alert.present();
+  }
+
+  changeLocale(lang) {
+    console.log("Using "+lang)
+    this.translate.use(lang)
   }
 }

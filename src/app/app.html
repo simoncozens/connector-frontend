@@ -13,6 +13,18 @@
     </ion-list>
   </ion-content>
 
+<ion-footer>
+  <ion-toolbar>
+    <ion-label>Language</ion-label>
+    <ion-select name="selectLocale" (ionChange)="changeLocale($event)">
+    <ion-option value="en">English</ion-option>
+    <ion-option value="es">Español</ion-option>
+    <ion-option value="po">Português</ion-option>
+    <ion-option value="fr">Français</ion-option>
+    </ion-select>
+  </ion-toolbar>
+</ion-footer>
+
 </ion-menu>
 
 <!-- Disable swipe-to-go-back because it's poor UX to combine STGB with side menus -->
