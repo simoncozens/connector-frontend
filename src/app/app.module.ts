@@ -24,6 +24,7 @@ import { SQLite } from '@ionic-native/sqlite';
 import { TranslateModule, TranslateService, TranslateLoader } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { TranslateStore } from "@ngx-translate/core/src/translate.store";
+import { Contacts } from '@ionic-native/contacts';
 
 export function createTranslateLoader(http: Http) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -66,7 +67,7 @@ export function createTranslateLoader(http: Http) {
     SplashScreen,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
     TranslateModule, TranslateService, TranslateStore,
-    SQLite
+    SQLite, Contacts
   ]
 })
 export class AppModule {}

@@ -6,6 +6,9 @@
       </button>
       <ion-avatar item-left><img [src]="sanitize(person?.picture)"/></ion-avatar>
       <ion-title>{{person?.name}}</ion-title>
+      <button item-right (click)="addContact()">
+        <ion-icon name="add"></ion-icon>
+      </button>
     </ion-item>
   </ion-navbar>
 </ion-header>
