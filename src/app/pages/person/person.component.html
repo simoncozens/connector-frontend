@@ -4,8 +4,8 @@
       <button ion-button menuToggle>
         <ion-icon name="menu"></ion-icon>
       </button>
-      <ion-avatar item-left><img [src]="sanitize(person?.picture)"/></ion-avatar>
-      <ion-title>{{person?.name}}</ion-title>
+      {{person?.name}}
+      <a item-right *ngIf="person?.email && person?.preferred_contact == 'email'" href="mailto:{{person?.email}}" class="btn-lg"><ion-icon name="mail"></ion-icon></a>
       <button item-right (click)="addContact()">
         <ion-icon name="add"></ion-icon>
       </button>
@@ -14,74 +14,62 @@
 </ion-header>
 
 <ion-content>
-  <ion-grid *ngIf="person">
-    <ion-row>
-        <a *ngIf="person.email" href="mailto:{{person?.email}}" class="btn-lg"><ion-icon name="mail"></ion-icon></a>
-
-        <span class="role label label-info" *ngFor="let role of person?.roles">{{role}}</span>
-
-        <a (click)="messages(person.id)" class="btn btn-primary">
-        <ion-icon name="mail-open"></ion-icon> Message</a>
+  <ion-list *ngIf="person">
+    <ion-item>
+        <ion-avatar item-left><img [src]="sanitize(person?.picture)"/></ion-avatar>
+        <span *ngFor="let role of person?.roles">
+          <ion-badge>{{role}}</ion-badge> </span>
+        <br>
+        <button ion-button (click)="messages(person.id)">
+          <ion-icon name="mail-open"></ion-icon> Message
+        </button>
         <span *ngIf="person.followed">
           <button ion-button (click)="unfollow()">Unfollow</button>
         </span>
         <span *ngIf="!person.followed">
           <button ion-button outline (click)="follow()">Follow</button>
         </span>
-    </ion-row>
-    <ion-row>
-      <ion-col col-4>Preferred Method of Contact</ion-col>
-      <ion-col col-8>{{person?.preferred_contact}}</ion-col>
-    </ion-row>
-    <ion-row>
-      <ion-col col-4>Introductory Bio</ion-col>
-      <ion-col col-8>{{person?.intro_bio}}</ion-col>
-    </ion-row>
-    <ion-row>
-      <ion-col col-4>Experience</ion-col>
-      <ion-col col-8>
-        <span  *ngFor="let e of person?.experience; let last = last">
-          <a (click)="peopleSearch({'experience':e})">{{e}}</a><span *ngIf="!last">, </span>
-        </span>
-      </ion-col>
-    </ion-row>
-    <ion-row>
-      <ion-col col-4>{{ 'PeopleRegions' | translate }} </ion-col>
-      <ion-col col-8>
+    </ion-item>
+    <ion-item>
+      Preferred Method of Contact
+      <ion-note item-end>{{person?.preferred_contact}}</ion-note>
+    </ion-item>
+    <ion-item>
+      <h2>Bio</h2>
+      <p>{{person?.intro_bio}}</p>
+    </ion-item>
+    <ion-item>
+      <h2>Experience</h2>
+      <span  *ngFor="let e of person?.experience; let last = last">
+        <a (click)="peopleSearch({'experience':e})">{{e}}</a><span *ngIf="!last">, </span>
+      </span>
+    </ion-item>
+    <ion-item>
+      {{ 'PeopleRegions' | translate }} 
+      <ion-note item-end>
         <span  *ngFor="let r of person?.regions; let last = last">
           <a (click)="peopleSearch({'region':r})">{{e}}</a><span *ngIf="!last">, </span>
         </span>
-      </ion-col>
-    </ion-row>
+      </ion-note>
+    </ion-item>
 
+  <ion-list-header>
+    Affiliations
+  </ion-list-header>
     <div *ngFor="let affiliation of person?.affiliations; let i = index; ">
-      <ion-row>
-        <ion-col col-4>
-            <span *ngIf="i==0">Primary</span>
-            <span *ngIf="i!=0">Other</span>
-            Organisation
-        </ion-col>
-        <ion-col col-8> {{affiliation.organisation}} </ion-col>
-      </ion-row>
-      <ion-row>
-        <ion-col col-4>
-            <span *ngIf="i==0">Primary</span>
-            <span *ngIf="i!=0">Other</span>
-            Position
-        </ion-col>
-        <ion-col col-8> {{affiliation.position}} </ion-col>
-      </ion-row>
-      <ion-row>
-        <ion-col col-4> Organisation Website </ion-col>
-        <ion-col col-8> {{affiliation.website}} </ion-col>
-      </ion-row>
+      <ion-item>
+        <h2>{{affiliation.position}}</h2>
+        <ion-note>
+          <a href="" onclick="window.open(affiliation.website, '_system', 'location=yes')">{{affiliation.organisation}}</a>
+        </ion-note>
+      </ion-item>
     </div>
 
-    <ion-row>
-      <ion-col col-4> My notes</ion-col>
-      <ion-col col-8>
+  <ion-list-header>
+     My notes
+   </ion-list-header>
+      <ion-item>
         <ion-textarea placeholder="My notes" [(ngModel)]='annotation' (change)="saveAnnotation();false"></ion-textarea>
-      </ion-col>
-    </ion-row>
-  </ion-grid>
+    </ion-item>
+  </ion-list>
 </ion-content>
