@@ -80,7 +80,7 @@
     <ion-row>
       <ion-col col-4> My notes</ion-col>
       <ion-col col-8>
-        <textarea [(ngModel)]='annotation' (keydown.enter)="saveAnnotation();false"></textarea>
+        <ion-textarea placeholder="My notes" [(ngModel)]='annotation' (change)="saveAnnotation();false"></ion-textarea>
       </ion-col>
     </ion-row>
   </ion-grid>
