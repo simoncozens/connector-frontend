@@ -5,6 +5,8 @@ import { PersonService } from '../../services/person.service';
 import { OfflinePersonService } from '../../services/offline.person.service';
 import {DomSanitizer} from '@angular/platform-browser';
 import { NavParams } from 'ionic-angular';
+import { Network } from '@ionic-native/network';
+import { Contacts, Contact, ContactField, ContactName } from '@ionic-native/contacts';
 
 import 'rxjs/Rx';
 
@@ -19,7 +21,9 @@ export class PersonComponent implements OnInit {
   constructor(private personService: PersonService,
     public navParams: NavParams,
     public ops: OfflinePersonService,
+    private contacts: Contacts,
     public platform: Platform,
+    private network: Network,
     private sanitizer:DomSanitizer
   ) {
     if (this.platform.is('cordova')) {

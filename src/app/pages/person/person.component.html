@@ -43,7 +43,7 @@
       </ion-col>
     </ion-row>
     <ion-row>
-      <ion-col col-4>Regions</ion-col>
+      <ion-col col-4>{{ 'PeopleRegions' | translate }} </ion-col>
       <ion-col col-8>
         <span  *ngFor="let r of person?.regions; let last = last">
           <a (click)="peopleSearch({'region':r})">{{e}}</a><span *ngIf="!last">, </span>
