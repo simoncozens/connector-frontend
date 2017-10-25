@@ -32,6 +32,9 @@ export function createTranslateLoader(http: Http) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
 }
 
+import {NgxPaginationModule} from 'ngx-pagination';
+import { MomentModule } from 'angular2-moment';
+
 @NgModule({
   declarations: [
     MyApp,
@@ -46,6 +49,7 @@ export function createTranslateLoader(http: Http) {
     IonicModule.forRoot(MyApp),
     HttpModule,
     AuthModule,
+    MomentModule,
     TranslateModule.forRoot({
         loader: {
           provide: TranslateLoader,
