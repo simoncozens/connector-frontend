@@ -10,9 +10,6 @@ import { PagedResults } from '../../classes/pagedresults';
 import {DomSanitizer} from '@angular/platform-browser';
 import { NavController, NavParams, AlertController } from 'ionic-angular';
 
-// XXX Need to get params from somewhere in Ionic
-
-
 @Component({
   selector: 'people',
   templateUrl: './people.component.html'
@@ -98,18 +95,6 @@ export class PeopleComponent implements OnInit {
     alert.present();
   }
 }
-
-// @Component({
-//   selector : 'follows',
-//   templateUrl: './people.component.html',
-//   styleUrls: ['./people.component.sass']
-// })
-// export class FollowsComponent extends PeopleComponent {
-//   getPeople() {
-//     this.personService.getFollows(this._page)
-//       .then(result => this.result = result);
-//   }
-// }
 
 // @Component({
 //   selector : 'recent',

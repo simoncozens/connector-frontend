@@ -9,7 +9,9 @@ import { HomePage } from './pages/home/home';
 import { ListPage } from './pages/list/list';
 import { LoginComponent } from './pages/login/login.component';
 import { PeopleComponent } from './pages/people/people';
+import { FollowsComponent } from './pages/people/follows';
 import { PersonComponent } from './pages/person/person.component';
+import { InboxComponent } from './pages/inbox/inbox.component';
 
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
@@ -35,8 +37,8 @@ export function createTranslateLoader(http: Http) {
     MyApp,
     HomePage,
     ListPage,
-    PeopleComponent,
-    PersonComponent,
+    PeopleComponent,FollowsComponent,
+    PersonComponent,InboxComponent,
     LoginComponent
   ],
   imports: [
@@ -57,7 +59,7 @@ export function createTranslateLoader(http: Http) {
     MyApp,
     HomePage,
     ListPage,
-    PeopleComponent,
+    PeopleComponent, FollowsComponent, InboxComponent,
     PersonComponent,
     LoginComponent
   ],

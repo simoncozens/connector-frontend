@@ -6,6 +6,8 @@ import { Network } from '@ionic-native/network';
 
 import { HomePage } from './pages/home/home';
 import { PeopleComponent } from './pages/people/people';
+import { FollowsComponent } from './pages/people/follows';
+import { InboxComponent } from './pages/inbox/inbox.component';
 import { LoginComponent } from './pages/login/login.component';
 import { AuthService } from './services/auth.service';
 import { OfflinePersonService } from './services/offline.person.service';
@@ -34,10 +36,10 @@ export class MyApp {
     translate.setDefaultLang('en');
     translate.use('en');
 
-    // used for an example of ngFor and navigation
     this.pages = [
-      { title: 'Home', component: HomePage },
-      { title: 'Profiles', component: PeopleComponent }
+      { title: 'Profiles', component: PeopleComponent },
+      { title: 'Starred Profiles', component: FollowsComponent },
+      { title: 'Messages', component: InboxComponent }
     ];
   }
 
