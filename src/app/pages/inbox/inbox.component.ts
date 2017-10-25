@@ -2,19 +2,20 @@ import { Component, OnInit, Input } from '@angular/core';
 import { Message } from '../../classes/message';
 import { MessageService } from '../../services/message.service';
 import { PagedResults } from '../../classes/pagedresults';
-import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 import {DomSanitizer} from '@angular/platform-browser';
+import { NavController } from 'ionic-angular';
+import { PersonComponent } from '../person/person.component';
 
 @Component({
   selector: 'inbox',
   templateUrl: './inbox.component.html'
-
 })
 export class InboxComponent implements OnInit {
   result: PagedResults<Message>;
   _page = 1;
   params = {};
   constructor(public messageService: MessageService,
+    public navCtrl: NavController,
     private sanitizer:DomSanitizer) {
   }
   getMessages() {
@@ -51,4 +52,13 @@ export class InboxComponent implements OnInit {
   }
   sanitize(url:string){return this.sanitizer.bypassSecurityTrustUrl(url); }
 
+  gotoPerson(pid) {
+    this.navCtrl.push(PersonComponent, {
+      id: pid
+    })
+  }
+
+  gotoThread() {
+
+  }
 }

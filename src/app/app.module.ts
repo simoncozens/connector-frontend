@@ -17,6 +17,8 @@ import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 
 import { PersonService } from './services/person.service';
+import { MessageService } from './services/message.service';
+import { InterComponentMessageService } from './services/intercomponentmessage.service';
 import { OfflinePersonService } from './services/offline.person.service';
 import { AuthModule } from './services/auth.module';
 import { AuthService } from './services/auth.service';
@@ -69,6 +71,7 @@ import { MomentModule } from 'angular2-moment';
   ],
   providers: [
     PersonService, AuthService, AuthGuard, OfflinePersonService,
+    MessageService, InterComponentMessageService,
     StatusBar, Network,
     SplashScreen,
     {provide: ErrorHandler, useClass: IonicErrorHandler},

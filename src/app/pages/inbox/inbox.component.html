@@ -1,16 +1,26 @@
-<ion-list *ngIf="result">
+<ion-header>
+  <ion-navbar>
+    <button ion-button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+    <ion-title>Inbox</ion-title>
+  </ion-navbar>
+</ion-header>
 
-<ion-item *ngFor="let thread of result?.entries">
+<ion-content class="list-inbox">
+<ion-list *ngIf="result">
+<button ion-item *ngFor="let thread of result?.entries" (click)="gotoThread(thread.user.id)">
       <ion-avatar item-start>
         <a (click)="gotoPerson(thread.user.id)"><img width="80" height="80" item-left [src]="sanitize(thread.user.picture)"/></a>
       </ion-avatar>
 
   <h2>{{thread.user.name}}</h2>
-  <p (click)="gotoThread(thread.user.id)">
-      <span *ngIf="thread.incoming" class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span>
+  <p>
+      <ion-icon name="arrow-round-forward" item-right *ngIf="thread.incoming"></ion-icon>
       {{thread.message.content}}
-      <span *ngIf="thread.message.status == 'Read'" class="glyphicon glyphicon-ok" aria-hidden="true"></span>
-    </p>
-      <div class="small text-muted text-right">{{thread.message.created_at | amTimeAgo }}</div>
-</ion-item>
+      <ion-icon name="checkmark-circle" item-right *ngIf="thread.message.status == 'Read'"></ion-icon>
+  </p>
+  <ion-note item-end>{{thread.message.created_at | amTimeAgo }}</ion-note>
+</button>
 </ion-list>
+</ion-content>
