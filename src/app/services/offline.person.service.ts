@@ -79,10 +79,10 @@ export class OfflinePersonService extends PersonService {
     .then( (rs) => {
       if (rs.rows.length < 1) { return Promise.resolve() }
       var cursor = Array.from(Array(rs.rows.length-1).keys())
-      var visits = cursor.map((n) => ({ id: rs.rows.item(n).id, last_viewed: rs.rows.item(n).last_viewed}) )
+      var ids = cursor.map((n) => rs.rows.item(n).id )
       // XXX I should probably return this promise?
       // But it makes the compiler go mental. I think this code is wrong.
-      this.authHttp.put(this.updateVisitsUrl, visits).toPromise()
+      this.authHttp.put(this.updateVisitsUrl, { ids: ids }).toPromise()
     })
   }
 
