@@ -13,6 +13,7 @@ import { Person } from '../classes/person';
 export class OfflinePersonService extends PersonService {
   // Define the routes we are going to interact with
   private bulkUpdateUrl = AppSettings.API_ENDPOINT + '/offline/people';
+  private updateVisitsUrl = AppSettings.API_ENDPOINT + '/offline/update_visits';
 
   private dbHandle :SQLiteObject;
 
@@ -48,6 +49,43 @@ export class OfflinePersonService extends PersonService {
     return this.dbHandle.executeSql("REPLACE INTO profiles (id, name,jsonblob, followed) VALUES (?,?,?)", [p.id, p.name, JSON.stringify(p), p.followed])
   }
 
+  sendWorkQueueItem(url: string, payload: string): Promise<any> {
+    // Payload is currently unused. If we start doing more clever stuff,
+    // fix this.
+    return this.authHttp.get(AppSettings.API_ENDPOINT + url)
+          .toPromise()
+  }
+
+  emptyWorkQueue() : Promise<any> {
+    return this.dbHandle.executeSql("DELETE FROM workqueue",[])
+  }
+
+  sendWorkQueue(): Promise<any> {
+    return this.dbHandle.executeSql('SELECT url,payload FROM workqueue', []).then( (rs) => {
+      console.log(rs);
+      if (rs.rows.length < 1) { return Promise.resolve() }
+      var cursor = Array.from(Array(rs.rows.length-1).keys())
+      cursor.reduce((p : Promise<any>, i : number ) => {
+          var row = rs.rows.item(i)
+          return p.then(() => {
+            this.sendWorkQueueItem(row.url, row.payload)
+          })
+        }, Promise.resolve())
+    })
+  }
+
+  sendLastVisited(): Promise<any> {
+    return this.dbHandle.executeSql('SELECT id,last_viewed FROM profiles ORDER BY last_viewed DESC LIMIT 10', [])
+    .then( (rs) => {
+      if (rs.rows.length < 1) { return Promise.resolve() }
+      var cursor = Array.from(Array(rs.rows.length-1).keys())
+      var visits = cursor.map((n) => ({ id: rs.rows.item(n).id, last_viewed: rs.rows.item(n).last_viewed}) )
+      // XXX I should probably return this promise?
+      // But it makes the compiler go mental. I think this code is wrong.
+      this.authHttp.put(this.updateVisitsUrl, visits).toPromise()
+    })
+  }
+
   // This should eventually move to a streaming-aware HTTP API,
   // but that can come later
   sync() : Promise<any> {
@@ -67,6 +105,11 @@ export class OfflinePersonService extends PersonService {
         }, Promise.resolve())
       }).then( () => {
         this.setLastSynced((new Date()).toISOString())
+        this.sendWorkQueue()
+      }).then( () => {
+        this.emptyWorkQueue()
+      }).then( () => {
+        this.sendLastVisited()
       })
     // XXX Next, dump the contents of the workqueue to the server and delete everything
     // Also send back the six last visited people
