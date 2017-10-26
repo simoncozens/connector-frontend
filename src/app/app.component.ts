@@ -36,7 +36,8 @@ export class MyApp {
     this.pages = [
       { title: 'Profiles', segment: "people" },
       { title: 'Starred Profiles', segment: "follows" },
-      { title: 'Messages', segment: "inbox" }
+      { title: 'Recently Visited', segment: "recent" },
+      { title: 'Messages', segment: "inbox" },
     ];
   }
 

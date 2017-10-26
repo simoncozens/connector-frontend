@@ -10,6 +10,7 @@ import { ListPage } from './pages/list/list';
 import { LoginComponent } from './pages/login/login.component';
 import { PeopleModule } from './pages/people/people.module';
 import { FollowsModule } from './pages/people/follows.module';
+import { RecentModule } from './pages/people/recent.module';
 import { PersonModule } from './pages/person/person.module';
 import { InboxModule } from './pages/inbox/inbox.module';
 import { MessagesWithModule } from './pages/messages-with/messages-with.module';
@@ -50,6 +51,7 @@ export function createTranslateLoader(http: Http) {
     PeopleModule,
     PersonModule,
     FollowsModule,
+    RecentModule,
     InboxModule,
     MessagesWithModule,
     TranslateModule.forRoot({
