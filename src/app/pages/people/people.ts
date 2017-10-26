@@ -81,7 +81,7 @@ export class PeopleComponent implements OnInit {
   }
 
   gotoPerson(person) {
-    this.navCtrl.push("people", {
+    this.navCtrl.push("person", {
       id: person.id,
     })
   }
