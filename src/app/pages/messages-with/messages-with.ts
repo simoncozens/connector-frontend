@@ -2,16 +2,18 @@ import { Component, OnInit, Input } from '@angular/core';
 import { Message } from '../../classes/message';
 import { MessageService } from '../../services/message.service';
 import { PagedResults } from '../../classes/pagedresults';
-import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 import {DomSanitizer} from '@angular/platform-browser';
+import { NavParams, IonicPage } from 'ionic-angular';
 import { Person } from '../../classes/person';
 import { InterComponentMessageService } from '../../services/intercomponentmessage.service';
 
+@IonicPage({
+  name: "messages-with",
+  segment: "messages-with/:id"
+  })
 @Component({
   selector: 'messages-with',
-  templateUrl: './messages-with.component.html',
-    styleUrls: ['../inbox/inbox.component.sass']
-
+  templateUrl: './messages-with.component.html'
 })
 export class MessagesWithComponent implements OnInit {
   result: PagedResults<Message>;
@@ -21,6 +23,7 @@ export class MessagesWithComponent implements OnInit {
   with: Person;
   params = {};
   constructor(public messageService: MessageService,
+    public navParams: NavParams,
     public interComponentMessageService: InterComponentMessageService,
     private sanitizer:DomSanitizer) {
   }
@@ -32,11 +35,8 @@ export class MessagesWithComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    // XXX Needs rewrite for ionic
-    // this.route.paramMap.subscribe(params => {
-      // this.withId = params.get('id')
-      // this.getMessages()
-    // });
+    this.withId = this.navParams.get('id')
+    this.getMessages()
   }
 
   @Input() set page(value: number) {

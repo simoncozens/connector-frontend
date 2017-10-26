@@ -1,17 +1,18 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { ErrorHandler, NgModule } from '@angular/core';
 import { IonicApp, IonicErrorHandler, IonicModule } from 'ionic-angular';
-import { Http, HttpModule, Response } from '@angular/http';
+import { Http, HttpModule } from '@angular/http';
 import { Network } from '@ionic-native/network';
 
 import { MyApp } from './app.component';
 import { HomePage } from './pages/home/home';
 import { ListPage } from './pages/list/list';
 import { LoginComponent } from './pages/login/login.component';
-import { PeopleComponent } from './pages/people/people';
-import { FollowsComponent } from './pages/people/follows';
-import { PersonComponent } from './pages/person/person.component';
-import { InboxComponent } from './pages/inbox/inbox.component';
+import { PeopleModule } from './pages/people/people.module';
+import { FollowsModule } from './pages/people/follows.module';
+import { PersonModule } from './pages/person/person.module';
+import { InboxModule } from './pages/inbox/inbox.module';
+import { MessagesWithModule } from './pages/messages-with/messages-with.module';
 
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
@@ -34,16 +35,11 @@ export function createTranslateLoader(http: Http) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
 }
 
-import {NgxPaginationModule} from 'ngx-pagination';
-import { MomentModule } from 'angular2-moment';
-
 @NgModule({
   declarations: [
     MyApp,
     HomePage,
     ListPage,
-    PeopleComponent,FollowsComponent,
-    PersonComponent,InboxComponent,
     LoginComponent
   ],
   imports: [
@@ -51,7 +47,11 @@ import { MomentModule } from 'angular2-moment';
     IonicModule.forRoot(MyApp),
     HttpModule,
     AuthModule,
-    MomentModule,
+    PeopleModule,
+    PersonModule,
+    FollowsModule,
+    InboxModule,
+    MessagesWithModule,
     TranslateModule.forRoot({
         loader: {
           provide: TranslateLoader,
@@ -65,8 +65,6 @@ import { MomentModule } from 'angular2-moment';
     MyApp,
     HomePage,
     ListPage,
-    PeopleComponent, FollowsComponent, InboxComponent,
-    PersonComponent,
     LoginComponent
   ],
   providers: [

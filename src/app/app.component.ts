@@ -5,9 +5,6 @@ import { SplashScreen } from '@ionic-native/splash-screen';
 import { Network } from '@ionic-native/network';
 
 import { HomePage } from './pages/home/home';
-import { PeopleComponent } from './pages/people/people';
-import { FollowsComponent } from './pages/people/follows';
-import { InboxComponent } from './pages/inbox/inbox.component';
 import { LoginComponent } from './pages/login/login.component';
 import { AuthService } from './services/auth.service';
 import { OfflinePersonService } from './services/offline.person.service';
@@ -21,7 +18,7 @@ export class MyApp {
 
   rootPage: any = HomePage;
 
-  pages: Array<{title: string, component: any}>;
+  pages: Array<{title: string, segment: string}>;
 
   constructor(public platform: Platform,
     public statusBar: StatusBar,
@@ -37,9 +34,9 @@ export class MyApp {
     translate.use('en');
 
     this.pages = [
-      { title: 'Profiles', component: PeopleComponent },
-      { title: 'Starred Profiles', component: FollowsComponent },
-      { title: 'Messages', component: InboxComponent }
+      { title: 'Profiles', segment: "people" },
+      { title: 'Starred Profiles', segment: "follows" },
+      { title: 'Messages', segment: "inbox" }
     ];
   }
 
@@ -76,8 +73,8 @@ export class MyApp {
   openPage(page) {
     // Reset the content nav to have just this page
     // we wouldn't want the back button to show in this scenario
-    this.nav.setRoot(page.component).then(cando => {
-      if(!cando) this.nav.setRoot(LoginComponent, {"next": page.component} )
+    this.nav.push(page.segment).then(cando => {
+      if(!cando) this.nav.setRoot(LoginComponent, {"next": page.segment } )
     });
   }
 

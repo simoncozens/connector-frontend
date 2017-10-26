@@ -1,7 +1,12 @@
 import { Component, OnInit, Input } from '@angular/core';
+import { IonicPage, Platform } from 'ionic-angular';
 
 import { PeopleComponent } from './people';
 
+@IonicPage({
+  name: "follows",
+  segment: "follows"
+  })
 @Component({
   selector : 'follows',
   templateUrl: './people.component.html'

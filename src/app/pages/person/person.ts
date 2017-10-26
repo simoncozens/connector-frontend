@@ -4,12 +4,16 @@ import { Platform } from 'ionic-angular';
 import { PersonService } from '../../services/person.service';
 import { OfflinePersonService } from '../../services/offline.person.service';
 import {DomSanitizer} from '@angular/platform-browser';
-import { NavParams } from 'ionic-angular';
+import { NavParams, IonicPage } from 'ionic-angular';
 import { Network } from '@ionic-native/network';
 import { Contacts, Contact, ContactField, ContactName } from '@ionic-native/contacts';
 
 import 'rxjs/Rx';
 
+@IonicPage({
+  name: "person",
+  segment: "people/:id"
+  })
 @Component({
   selector: 'person',
   templateUrl: './person.component.html'

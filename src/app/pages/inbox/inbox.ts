@@ -1,11 +1,15 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { Message } from '../../classes/message';
+import { IonicPage, Platform } from 'ionic-angular';
 import { MessageService } from '../../services/message.service';
 import { PagedResults } from '../../classes/pagedresults';
 import {DomSanitizer} from '@angular/platform-browser';
 import { NavController } from 'ionic-angular';
-import { PersonComponent } from '../person/person.component';
 
+@IonicPage({
+  name: "inbox",
+  segment: "inbox"
+  })
 @Component({
   selector: 'inbox',
   templateUrl: './inbox.component.html'
@@ -53,12 +57,10 @@ export class InboxComponent implements OnInit {
   sanitize(url:string){return this.sanitizer.bypassSecurityTrustUrl(url); }
 
   gotoPerson(pid) {
-    this.navCtrl.push(PersonComponent, {
-      id: pid
-    })
+    this.navCtrl.push("people", {id: pid })
   }
 
-  gotoThread() {
-
+  gotoThread(pid) {
+    this.navCtrl.push("messages-with", {id: pid })
   }
 }

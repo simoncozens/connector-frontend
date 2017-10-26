@@ -1,15 +1,18 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { Person } from '../../classes/person';
-import { Platform } from 'ionic-angular';
+import { IonicPage, Platform } from 'ionic-angular';
 import { OfflinePersonService } from '../../services/offline.person.service';
 import { PersonService } from '../../services/person.service';
-import { PersonComponent } from '../person/person.component';
 import { AuthService } from '../../services/auth.service';
 import { PagedResults } from '../../classes/pagedresults';
 // import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 import {DomSanitizer} from '@angular/platform-browser';
 import { NavController, NavParams, AlertController } from 'ionic-angular';
 
+@IonicPage({
+  name: "people",
+  segment: "people"
+  })
 @Component({
   selector: 'people',
   templateUrl: './people.component.html'
@@ -78,7 +81,7 @@ export class PeopleComponent implements OnInit {
   }
 
   gotoPerson(person) {
-    this.navCtrl.push(PersonComponent, {
+    this.navCtrl.push("people", {
       id: person.id,
     })
   }
