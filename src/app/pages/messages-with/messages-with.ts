@@ -1,6 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { Message } from '../../classes/message';
 import { MessageService } from '../../services/message.service';
+import { AuthService } from '../../services/auth.service';
 import { PagedResults } from '../../classes/pagedresults';
 import {DomSanitizer} from '@angular/platform-browser';
 import { NavParams, IonicPage } from 'ionic-angular';
@@ -21,9 +22,11 @@ export class MessagesWithComponent implements OnInit {
   withId: string;
   newMessage: string;
   with: Person;
+  me: Person;
   params = {};
   constructor(public messageService: MessageService,
     public navParams: NavParams,
+    public auth: AuthService,
     public interComponentMessageService: InterComponentMessageService,
     private sanitizer:DomSanitizer) {
   }
@@ -37,6 +40,7 @@ export class MessagesWithComponent implements OnInit {
   ngOnInit(): void {
     this.withId = this.navParams.get('id')
     this.getMessages()
+    this.me = this.auth.loggedInUser()
   }
 
   @Input() set page(value: number) {

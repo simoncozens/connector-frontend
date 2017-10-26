@@ -1,27 +1,33 @@
-<div *ngIf="with" class="row">
-  <div class="col-xs-2"><img [src]="sanitize(with.picture)"/>
-    <div class="strut"></div>
-  </div>
-  <div class="col-xs-5"><h3>{{with.name}}</h3>
-  </div>
-</div>
+<ion-header>
+  <ion-navbar>
+    <ion-item>
+      <button ion-button menuToggle>
+        <ion-icon name="menu"></ion-icon>
+      </button>
+      {{with?.name}}
+    </ion-item>
+  </ion-navbar>
+</ion-header>
 
-<div *ngIf="result">
-<div class="message row" *ngFor="let message of result?.entries.reverse()">
-    <div class="clearfix"></div>
-  <div class="col-xs-5">
-    <div class="col-xs-9  well" [ngClass]="{'pull-right': !toMe(message), 'fromMe': !toMe(message)}" (vp-in-view)="markRead(message)">
-      {{message.content}}
-      <span *ngIf="!toMe(message) &amp;&amp; message.status == 'Read'" class="glyphicon glyphicon-ok" aria-hidden="true"></span>
-      <div class="small text-muted text-right">{{ message.created_at | amTimeAgo }}</div>
-    </div>
-  </div>
-</div>
-</div>
+<ion-content class="messages-with">
 
-<div class="row">
-  <div class="col-xs-5">
-    <textarea class="form-control well" [(ngModel)]='newMessage' (keydown.enter)="sendMessage();false" >
+  <ion-card *ngFor="let message of result?.entries.reverse()" [ngClass]="{'toMe': toMe(message), 'fromMe': !toMe(message)}" (vp-in-view)="markRead(message)">
+    <ion-item>
+        <ion-avatar item-left>
+          <img [src]="sanitize( toMe(message) ? with.picture : me.picture)"/>
+        </ion-avatar>
+        <ion-note item-right>
+          {{ message.created_at | amTimeAgo }}
+          <ion-icon name="checkmark" *ngIf="!toMe(message) &amp;&amp; message.status == 'Read'"></ion-icon>
+      </ion-note>
+    </ion-item>
+    <ion-card-content>
+      <p>{{message.content}}</p>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card>
+      <textarea class="form-control well" [(ngModel)]='newMessage' (keydown.enter)="sendMessage();false" >
     </textarea>
-  </div>
-</div>
+  </ion-card>
+</ion-content>
