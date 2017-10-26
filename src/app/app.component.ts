@@ -38,6 +38,7 @@ export class MyApp {
       { title: 'Starred Profiles', segment: "follows" },
       { title: 'Recently Visited', segment: "recent" },
       { title: 'Messages', segment: "inbox" },
+      { title: 'My Profile', segment: "editprofile" },
     ];
   }
 

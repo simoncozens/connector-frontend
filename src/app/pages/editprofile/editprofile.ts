@@ -5,7 +5,12 @@ import { PersonService } from '../../services/person.service';
 import { Person, Affiliation } from '../../classes/person';
 import { Response } from '@angular/http';
 import 'rxjs/add/operator/toPromise';
+import { IonicPage, Platform, ToastController } from 'ionic-angular';
 
+@IonicPage({
+  name: "editprofile",
+  segment: "editprofile"
+  })
 @Component({
   selector: 'login',
   templateUrl: './editprofile.component.html'
@@ -14,7 +19,9 @@ export class EditProfileComponent implements OnInit {
     public profileForm: FormGroup;
 
   person: Person;  public alerts: any = [];
-  constructor(public personService: PersonService, private _fb: FormBuilder, private auth: AuthService) {
+  constructor(public personService: PersonService,
+    private _fb: FormBuilder, private auth: AuthService,
+    public toastCtrl: ToastController) {
     this.person = this.auth.loggedInUser();
   }
   ngOnInit() {
@@ -46,10 +53,20 @@ export class EditProfileComponent implements OnInit {
       response => {
         this.person = Object.assign(this.person, value);
         this.auth.setLoggedInUser(this.person);
-        this.alerts = [ {type: 'success', msg: `Saved successfully.` }, ]
+        const toast = this.toastCtrl.create({
+            message: 'Saved successfully',
+            duration: 3000,
+            position: 'bottom'
+          });
+        toast.present();
       }
     ).catch(() => {
-        this.alerts = [ {type: 'danger', msg: `Something went wrong.` }, ]
+      const toast = this.toastCtrl.create({
+          message: 'Something went wrong',
+          duration: 3000,
+          position: 'bottom'
+        });
+      toast.present();
     }
 
     )

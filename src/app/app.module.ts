@@ -13,6 +13,7 @@ import { FollowsModule } from './pages/people/follows.module';
 import { RecentModule } from './pages/people/recent.module';
 import { PersonModule } from './pages/person/person.module';
 import { InboxModule } from './pages/inbox/inbox.module';
+import { EditProfileModule } from './pages/editprofile/editprofile.module';
 import { MessagesWithModule } from './pages/messages-with/messages-with.module';
 
 import { StatusBar } from '@ionic-native/status-bar';
@@ -53,6 +54,7 @@ export function createTranslateLoader(http: Http) {
     FollowsModule,
     RecentModule,
     InboxModule,
+    EditProfileModule,
     MessagesWithModule,
     TranslateModule.forRoot({
         loader: {
