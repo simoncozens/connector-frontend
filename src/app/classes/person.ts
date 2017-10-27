@@ -4,6 +4,11 @@ export class Affiliation {
   website: string;
 }
 
+export class FieldPermissions {
+  preferred_contact: string[];
+  intro_bio: string[];
+  // XXX
+}
 
 export class Person {
   id: any;
@@ -17,4 +22,5 @@ export class Person {
   followed: boolean;
   affiliations: Affiliation[];
   annotation: any;
+  field_permissions: FieldPermissions;
 }

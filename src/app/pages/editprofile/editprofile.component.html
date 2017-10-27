@@ -1,56 +1,29 @@
-<div class="person row" *ngIf="person">
-  <div class="col-xs-2"><img src="http://via.placeholder.com/150x150"/></div>
-  <div class="col-xs-9">
+<ion-header>
+  <ion-navbar>
+      <button ion-button menuToggle>
+        <ion-icon name="menu"></ion-icon>
+      </button>
+      <ion-title>Edit Profile</ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content>
+<ion-list class="person row" *ngIf="person">
+  <ion-item>
+    <ion-avatar item-start>
+        <img width="80" height="80" item-left [src]="sanitize(person.picture)"/>
+      </ion-avatar>
     <h3>{{person?.name}}</h3>
-    <a *ngIf="person.email" href="mailto:{{person?.email}}" class="btn-lg">
-      <span class="glyphicon glyphicon-envelope" aria-hidden="true"></span>
-    </a>
-    <div class="strut"></div>
-      <span class="role label label-info" *ngFor="let role of person?.roles">{{role}}</span>
-  </div>
-</div>
-
-<form [formGroup]="profileForm" novalidate (ngSubmit)="save(profileForm)">
-
-  <div class="row">
-    <div class="form-group">
-      <div class="col-xs-2"><label>Intro Bio</label></div>
-      <div class="col-xs-9">
-        <textarea type="text"
-          class="form-control" formControlName="intro_bio">
-        </textarea>
-      </div>
-
-      <div formArrayName="affiliations">
-        <!--affiliations-->
-          <div *ngFor="let address of getAffiliations(profileForm); let i=index">
-            <div class="col-xs-2">
-              <span>Affiliation {{i + 1}}</span>
-              <span class="glyphicon glyphicon-remove pull-right" *ngIf="getAffiliations(profileForm).length > 1" (click)="removeAffiliation(i)"></span>
-            </div>
-            <div class="col-xs-9" [formGroupName]="i">
-            <div class="panel panel-default">
-            <div class="panel-body">
-              <div class="form-group">
-                <label>Organisation</label>
-                <input type="text" class="form-control" formControlName="organisation">
-                <small [hidden]="getAffiliations(profileForm)[i].get('organisation').valid" class="text-danger">
-                    Organisation is required
-                </small>
-              </div>
-              <div class="form-group">
-                <label>Position</label>
-                <input type="text" class="form-control" formControlName="position">
-              </div>
-              <div class="form-group">
-                <label>Website</label>
-                <input type="text" class="form-control" formControlName="website">
-              </div>
-              </div>
-              </div>
-            </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</form>
+  </ion-item>
+  <ion-item>
+    Preferred Method of Contact
+    <ion-note item-end (click)='showPrefContactRadio()'>{{person?.preferred_contact}}</ion-note>
+    <p (click)='showPermissions("preferred_contact")'>Who can see this?</p>
+      </ion-item>
+      <ion-item>
+        Intro Bio
+        <ion-note item-end>{{person?.intro_bio}}</ion-note>
+      </ion-item>
+)
+</ion-list>
+</ion-content>
