@@ -32,7 +32,7 @@ import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { TranslateStore } from "@ngx-translate/core/src/translate.store";
 import { Contacts } from '@ionic-native/contacts';
 
-import { FromBase64Pipe } from './pipes/frombase64'
+import { PipesModule } from './pipes/pipes.module'
 
 export function createTranslateLoader(http: Http) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -43,8 +43,7 @@ export function createTranslateLoader(http: Http) {
     MyApp,
     HomePage,
     ListPage,
-    LoginComponent,
-    FromBase64Pipe
+    LoginComponent
   ],
   imports: [
     BrowserModule,
@@ -58,6 +57,7 @@ export function createTranslateLoader(http: Http) {
     InboxModule,
     EditProfileModule,
     MessagesWithModule,
+    PipesModule,
     TranslateModule.forRoot({
         loader: {
           provide: TranslateLoader,
