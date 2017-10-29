@@ -3,7 +3,6 @@ import { ErrorHandler, NgModule } from '@angular/core';
 import { IonicApp, IonicErrorHandler, IonicModule } from 'ionic-angular';
 import { Http, HttpModule } from '@angular/http';
 import { Network } from '@ionic-native/network';
-
 import { MyApp } from './app.component';
 import { HomePage } from './pages/home/home';
 import { ListPage } from './pages/list/list';
@@ -33,6 +32,8 @@ import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { TranslateStore } from "@ngx-translate/core/src/translate.store";
 import { Contacts } from '@ionic-native/contacts';
 
+import { FromBase64Pipe } from './pipes/frombase64'
+
 export function createTranslateLoader(http: Http) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
 }
@@ -42,7 +43,8 @@ export function createTranslateLoader(http: Http) {
     MyApp,
     HomePage,
     ListPage,
-    LoginComponent
+    LoginComponent,
+    FromBase64Pipe
   ],
   imports: [
     BrowserModule,

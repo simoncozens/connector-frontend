@@ -6,7 +6,6 @@ import { PersonService } from '../../services/person.service';
 import { AuthService } from '../../services/auth.service';
 import { PagedResults } from '../../classes/pagedresults';
 // import { Router, ActivatedRoute, ParamMap } from '@angular/router';
-import {DomSanitizer} from '@angular/platform-browser';
 import { NavController, NavParams, AlertController } from 'ionic-angular';
 
 @IonicPage({
@@ -25,7 +24,6 @@ export class PeopleComponent implements OnInit {
     public personService: PersonService,
     public ops: OfflinePersonService,
     public platform: Platform,
-    private sanitizer:DomSanitizer,
     public alertCtrl: AlertController,
     public navCtrl: NavController,
     public auth: AuthService, public navParams: NavParams
@@ -85,8 +83,6 @@ export class PeopleComponent implements OnInit {
       id: person.id,
     })
   }
-
-  sanitize(url:string){return this.sanitizer.bypassSecurityTrustUrl(url); }
 
   dammit(e) {
     console.log(e);

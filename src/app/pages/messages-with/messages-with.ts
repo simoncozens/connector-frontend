@@ -3,7 +3,6 @@ import { Message } from '../../classes/message';
 import { MessageService } from '../../services/message.service';
 import { AuthService } from '../../services/auth.service';
 import { PagedResults } from '../../classes/pagedresults';
-import {DomSanitizer} from '@angular/platform-browser';
 import { NavParams, IonicPage } from 'ionic-angular';
 import { Person } from '../../classes/person';
 import { InterComponentMessageService } from '../../services/intercomponentmessage.service';
@@ -27,8 +26,8 @@ export class MessagesWithComponent implements OnInit {
   constructor(public messageService: MessageService,
     public navParams: NavParams,
     public auth: AuthService,
-    public interComponentMessageService: InterComponentMessageService,
-    private sanitizer:DomSanitizer) {
+    public interComponentMessageService: InterComponentMessageService
+    ) {
   }
 
   getMessages() {
@@ -63,7 +62,6 @@ export class MessagesWithComponent implements OnInit {
   onScroll () {
     this.page = this.page + 1;
   }
-  sanitize(url:string){return this.sanitizer.bypassSecurityTrustUrl(url); }
 
   sendMessage() {
     this.messageService.sendMessage(this.withId, this.newMessage)

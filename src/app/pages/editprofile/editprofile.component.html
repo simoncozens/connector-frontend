@@ -11,7 +11,7 @@
 <ion-list class="person row" *ngIf="person">
   <ion-item>
     <ion-avatar item-start>
-        <img width="80" height="80" item-left [src]="sanitize(person.picture)"/>
+        <img width="80" height="80" item-left [src]="person.picture | fromBase64"/>
       </ion-avatar>
     <h3>{{person?.name}}</h3>
   </ion-item>

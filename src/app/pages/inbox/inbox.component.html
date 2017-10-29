@@ -11,7 +11,7 @@
 <ion-list *ngIf="result">
 <button ion-item *ngFor="let thread of result?.entries" (click)="gotoThread(thread.user.id)">
       <ion-avatar item-start>
-        <a (click)="gotoPerson(thread.user.id)"><img width="80" height="80" item-left [src]="sanitize(thread.user.picture)"/></a>
+        <a (click)="gotoPerson(thread.user.id)"><img width="80" height="80" item-left [src]="thread.user.picture | fromBase64"/></a>
       </ion-avatar>
 
   <h2>{{thread.user.name}}</h2>

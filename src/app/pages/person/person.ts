@@ -3,7 +3,6 @@ import { Person } from '../../classes/person';
 import { Platform } from 'ionic-angular';
 import { PersonService } from '../../services/person.service';
 import { OfflinePersonService } from '../../services/offline.person.service';
-import {DomSanitizer} from '@angular/platform-browser';
 import { NavParams, IonicPage } from 'ionic-angular';
 import { Network } from '@ionic-native/network';
 import { Contacts, Contact, ContactField, ContactName } from '@ionic-native/contacts';
@@ -27,8 +26,7 @@ export class PersonComponent implements OnInit {
     public ops: OfflinePersonService,
     private contacts: Contacts,
     public platform: Platform,
-    private network: Network,
-    private sanitizer:DomSanitizer
+    private network: Network
   ) {
     if (this.platform.is('cordova')) {
       personService = ops;
@@ -42,8 +40,6 @@ export class PersonComponent implements OnInit {
         })
         .catch((error) => console.log(error));
   }
-
-  sanitize(url:string){return this.sanitizer.bypassSecurityTrustUrl(url); }
 
   follow(): void {
     this.person.followed = true;

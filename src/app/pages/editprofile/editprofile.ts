@@ -5,7 +5,6 @@ import { PersonService } from '../../services/person.service';
 import { Person, Affiliation, FieldPermissions } from '../../classes/person';
 import { Response } from '@angular/http';
 import 'rxjs/add/operator/toPromise';
-import {DomSanitizer} from '@angular/platform-browser';
 import { IonicPage, Platform, ToastController, AlertController } from 'ionic-angular';
 
 @IonicPage({
@@ -24,7 +23,6 @@ export class EditProfileComponent implements OnInit {
 
   constructor(public personService: PersonService,
     private _fb: FormBuilder, private auth: AuthService,
-    private sanitizer:DomSanitizer,
     public alertCtrl: AlertController,
     public toastCtrl: ToastController) {
     this.person = this.auth.loggedInUser();
@@ -52,8 +50,6 @@ export class EditProfileComponent implements OnInit {
   getAffiliations(profileForm): FormArray {
     return profileForm.get('affiliations').controls;
   }
-
-  sanitize(url:string){return this.sanitizer.bypassSecurityTrustUrl(url); }
 
   save(form) {
     let value = form.getRawValue()

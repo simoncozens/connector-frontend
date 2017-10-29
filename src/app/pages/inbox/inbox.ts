@@ -3,7 +3,6 @@ import { Message } from '../../classes/message';
 import { IonicPage, Platform } from 'ionic-angular';
 import { MessageService } from '../../services/message.service';
 import { PagedResults } from '../../classes/pagedresults';
-import {DomSanitizer} from '@angular/platform-browser';
 import { NavController } from 'ionic-angular';
 
 @IonicPage({
@@ -19,8 +18,7 @@ export class InboxComponent implements OnInit {
   _page = 1;
   params = {};
   constructor(public messageService: MessageService,
-    public navCtrl: NavController,
-    private sanitizer:DomSanitizer) {
+    public navCtrl: NavController) {
   }
   getMessages() {
     this.messageService.getInbox(this._page, this.params)
@@ -54,7 +52,6 @@ export class InboxComponent implements OnInit {
   onScroll () {
     this.page = this.page + 1;
   }
-  sanitize(url:string){return this.sanitizer.bypassSecurityTrustUrl(url); }
 
   gotoPerson(pid) {
     this.navCtrl.push("people", {id: pid })

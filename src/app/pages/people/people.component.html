@@ -13,7 +13,7 @@
   <ion-list *ngIf="result">
     <button ion-item *ngFor="let person of result?.entries" (click)="gotoPerson(person)">
       <ion-avatar item-start>
-        <img width="80" height="80" item-left [src]="sanitize(person.picture)"/>
+        <img width="80" height="80" item-left [src]="person.picture | fromBase64"/>
       </ion-avatar>
         <ion-icon name="star" item-right *ngIf="person.followed"></ion-icon>
         <ion-icon name="star-outline" item-right *ngIf="!person.followed"></ion-icon>

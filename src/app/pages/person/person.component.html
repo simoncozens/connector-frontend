@@ -14,7 +14,7 @@
 <ion-content>
   <ion-list *ngIf="person">
     <ion-item>
-        <ion-avatar item-left><img [src]="sanitize(person?.picture)"/></ion-avatar>
+        <ion-avatar item-left><img [src]="person?.picture | fromBase64"/></ion-avatar>
         <span *ngFor="let role of person?.roles">
           <ion-badge>{{role}}</ion-badge> </span>
         <br>

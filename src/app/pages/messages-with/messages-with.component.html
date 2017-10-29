@@ -12,7 +12,7 @@
   <ion-card *ngFor="let message of result?.entries.reverse()" [ngClass]="{'toMe': toMe(message), 'fromMe': !toMe(message)}" (vp-in-view)="markRead(message)">
     <ion-item>
         <ion-avatar item-left>
-          <img [src]="sanitize( toMe(message) ? with.picture : me.picture)"/>
+          <img [src]="(toMe(message) ? with.picture : me.picture) | fromBase64"/>
         </ion-avatar>
         <ion-note item-right>
           {{ message.created_at | amTimeAgo }}
