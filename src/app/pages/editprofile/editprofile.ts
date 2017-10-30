@@ -51,8 +51,9 @@ export class EditProfileComponent implements OnInit {
     return profileForm.get('affiliations').controls;
   }
 
-  save(form) {
-    let value = form.getRawValue()
+  save() {
+    let value = this.profileForm.getRawValue()
+    value.field_permissions = this.person.field_permissions
     this.personService.saveProfile(value).then(
       response => {
         this.person = Object.assign(this.person, value);
@@ -63,6 +64,7 @@ export class EditProfileComponent implements OnInit {
             position: 'bottom'
           });
         toast.present();
+        this.dirty=false;
       }
     ).catch(() => {
       const toast = this.toastCtrl.create({
