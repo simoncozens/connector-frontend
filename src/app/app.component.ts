@@ -48,14 +48,14 @@ export class MyApp {
       // Here you can do any higher level native things you might need.
       this.statusBar.styleDefault();
       this.splashScreen.hide();
-      if (!this.auth.loggedIn()) {
-        this.rootPage = LoginComponent;
-      } else if (this.platform.is('cordova')) {
-        console.log("Hello!")
-        this.ops.openDb().then( () => {
-          if (this.network.type != "none") { this.sync(); }
-        });
-      }
+      this.ops.openDb().then( () => {
+        if (!this.auth.loggedIn()) {
+          this.rootPage = LoginComponent;
+        } else if (this.platform.is('cordova')) {
+          console.log("Hello!")
+            if (this.network.type != "none") { this.sync(); }
+        }
+      });
     });
   }
 
