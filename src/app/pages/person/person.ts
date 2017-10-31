@@ -29,7 +29,7 @@ export class PersonComponent implements OnInit {
     private network: Network
   ) {
     if (this.platform.is('cordova')) {
-      personService = ops;
+      this.personService = this.ops;
     }
   }
   ngOnInit(): void {

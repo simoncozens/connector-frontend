@@ -29,7 +29,7 @@ export class PeopleComponent implements OnInit {
     public auth: AuthService, public navParams: NavParams
     ) {
     if (this.platform.is('cordova')) {
-      personService = ops;
+      this.personService = this.ops;
     }
   }
 
