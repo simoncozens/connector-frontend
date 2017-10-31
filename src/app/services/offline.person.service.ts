@@ -4,6 +4,7 @@ import { AppSettings } from '../app.settings';
 import { PagedResults } from '../classes/pagedresults';
 import { SQLite, SQLiteObject } from '@ionic-native/sqlite';
 import { PersonService } from './person.service';
+import { Network } from '@ionic-native/network';
 
 import 'rxjs/add/operator/toPromise';
 
@@ -23,7 +24,13 @@ export class OfflinePersonService extends PersonService {
   private key = "7326A638-3BB5-4E2C-B85F-B2DB4B4AFEF1"
 
   constructor(public authHttp: AuthHttp,
-    private sqlite: SQLite) { super(authHttp); }
+    private network: Network,
+    private sqlite: SQLite) {
+    super(authHttp);
+    this.network.onConnect().subscribe(() => {
+        setTimeout(() => this.miniSync(), 3000);
+    })
+  }
 
   setLastSynced(synctime: string) { localStorage.setItem('lastSynced', synctime); }
   getLastSynced() : string { return localStorage.getItem('lastSynced'); }
@@ -40,20 +47,24 @@ export class OfflinePersonService extends PersonService {
       }).then((db: SQLiteObject) => {
         db.executeSql('create table if not exists workqueue (url string, payload)', {})
         return db;
+      },(e) => {
+        console.log("SQL failure")
+        console.log(e)
       })
   }
 
   updateUser(p: Person): Promise<any> {
     // There's a terrible inefficiency here in restringifying what we
     // just destringified. CPU time is cheap, programmer time is expensive...
-    return this.dbHandle.executeSql("REPLACE INTO profiles (id, name,jsonblob, followed) VALUES (?,?,?)", [p.id, p.name, JSON.stringify(p), p.followed])
+    return this.dbHandle.executeSql("REPLACE INTO profiles (id, name,jsonblob, followed) VALUES (?,?,?,?)", [p.id, p.name, JSON.stringify(p), p.followed?1:0])
   }
 
   sendWorkQueueItem(url: string, payload: string): Promise<any> {
-    // Payload is currently unused. If we start doing more clever stuff,
-    // fix this.
-    return this.authHttp.get(AppSettings.API_ENDPOINT + url)
-          .toPromise()
+    if(payload.length >0) {
+        return this.authHttp.post(AppSettings.API_ENDPOINT +  url, JSON.parse(payload)).toPromise()
+      } else {
+        return this.authHttp.get(AppSettings.API_ENDPOINT +  url).toPromise()
+      }
   }
 
   emptyWorkQueue() : Promise<any> {
@@ -64,7 +75,7 @@ export class OfflinePersonService extends PersonService {
     return this.dbHandle.executeSql('SELECT url,payload FROM workqueue', []).then( (rs) => {
       console.log(rs);
       if (rs.rows.length < 1) { return Promise.resolve() }
-      var cursor = Array.from(Array(rs.rows.length-1).keys())
+      var cursor = Array.from(Array(rs.rows.length).keys())
       cursor.reduce((p : Promise<any>, i : number ) => {
           var row = rs.rows.item(i)
           return p.then(() => {
@@ -75,15 +86,20 @@ export class OfflinePersonService extends PersonService {
   }
 
   sendLastVisited(): Promise<any> {
+    console.log("Send last")
     return this.dbHandle.executeSql('SELECT id,last_viewed FROM profiles ORDER BY last_viewed DESC LIMIT 10', [])
     .then( (rs) => {
+      console.log("Last profiles visited:")
+      console.log(rs)
       if (rs.rows.length < 1) { return Promise.resolve() }
-      var cursor = Array.from(Array(rs.rows.length-1).keys())
+      var cursor = Array.from(Array(rs.rows.length).keys())
       var ids = cursor.map((n) => rs.rows.item(n).id )
       // XXX I should probably return this promise?
       // But it makes the compiler go mental. I think this code is wrong.
+      console.log("Sending to server")
+      console.log(ids)
       this.authHttp.put(this.updateVisitsUrl, { ids: ids }).toPromise()
-    })
+    },(e) => { console.log("Oops in SQL"); console.log(e)})
   }
 
   // This should eventually move to a streaming-aware HTTP API,
@@ -100,19 +116,26 @@ export class OfflinePersonService extends PersonService {
         response.shift()
         response.reduce((p : Promise<any>, person : Person ) => {
           return p.then(() => {
+            console.log(person.id)
             this.updateUser(person)
           })
         }, Promise.resolve())
       }).then( () => {
         this.setLastSynced((new Date()).toISOString())
-        this.sendWorkQueue()
-      }).then( () => {
+        this.miniSync()
+      })
+  }
+
+  miniSync (): Promise<any> {
+    if (!this.dbHandle) { Promise.reject( new Error("No DB connection"))}
+    if (this.network.type == "none") { return Promise.resolve() }
+    return this.sendWorkQueue().then( () => {
+        console.log("Emptying work queue")
         this.emptyWorkQueue()
       }).then( () => {
+        console.log("Sending last visited")
         this.sendLastVisited()
       })
-    // XXX Next, dump the contents of the workqueue to the server and delete everything
-    // Also send back the six last visited people
   }
 
   visitPerson(id: string): Promise<any> {
@@ -120,16 +143,19 @@ export class OfflinePersonService extends PersonService {
     return this.dbHandle.executeSql(
       'UPDATE profiles SET last_viewed = ? WHERE id = ?',
       [(new Date()).toISOString(), id]
-    )
+    ).then( () => this.miniSync() )
   }
 
   _getPerson(id: string): Promise<Person> {
     if (!this.dbHandle) { Promise.reject( new Error("No DB connection"))}
-    return this.dbHandle.executeSql('SELECT jsonblob FROM profiles WHERE id = ?',
+    console.log(id)
+    return this.dbHandle.executeSql('SELECT jsonblob,followed FROM profiles WHERE id = ?',
     [ id ]).then( (rs) => {
       console.log(rs);
       if (rs.rows.length < 1) { throw new Error("Person not found!") }
-      return JSON.parse(rs.rows.item(0).jsonblob)
+      let person = JSON.parse(rs.rows.item(0).jsonblob)
+      if (rs.rows.item(0).followed) { person.followed = true; }
+      return person
     })
   }
 
@@ -142,26 +168,31 @@ export class OfflinePersonService extends PersonService {
     var offset = (page-1) * this.per_page
     // This +clause thing is horrible and we need to be very careful about
     // where we generate the SQL.
-    var sql = 'SELECT jsonblob FROM profiles WHERE '+clause + ' LIMIT ? OFFSET ?'
+    var sql = 'SELECT id,name,followed,jsonblob FROM profiles WHERE '+clause + ' LIMIT ? OFFSET ?'
     console.log(sql)
     return this.dbHandle.executeSql(sql,
       [ this.per_page, offset ]).then( (rs) => {
         console.log(rs);
         if (rs.rows.length < 1) { throw new Error("Person not found!") }
-        var cursor = Array.from(Array(rs.rows.length-1).keys())
-        //           0, 1, 2, .., rs.rows.length-1
+        var cursor = Array.from(Array(rs.rows.length).keys())
+        //           0, 1, 2, .., rs.rows.length
+        cursor.map((n) => console.log(rs.rows.item(n).id, rs.rows.item(n).name))
         var results:PagedResults<Person> = {
           current_page: page,
           total_entries: 0, // Do we ever even use this?
-          entries: cursor.map((n) => JSON.parse(rs.rows.item(n).jsonblob) as Person)
+          entries: cursor.map((n) => {
+            let p=  JSON.parse(rs.rows.item(n).jsonblob) as Person;
+            if(rs.rows.item(n).followed) {p.followed=true;}
+            return p;
+          })
         }
         return results
-      })
+      }, (e) => { console.log("Fail in getPeople"); console.log(e); })
     // XXX Search
   }
 
   getFollows(page: number = 1) :Promise<PagedResults<Person>> {
-    return this.getPeople(page, {}, "followed is not null")
+    return this.getPeople(page, {}, "followed = 1")
   }
 
   getRecent(page: number = 1) :Promise<PagedResults<Person>> {
@@ -174,20 +205,20 @@ export class OfflinePersonService extends PersonService {
     this.dbHandle.executeSql(
       "UPDATE profiles SET followed = 1 WHERE id = ?", [id])
     .then( () => {
-      var url = id + '/follow'
+      var url = '/people/' + id + '/follow'
       this.dbHandle.executeSql(
       "INSERT INTO workqueue (url, payload) VALUES (?,'')", [url])
-    })
+    }).then( () => this.miniSync() )
   }
 
   unfollow(id: string) {
     this.dbHandle.executeSql(
       "UPDATE profiles SET followed = NULL WHERE id = ?", [id])
     .then( () => {
-      var url = id + '/unfollow'
+      var url = '/people/' + id + '/unfollow'
       this.dbHandle.executeSql(
       "INSERT INTO workqueue (url, payload) VALUES (?,'')", [url])
-    })
+    }).then( () => this.miniSync() )
   }
 
   saveProfile(profileData): Promise<any> {
@@ -196,8 +227,13 @@ export class OfflinePersonService extends PersonService {
   }
 
 
-  annotate(id: string, content: string) {
-    // Alter locally
+  annotate(p: Person, content: string) {
+    p.annotation = content;
+    this.updateUser(p).then( () => {
+      var url = '/people/' + p.id + '/annotate'
+      var payload = JSON.stringify({"content": content})
+      this.dbHandle.executeSql("INSERT INTO workqueue (url, payload) VALUES (?,?)", [url,payload])
+    }).then( () => this.miniSync())
     // Add to workqueue
   }
 }

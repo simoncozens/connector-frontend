@@ -36,7 +36,7 @@ export class PersonComponent implements OnInit {
     this.personService.getPerson(this.navParams.get('id'))
         .then((person: Person) => {
           this.person = person
-          this.annotation = person.annotation && person.annotation.content
+          this.annotation = person.annotation
         })
         .catch((error) => console.log(error));
   }
@@ -55,7 +55,7 @@ export class PersonComponent implements OnInit {
   }
 
   saveAnnotation(): void {
-    this.personService.annotate(this.person.id, this.annotation)
+    this.personService.annotate(this.person, this.annotation)
   }
 
   addContact(): void {

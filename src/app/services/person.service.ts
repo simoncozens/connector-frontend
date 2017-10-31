@@ -68,8 +68,8 @@ export class PersonService {
       .toPromise()
   }
 
-  annotate(id: string, content: string) {
-    this.authHttp.post(this.personUrl + id + '/annotate', { content: content})
+  annotate(p: Person, content: string) {
+    this.authHttp.post(this.personUrl + p.id + '/annotate', { content: content})
       .toPromise()
       .then(response => response.json() as Person)
       .catch(this.handleError);
