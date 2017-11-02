@@ -57,6 +57,16 @@ export class PeopleComponent implements OnInit {
     // Reset items back to all of the items
     let val = ev.target.value;
     console.log(val)
+    if ( val.length > 0 && val.length <4) {
+      return; // Not yet
+    }
+    this.result = null
+    if (val.length == 0) {
+      this.params = {}
+    } else {
+      this.params = { fts: val }
+    }
+    this.page = 1
   }
 
   @Input() set page(value: number) {
