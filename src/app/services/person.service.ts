@@ -14,6 +14,7 @@ export class PersonService {
   private personUrl = AppSettings.API_ENDPOINT + '/people/';
   private followUrl = AppSettings.API_ENDPOINT + '/people/following';
   private recentUrl = AppSettings.API_ENDPOINT + '/people/recent';
+  private recommendedUrl = AppSettings.API_ENDPOINT + '/people/recommended';
 
   constructor(public authHttp: AuthHttp) { }
 
@@ -35,6 +36,9 @@ export class PersonService {
   }
   getRecent(page: number = 1) :Promise<PagedResults<Person>> {
     return this.getPeople(page, {}, this.recentUrl);
+  }
+  getRecommended(page: number = 1) :Promise<PagedResults<Person>> {
+    return this.getPeople(page, {}, this.recommendedUrl);
   }
 
   getPerson(id: string): Promise<Person> {

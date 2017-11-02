@@ -18,7 +18,8 @@ export class MyApp {
 
   rootPage: any = HomePage;
 
-  pages: Array<{title: string, segment: string}>;
+  pages: Array<{title: string, segment: string, onlineOnly: boolean}>;
+  availablePages: Array<{title: string, segment: string, onlineOnly: boolean}>;
 
   constructor(public platform: Platform,
     public statusBar: StatusBar,
@@ -32,13 +33,13 @@ export class MyApp {
     this.initializeApp();
     translate.setDefaultLang('en');
     translate.use('en');
-
-    this.pages = [
-      { title: 'Profiles', segment: "people" },
-      { title: 'Starred Profiles', segment: "follows" },
-      { title: 'Recently Visited', segment: "recent" },
-      { title: 'Messages', segment: "inbox" },
-      { title: 'My Profile', segment: "editprofile" },
+    this.availablePages = [
+      { title: 'Profiles', segment: "people", onlineOnly: false },
+      { title: 'Starred Profiles', segment: "follows", onlineOnly: false },
+      { title: 'Recently Visited', segment: "recent", onlineOnly: false },
+      { title: 'Recommended', segment: "recommended", onlineOnly: true },
+      { title: 'Messages', segment: "inbox", onlineOnly: true }, // For now
+      { title: 'My Profile', segment: "editprofile", onlineOnly: true },
     ];
   }
 
@@ -48,15 +49,27 @@ export class MyApp {
       // Here you can do any higher level native things you might need.
       this.statusBar.styleDefault();
       this.splashScreen.hide();
+      this.setupPages()
       this.ops.openDb().then( () => {
         if (!this.auth.loggedIn()) {
           this.rootPage = LoginComponent;
         } else if (this.platform.is('cordova')) {
           console.log("Hello!")
-            if (this.network.type != "none") { this.sync(); }
+            if (this.network.type != "none") {
+              this.sync();
+            }
         }
       });
+      if (this.platform.is("cordova")) {
+        this.network.onchange().subscribe(this.setupPages)
+      }
     });
+  }
+
+  setupPages() {
+    var online = (!this.platform.is('cordova')) || this.network.type != "none"
+    if (online) { this.pages = this.availablePages }
+    else { this.pages = this.availablePages.filter((p) => !p.onlineOnly) }
   }
 
   sync() {

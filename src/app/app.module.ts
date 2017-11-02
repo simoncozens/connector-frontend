@@ -10,6 +10,7 @@ import { LoginComponent } from './pages/login/login.component';
 import { PeopleModule } from './pages/people/people.module';
 import { FollowsModule } from './pages/people/follows.module';
 import { RecentModule } from './pages/people/recent.module';
+import { RecommendedModule } from './pages/people/recommended.module';
 import { PersonModule } from './pages/person/person.module';
 import { InboxModule } from './pages/inbox/inbox.module';
 import { EditProfileModule } from './pages/editprofile/editprofile.module';
