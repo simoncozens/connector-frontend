@@ -8,6 +8,7 @@ import { HomePage } from './pages/home/home';
 import { LoginComponent } from './pages/login/login.component';
 import { AuthService } from './services/auth.service';
 import { OfflinePersonService } from './services/offline.person.service';
+import { NotificationService } from './services/notification.service';
 import {TranslateService} from '@ngx-translate/core';
 
 @Component({
@@ -28,6 +29,7 @@ export class MyApp {
     public alertCtrl: AlertController,
     private network: Network,
     public ops: OfflinePersonService,
+    public notificationService: NotificationService,
     public translate: TranslateService,
     private auth: AuthService) {
     this.initializeApp();
@@ -56,6 +58,7 @@ export class MyApp {
         } else if (this.platform.is('cordova')) {
           console.log("Hello!")
             if (this.network.type != "none") {
+              this.notificationService.init()
               this.sync();
             }
         }

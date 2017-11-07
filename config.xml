@@ -91,5 +91,7 @@
     <plugin name="cordova-plugin-contacts" spec="^2.3.1">
         <variable name="CONTACTS_USAGE_DESCRIPTION" value=" " />
     </plugin>
-    <plugin name="phonegap-plugin-push" spec="^2.0.0" />
+    <plugin name="phonegap-plugin-push" spec="^2.1.0">
+        <variable name="FCM_VERSION" value="11.0.1" />
+    </plugin>
 </widget>

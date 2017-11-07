@@ -24,6 +24,7 @@ import { SplashScreen } from '@ionic-native/splash-screen';
 import { PersonService } from './services/person.service';
 import { MessageService } from './services/message.service';
 import { InterComponentMessageService } from './services/intercomponentmessage.service';
+import { NotificationService } from './services/notification.service';
 import { OfflinePersonService } from './services/offline.person.service';
 import { AuthModule } from './services/auth.module';
 import { AuthService } from './services/auth.service';
@@ -79,7 +80,7 @@ export function createTranslateLoader(http: Http) {
   providers: [
     PersonService, AuthService, AuthGuard, OfflinePersonService,
     MessageService, InterComponentMessageService,
-    StatusBar, Network, Push, Device,
+    StatusBar, Network, Push, Device, NotificationService,
     SplashScreen,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
     TranslateModule, TranslateService, TranslateStore,

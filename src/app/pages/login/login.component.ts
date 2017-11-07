@@ -7,6 +7,7 @@ import 'rxjs/add/operator/toPromise';
 import { NavController, NavParams, LoadingController, AlertController } from 'ionic-angular';
 import { HomePage } from '../../pages/home/home';
 import { OfflinePersonService } from '../../services/offline.person.service';
+import { NotificationService } from '../../services/notification.service';
 
 @Component({
   selector: 'login',
@@ -22,6 +23,7 @@ export class LoginComponent {
     fb: FormBuilder,
     public platform: Platform,
     public navCtrl: NavController,
+    public notificationService: NotificationService,
     public navParams: NavParams) {
     this.loginForm = fb.group({
       'email': '',
@@ -51,6 +53,7 @@ export class LoginComponent {
     this.auth.stashJWT(parsed['token']);
     this.auth.setLoggedInUser(parsed);
     if (this.platform.is('cordova')) {
+      this.notificationService.init()
       this.sync()
     } else {
       this.gotoNext()
