@@ -21,14 +21,23 @@
     <h3>{{person?.name}}</h3>
   </ion-item>
   <ion-item>
-    Preferred Method of Contact
+    <ion-label>Preferred Method of Contact</ion-label>
     <ion-note item-end (click)='showPrefContactRadio()'>{{person?.preferred_contact}}</ion-note>
     <p (click)='showPermissions("preferred_contact")'>Who can see this?</p>
       </ion-item>
-      <ion-item>
-        Intro Bio
-        <ion-note item-end>{{person?.intro_bio}}</ion-note>
-      </ion-item>
-)
+  <ion-item>
+    <ion-label>Intro Bio</ion-label>
+    <ion-note item-end>{{person?.intro_bio}}</ion-note>
+  </ion-item>
+  <!-- Organisations -->
+  <!-- Country of Residence -->
+    <ion-item>
+    <ion-label>Country of Residence</ion-label>
+        <ion-select [(ngModel)]="person.country" (ionChange)="save()">
+          <ion-option *ngFor="let country of picklists.countries">{{country}}</ion-option>
+        </ion-select>
+    </ion-item>
+
+  <!-- Country of Citizenship -->
 </ion-list>
 </ion-content>

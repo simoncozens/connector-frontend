@@ -6,6 +6,7 @@ import { Person, Affiliation, FieldPermissions } from '../../classes/person';
 import { Response } from '@angular/http';
 import 'rxjs/add/operator/toPromise';
 import { IonicPage, Platform, ToastController, AlertController } from 'ionic-angular';
+import { picklists } from "../../picklists";
 
 @IonicPage({
   name: "editprofile",
@@ -20,6 +21,7 @@ export class EditProfileComponent implements OnInit {
 
   person: Person;  public alerts: any = [];
   dirty: boolean;
+  picklists = picklists;
 
   constructor(public personService: PersonService,
     private _fb: FormBuilder, private auth: AuthService,

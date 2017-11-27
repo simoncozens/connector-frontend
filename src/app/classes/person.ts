@@ -15,6 +15,7 @@ export class Person {
   name: string;
   email: string;
   intro_bio: string;
+  country: string;
   preferred_contact: string;
   roles: string[];
   experience: string[];
