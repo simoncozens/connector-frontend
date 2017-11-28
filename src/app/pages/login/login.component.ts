@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input, ViewChild } from '@angular/core';
 import { Platform } from 'ionic-angular';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { AuthService } from '../../services/auth.service';
@@ -8,12 +8,15 @@ import { NavController, NavParams, LoadingController, AlertController } from 'io
 import { HomePage } from '../../pages/home/home';
 import { OfflinePersonService } from '../../services/offline.person.service';
 import { NotificationService } from '../../services/notification.service';
+import { ToastController } from 'ionic-angular';
 
 @Component({
   selector: 'login',
   templateUrl: './login.component.html'
 })
 export class LoginComponent {
+  @ViewChild('email') mailField ;
+
   loginForm: FormGroup;
   loginFail: boolean;
   constructor(private auth: AuthService,
@@ -21,6 +24,7 @@ export class LoginComponent {
     public loadingCtrl: LoadingController,
     public alertCtrl: AlertController,
     fb: FormBuilder,
+    private toastCtrl: ToastController,
     public platform: Platform,
     public navCtrl: NavController,
     public notificationService: NotificationService,
@@ -67,6 +71,24 @@ export class LoginComponent {
 
   private handleLoginError(error: any) {
     this.loginFail = true;
+  }
+
+  forgotPassword(credentials) {
+    // First check user is set
+    if (!credentials.email) {
+      this.mailField.setFocus();
+      return false;
+    }
+    this.auth.forgotPassword(credentials.email).then()
+      .then(response => {
+          let toast = this.toastCtrl.create({
+            message: 'Instructions have been sent to your email',
+            duration: 3000,
+            position: 'bottom'
+          });
+          toast.present()
+      })
+      .catch((err) => this.dammit(err));
   }
 
   sync() {

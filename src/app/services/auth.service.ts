@@ -8,6 +8,7 @@ import { AppSettings } from '../app.settings';
 @Injectable()
 export class AuthService {
   private loginUrl = AppSettings.API_ENDPOINT + '/login';
+  private forgotPasswordUrl = AppSettings.API_ENDPOINT + '/reset_password';
 
   headers = new Headers({
     'Content-Type': 'application/json'
@@ -43,6 +44,14 @@ export class AuthService {
       this.loginUrl,
       JSON.stringify(credentials),
       {headers: this.headers}
+    ).toPromise();
+  }
+
+  forgotPassword(email: string): Promise<any> {
+    return this.http.get(
+      this.forgotPasswordUrl,
+      { params: {email: email},
+        headers: this.headers}
     ).toPromise();
   }
 }

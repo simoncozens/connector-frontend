@@ -12,7 +12,7 @@
         <form [formGroup]="loginForm" >
           <ion-item>
             <ion-label>Username</ion-label>
-            <ion-input type="email" [formControl]="loginForm.controls['email']" placeholder="Email" class="form-control" required pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$"></ion-input>
+            <ion-input #email type="email" [formControl]="loginForm.controls['email']" placeholder="Email" class="form-control" required pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$"></ion-input>
           </ion-item>
           <ion-item>
             <ion-label>Password</ion-label>
@@ -24,6 +24,10 @@
           <ion-item>
             <button ion-button type="submit" name="login" (click)="submitForm(loginForm.value)">Login</button>
           </ion-item>
+          <ion-item>
+            <a href="#" (click)="forgotPassword(loginForm.value)">Forgot password?</a>
+          </ion-item>
+
         <ion-item>
 <ion-label i18n="@@languageSelect">Select language</ion-label> <ion-select name="selectLocale" (change)="changeLocale($event.target.value)">
 <ion-option value="en">English</ion-option>
