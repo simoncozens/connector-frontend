@@ -62,8 +62,11 @@ export class PersonComponent implements OnInit {
     console.log("Add contact")
     if (this.platform.is('cordova')) {
       let contact: Contact = this.contacts.create();
-      contact.name = new ContactName(null, 'Smith', 'John');
-      contact.phoneNumbers = [new ContactField('mobile', '6471234567')];
+      contact.displayName = this.person.name;
+      contact.nickName = this.person.name;
+      contact.name = new ContactName();
+      contact.name.formatted = this.person.name;
+      contact.emails = [new ContactField('home', this.person.email)];
       contact.save().then(
         () => console.log('Contact saved!', contact),
         (error: any) => console.error('Error saving contact.', error)
@@ -71,11 +74,10 @@ export class PersonComponent implements OnInit {
     } else {
         var vcf = `BEGIN:VCARD
 VERSION:3.0
-N:Doe;John;;;
-FN:John Doe
-ORG:Example.com Inc.;
-TITLE:Imaginary test person
-EMAIL;type=INTERNET;type=WORK;type=pref:johnDoe@example.org
+N:${this.person.name}
+FN:${this.person.name}
+ORG:${this.person.affiliations[0] && this.person.affiliations[0].organisation}
+EMAIL;type=INTERNET;type=WORK;type=pref:${this.person.email}
 TEL;type=WORK;type=pref:+1 617 555 1212
 TEL;type=WORK:+1 (617) 555-1234
 TEL;type=CELL:+1 781 555 1212
@@ -84,15 +86,8 @@ item1.ADR;type=WORK:;;2 Enterprise Avenue;Worktown;NY;01111;USA
 item1.X-ABADR:us
 item2.ADR;type=HOME;type=pref:;;3 Acacia Avenue;Hoemtown;MA;02222;USA
 item2.X-ABADR:us
-NOTE:John Doe has a long and varied history\, being documented on more police files that anyone else. Reports of his death are alas numerous.
-item3.URL;type=pref:http\://www.example/com/doe
+item3.URL;type=pref:${this.person.affiliations[0] && this.person.affiliations[0].website}
 item3.X-ABLabel:_$!<HomePage>!$_
-item4.URL:http\://www.example.com/Joe/foaf.df
-item4.X-ABLabel:FOAF
-item5.X-ABRELATEDNAMES;type=pref:Jane Doe
-item5.X-ABLabel:_$!<Friend>!$_
-CATEGORIES:Work,Test group
-X-ABUID:5AD380FD-B2DE-4261-BA99-DE1D1DB52FBE\:ABPerson
 END:VCARD`
         var blob = new Blob([vcf], {
           type: 'text/vcard'
