@@ -5,6 +5,7 @@ import { Http, HttpModule } from '@angular/http';
 import { Network } from '@ionic-native/network';
 import { Push } from '@ionic-native/push';
 import { Device } from '@ionic-native/device';
+import { Globalization } from '@ionic-native/globalization';
 import { MyApp } from './app.component';
 import { HomePage } from './pages/home/home';
 import { ListPage } from './pages/list/list';
@@ -81,6 +82,7 @@ export function createTranslateLoader(http: Http) {
     PersonService, AuthService, AuthGuard, OfflinePersonService,
     MessageService, InterComponentMessageService,
     StatusBar, Network, Push, Device, NotificationService,
+    Globalization,
     SplashScreen,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
     TranslateModule, TranslateService, TranslateStore,

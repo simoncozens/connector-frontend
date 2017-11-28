@@ -10,6 +10,7 @@ import { AuthService } from './services/auth.service';
 import { OfflinePersonService } from './services/offline.person.service';
 import { NotificationService } from './services/notification.service';
 import {TranslateService} from '@ngx-translate/core';
+import { Globalization } from '@ionic-native/globalization';
 
 @Component({
   templateUrl: 'app.html'
@@ -23,6 +24,7 @@ export class MyApp {
   availablePages: Array<{title: string, segment: string, onlineOnly: boolean}>;
 
   constructor(public platform: Platform,
+    private globalization: Globalization,
     public statusBar: StatusBar,
     public splashScreen: SplashScreen,
     public loadingCtrl: LoadingController,
@@ -33,8 +35,7 @@ export class MyApp {
     public translate: TranslateService,
     private auth: AuthService) {
     this.initializeApp();
-    translate.setDefaultLang('en');
-    translate.use('en');
+    this.setupLanguage();
     this.availablePages = [
       { title: 'Profiles', segment: "people", onlineOnly: false },
       { title: 'Starred Profiles', segment: "follows", onlineOnly: false },
@@ -105,8 +106,25 @@ export class MyApp {
     alert.present();
   }
 
+  setupLanguage() {
+    this.translate.setDefaultLang('en');
+    var l = localStorage.getItem('lang');
+    if (l) {
+      this.translate.use(l);
+      return;
+    }
+    this.globalization.getPreferredLanguage().then(res => {
+      console.log(res);
+      this.translate.use(res.value);
+    }).catch(e => {
+      console.log(e);
+      this.translate.use('en');
+    });
+
+  }
   changeLocale(lang) {
     console.log("Using "+lang)
+    localStorage.setItem("lang", lang);
     this.translate.use(lang)
   }
 }
