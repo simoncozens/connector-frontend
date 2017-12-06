@@ -21,27 +21,33 @@
     <h3>{{person?.name}}</h3>
   </ion-item>
   <ion-item-divider color="primary">Basic information</ion-item-divider>
-    <ion-item>
+    <ion-item class="goeswithfollowing">
       <ion-label>Preferred Method of Contact</ion-label>
-      <p (click)='showPermissions("preferred_contact")'>Who can see this?</p>
           <ion-select [(ngModel)]="person.preferred_contact" (ionChange)="dirty = true">
             <ion-option>email</ion-option>
             <ion-option value="skype">Skype</ion-option>
             <ion-option value="whatsapp">Whatsapp</ion-option>
           </ion-select>
     </ion-item>
-    <ion-item>
-      <ion-label>Intro Bio</ion-label>
+    <ion-item class="whocansee">
+      <p item-content (click)='showPermissions("preferred_contact")'>Who can see this?</p>
+    </ion-item>
+    <ion-item class="goeswithfollowing">
+      <ion-label>Intro Bio
+      </ion-label>
       <ion-textarea [(ngModel)]="person.intro_bio"></ion-textarea>
+    </ion-item>
+    <ion-item class="whocansee">
+      <p item-content (click)='showPermissions("intro_bio")'>Who can see this?</p>
     </ion-item>
     <ion-item-divider color="primary">Affiliations</ion-item-divider>
     <div *ngFor="let affiliation of person.affiliations; let idx = index; let last=last ">
         <ion-item-divider>
             <button ion-button color="danger"  item-end>
-              <ion-icon name="trash"></ion-icon>
+              <ion-icon name="trash" (click)="killAffiliation(idx)"></ion-icon>
             </button>
             <button ion-button item-end *ngIf="last">
-              <ion-icon name="add"></ion-icon>
+              <ion-icon name="add" (click)="addAffiliation()"></ion-icon>
             </button>
             Affiliation {{1+idx}}
         </ion-item-divider>

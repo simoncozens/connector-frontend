@@ -54,6 +54,19 @@ export class EditProfileComponent implements OnInit {
     )
   }
 
+  killAffiliation(n) {
+    this.person.affiliations.splice(n,1);
+    this.dirty=true;
+    if (this.person.affiliations.length == 0) {
+      this.addAffiliation()
+    }
+  }
+
+  addAffiliation() {
+    this.person.affiliations.push({ organisation:"", position:"", website:"" })
+    this.dirty=true;
+  }
+
   showPermissions(field) {
     let alert = this.alertCtrl.create();
     alert.setTitle('Who can view this field?');
