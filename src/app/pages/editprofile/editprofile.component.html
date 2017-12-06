@@ -13,31 +13,63 @@
 </ion-header>
 
 <ion-content>
-<ion-list class="person row" *ngIf="person">
+<ion-item-group *ngIf="person">
   <ion-item>
     <ion-avatar item-start>
         <img width="80" height="80" item-left [src]="person.picture | fromBase64"/>
       </ion-avatar>
     <h3>{{person?.name}}</h3>
   </ion-item>
-  <ion-item>
-    <ion-label>Preferred Method of Contact</ion-label>
-    <ion-note item-end (click)='showPrefContactRadio()'>{{person?.preferred_contact}}</ion-note>
-    <p (click)='showPermissions("preferred_contact")'>Who can see this?</p>
-      </ion-item>
-  <ion-item>
-    <ion-label>Intro Bio</ion-label>
-    <ion-note item-end>{{person?.intro_bio}}</ion-note>
-  </ion-item>
-  <!-- Organisations -->
-  <!-- Country of Residence -->
+  <ion-item-divider color="primary">Basic information</ion-item-divider>
     <ion-item>
-    <ion-label>Country of Residence</ion-label>
-        <ion-select [(ngModel)]="person.country" (ionChange)="save()">
-          <ion-option *ngFor="let country of picklists.countries">{{country}}</ion-option>
-        </ion-select>
+      <ion-label>Preferred Method of Contact</ion-label>
+      <p (click)='showPermissions("preferred_contact")'>Who can see this?</p>
+          <ion-select [(ngModel)]="person.preferred_contact" (ionChange)="dirty = true">
+            <ion-option>email</ion-option>
+            <ion-option value="skype">Skype</ion-option>
+            <ion-option value="whatsapp">Whatsapp</ion-option>
+          </ion-select>
     </ion-item>
-
-  <!-- Country of Citizenship -->
-</ion-list>
+    <ion-item>
+      <ion-label>Intro Bio</ion-label>
+      <ion-textarea [(ngModel)]="person.intro_bio"></ion-textarea>
+    </ion-item>
+    <ion-item-divider color="primary">Affiliations</ion-item-divider>
+    <div *ngFor="let affiliation of person.affiliations; let idx = index; let last=last ">
+        <ion-item-divider>
+            <button ion-button color="danger"  item-end>
+              <ion-icon name="trash"></ion-icon>
+            </button>
+            <button ion-button item-end *ngIf="last">
+              <ion-icon name="add"></ion-icon>
+            </button>
+            Affiliation {{1+idx}}
+        </ion-item-divider>
+      <ion-item class="my-inset">
+        <ion-label floating>Organisation</ion-label>
+        <ion-input [(ngModel)]="affiliation.organisation"></ion-input>
+      </ion-item>
+      <ion-item class="my-inset">
+        <ion-label floating>Position</ion-label>
+        <ion-input [(ngModel)]="affiliation.position"></ion-input>
+      </ion-item>
+      <ion-item class="my-inset">
+        <ion-label floating>Website</ion-label>
+        <ion-input [(ngModel)]="affiliation.website"></ion-input>
+      </ion-item>
+    </div>
+    <ion-item-divider color="primary">Personal Information</ion-item-divider>
+      <ion-item>
+      <ion-label>Country of Residence</ion-label>
+          <ion-select [(ngModel)]="person.country" (ionChange)="dirty = true">
+            <ion-option *ngFor="let country of picklists.countries">{{country}}</ion-option>
+          </ion-select>
+      </ion-item>
+      <ion-item>
+      <ion-label>Country of Citizenship</ion-label>
+          <ion-select [(ngModel)]="person.citizenship" (ionChange)="dirty = true">
+            <ion-option *ngFor="let country of picklists.countries">{{country}}</ion-option>
+          </ion-select>
+      </ion-item>
+</ion-item-group>
 </ion-content>
