@@ -35,7 +35,7 @@
     <ion-item class="goeswithfollowing">
       <ion-label>Intro Bio
       </ion-label>
-      <ion-textarea [(ngModel)]="person.intro_bio"></ion-textarea>
+      <ion-textarea (ionChange)="dirty = true" [(ngModel)]="person.intro_bio"></ion-textarea>
     </ion-item>
     <ion-item class="whocansee">
       <p item-content (click)='showPermissions("intro_bio")'>Who can see this?</p>
@@ -53,15 +53,15 @@
         </ion-item-divider>
       <ion-item class="my-inset">
         <ion-label floating>Organisation</ion-label>
-        <ion-input [(ngModel)]="affiliation.organisation"></ion-input>
+        <ion-input (ionChange)="dirty = true" [(ngModel)]="affiliation.organisation"></ion-input>
       </ion-item>
       <ion-item class="my-inset">
         <ion-label floating>Position</ion-label>
-        <ion-input [(ngModel)]="affiliation.position"></ion-input>
+        <ion-input (ionChange)="dirty = true" [(ngModel)]="affiliation.position"></ion-input>
       </ion-item>
       <ion-item class="my-inset">
         <ion-label floating>Website</ion-label>
-        <ion-input [(ngModel)]="affiliation.website"></ion-input>
+        <ion-input (ionChange)="dirty = true" [(ngModel)]="affiliation.website"></ion-input>
       </ion-item>
     </div>
     <ion-item-divider color="primary">Personal Information</ion-item-divider>
