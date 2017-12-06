@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
 import { AuthHttp } from 'angular2-jwt';
+import { Platform } from 'ionic-angular';
+
 import { AppSettings } from '../app.settings';
 import { PagedResults } from '../classes/pagedresults';
 import { SQLite, SQLiteObject } from '@ionic-native/sqlite';
@@ -25,10 +27,15 @@ export class OfflinePersonService extends PersonService {
 
   constructor(public authHttp: AuthHttp,
     private network: Network,
+    private platform: Platform,
     private sqlite: SQLite) {
     super(authHttp);
-    this.network.onConnect().subscribe(() => {
-        setTimeout(() => this.miniSync(), 3000);
+    this.platform.ready().then(() => {
+      if (this.platform.is('cordova')) {
+        this.network.onConnect().subscribe(() => {
+            setTimeout(() => this.miniSync(), 3000);
+        })
+      }
     })
   }
 
