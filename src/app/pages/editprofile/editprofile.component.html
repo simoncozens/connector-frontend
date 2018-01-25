@@ -24,9 +24,14 @@
     <ion-item class="goeswithfollowing">
       <ion-label>Preferred Method of Contact</ion-label>
           <ion-select [(ngModel)]="person.preferred_contact" (ionChange)="dirty = true">
-            <ion-option>email</ion-option>
-            <ion-option value="skype">Skype</ion-option>
-            <ion-option value="whatsapp">Whatsapp</ion-option>
+            <ion-option value="Email">Email</ion-option>
+            <ion-option value="SMS">SMS</ion-option>
+            <ion-option value="Phone (Voice)">Phone (Voice)</ion-option>
+            <ion-option value="Skype">Skype</ion-option>
+            <ion-option value="Facebook">Facebook</ion-option>
+            <ion-option value="LinkedIn">LinkedIn</ion-option>
+            <ion-option value="Whatsapp">Whatsapp</ion-option>
+            <ion-option value="Other">Other</ion-option>
           </ion-select>
     </ion-item>
     <ion-item class="whocansee">
