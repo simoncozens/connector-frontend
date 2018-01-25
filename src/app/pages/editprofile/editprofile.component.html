@@ -56,31 +56,46 @@
             </button>
             Affiliation {{1+idx}}
         </ion-item-divider>
-      <ion-item class="my-inset">
+      <ion-item class="my-inset goeswithfollowing">
         <ion-label floating>Organisation</ion-label>
         <ion-input (ionChange)="dirty = true" [(ngModel)]="affiliation.organisation"></ion-input>
       </ion-item>
-      <ion-item class="my-inset">
+      <ion-item class="whocansee">
+        <p item-content (click)='showPermissions("organisation")'>Who can see this?</p>
+      </ion-item>
+      <ion-item class="my-inset goeswithfollowing">
         <ion-label floating>Position</ion-label>
         <ion-input (ionChange)="dirty = true" [(ngModel)]="affiliation.position"></ion-input>
       </ion-item>
-      <ion-item class="my-inset">
+      <ion-item class="whocansee">
+        <p item-content (click)='showPermissions("position")'>Who can see this?</p>
+      </ion-item>
+      <ion-item class="my-inset goeswithfollowing">
         <ion-label floating>Website</ion-label>
         <ion-input (ionChange)="dirty = true" [(ngModel)]="affiliation.website"></ion-input>
       </ion-item>
+      <ion-item class="whocansee">
+        <p item-content (click)='showPermissions("website")'>Who can see this?</p>
+      </ion-item>
     </div>
     <ion-item-divider color="primary">Personal Information</ion-item-divider>
-      <ion-item>
+      <ion-item class="goeswithfollowing">
       <ion-label>Country of Residence</ion-label>
           <ion-select [(ngModel)]="person.country" (ionChange)="dirty = true">
             <ion-option *ngFor="let country of picklists.countries">{{country}}</ion-option>
           </ion-select>
       </ion-item>
-      <ion-item>
+      <ion-item class="whocansee">
+        <p item-content (click)='showPermissions("country")'>Who can see this?</p>
+      </ion-item>
+      <ion-item class="goeswithfollowing">
       <ion-label>Country of Citizenship</ion-label>
           <ion-select [(ngModel)]="person.citizenship" (ionChange)="dirty = true">
             <ion-option *ngFor="let country of picklists.countries">{{country}}</ion-option>
           </ion-select>
+      </ion-item>
+      <ion-item class="whocansee">
+        <p item-content (click)='showPermissions("citizenship")'>Who can see this?</p>
       </ion-item>
 </ion-item-group>
 </ion-content>
