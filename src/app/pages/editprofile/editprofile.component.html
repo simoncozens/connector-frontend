@@ -38,6 +38,13 @@
       <p item-content (click)='showPermissions("preferred_contact")'>Who can see this?</p>
     </ion-item>
     <ion-item class="goeswithfollowing">
+      <ion-label floating>Self-Introduction Video</ion-label>
+      <ion-input (ionChange)="dirty = true" [(ngModel)]="person.intro_video"></ion-input>
+    </ion-item>
+    <ion-item class="whocansee">
+      <p item-content (click)='showPermissions("intro_video")'>Who can see this?</p>
+    </ion-item>
+    <ion-item class="goeswithfollowing">
       <ion-label>Intro Bio
       </ion-label>
       <ion-textarea (ionChange)="dirty = true" [(ngModel)]="person.intro_bio"></ion-textarea>
@@ -79,7 +86,7 @@
       </ion-item>
     </div>
     <ion-item-divider color="primary">Personal Information</ion-item-divider>
-      <ion-item class="goeswithfollowing">
+      <ion-item class="my-inset goeswithfollowing">
       <ion-label>Country of Residence</ion-label>
           <ion-select [(ngModel)]="person.country" (ionChange)="dirty = true">
             <ion-option *ngFor="let country of picklists.countries">{{country}}</ion-option>
@@ -88,7 +95,7 @@
       <ion-item class="whocansee">
         <p item-content (click)='showPermissions("country")'>Who can see this?</p>
       </ion-item>
-      <ion-item class="goeswithfollowing">
+      <ion-item class="my-inset goeswithfollowing">
       <ion-label>Country of Citizenship</ion-label>
           <ion-select [(ngModel)]="person.citizenship" (ionChange)="dirty = true">
             <ion-option *ngFor="let country of picklists.countries">{{country}}</ion-option>
@@ -97,5 +104,72 @@
       <ion-item class="whocansee">
         <p item-content (click)='showPermissions("citizenship")'>Who can see this?</p>
       </ion-item>
+      <ion-item class="my-inset goeswithfollowing">
+        <ion-label>Gender</ion-label>
+        <ion-select [(ngModel)]="person.gender" (ionChange)="dirty = true">
+          <ion-option value="Male">Male</ion-option>
+          <ion-option value="Female">Female</ion-option>
+        </ion-select>
+        </ion-item>
+        <ion-item class="whocansee">
+          <p item-content (click)='showPermissions("gender")'>Who can see this?</p>
+        </ion-item>
+        <ion-item class="my-inset goeswithfollowing">
+          <ion-label>Primary language</ion-label>
+          <ion-select [(ngModel)]="person.primary-language" (ionChange)="dirty = true">
+            <ion-option value="English">English</ion-option>
+            <ion-option value="French">French</ion-option>
+            <ion-option value="Spanish">Spanish</ion-option>
+            <ion-option value="Portuguese">Portuguese</ion-option>
+            <ion-option value="Russian">Russian</ion-option>
+            <ion-option value="Korean">Korean</ion-option>
+            <ion-option value="Chinese">Chinese</ion-option>  
+          </ion-select>
+          </ion-item>
+        <ion-item class="whocansee">
+          <p item-content (click)='showPermissions("primary-language")'>Who can see this?</p>
+        </ion-item>
+        <ion-item class="my-inset goeswithfollowing">
+          <ion-label floating>Other languages</ion-label>
+          <ion-input (ionChange)="dirty = true" [(ngModel)]="person.other-languages"></ion-input>
+        </ion-item>
+        <ion-item class="whocansee">
+          <p item-content (click)='showPermissions("other-languages")'>Who can see this?</p>
+        </ion-item>
+        <ion-item class="my-inset goeswithfollowing">
+          <ion-label>Comfort level with English</ion-label>
+          <ion-select [(ngModel)]="person.comfort-level-with-english" (ionChange)="dirty = true">
+            <ion-option value="None">None</ion-option>
+            <ion-option value="Spoken">Spoken</ion-option>
+            <ion-option value="Written">Written</ion-option>
+            <ion-option value="Spoken & Written">Spoken & Written</ion-option>
+            <ion-option value="Native Fluency">Native Fluency</ion-option> 
+          </ion-select>
+          </ion-item>
+        <ion-item class="whocansee">
+          <p item-content (click)='showPermissions("comfort-level-with-english")'>Who can see this?</p>
+        </ion-item>
+        <ion-item class="my-inset goeswithfollowing">
+            <ion-label>Issues of experience</ion-label>
+            <ion-select [(ngModel)]="person.issues-of-experience" (ionChange)="dirty = true" multiple="true">
+              <ion-option>Apologetics-Truth-Pluralism</ion-option>
+              <ion-option>Arts</ion-option>
+              <ion-option>Bible Translation and Exposition</ion-option>
+              <ion-option>Buddhism</ion-option>
+              <ion-option>Business as Mission</ion-option>
+              <ion-option>Children at Risk</ion-option>
+              <ion-option>Church Planting</ion-option>
+              <ion-option>Church Research</ion-option>
+              <ion-option>Cities</ion-option>
+              <ion-option>Creation Care</ion-option>
+              <ion-option>Diasporas</ion-option>
+              <ion-option>Disability Concerns</ion-option>
+              <ion-option>Evangelism among Children</ion-option>
+              <ion-option>Evangelism Training</ion-option>
+            </ion-select>
+          </ion-item>
+        <ion-item class="whocansee">
+          <p item-content (click)='showPermissions("issues-of-experience")'>Who can see this?</p>
+        </ion-item>
 </ion-item-group>
 </ion-content>
