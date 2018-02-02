@@ -25,10 +25,10 @@ export class Person {
   country: string;
   citizenship: string;
   gender: string;
-  primary-language: string;
-  other-languages: string;
-  comfort-level-with-english: string;
-  issues-of-experience: string[];
+  primary_language: string;
+  other_languages: string;
+  comfort_level_with_english: string;
+  issues_of_experience: string[];
   annotation: any;
   field_permissions: FieldPermissions;
 }
