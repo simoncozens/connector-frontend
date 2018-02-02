@@ -14,14 +14,21 @@ export class Person {
   id: any;
   name: string;
   email: string;
-  intro_bio: string;
-  country: string;
   preferred_contact: string;
+  intro_video: string;
+  intro_bio: string;
   roles: string[];
   experience: string[];
   regions: string[];
   followed: boolean;
   affiliations: Affiliation[];
+  country: string;
+  citizenship: string;
+  gender: string;
+  primary-language: string;
+  other-languages: string;
+  comfort-level-with-english: string;
+  issues-of-experience: string[];
   annotation: any;
   field_permissions: FieldPermissions;
 }
