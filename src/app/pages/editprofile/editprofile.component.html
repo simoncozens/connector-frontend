@@ -116,7 +116,7 @@
         </ion-item>
         <ion-item class="my-inset goeswithfollowing">
           <ion-label>Primary language</ion-label>
-          <ion-select [(ngModel)]="person.primary-language" (ionChange)="dirty = true">
+          <ion-select [(ngModel)]="person.primary_language" (ionChange)="dirty = true">
             <ion-option value="English">English</ion-option>
             <ion-option value="French">French</ion-option>
             <ion-option value="Spanish">Spanish</ion-option>
@@ -127,18 +127,18 @@
           </ion-select>
           </ion-item>
         <ion-item class="whocansee">
-          <p item-content (click)='showPermissions("primary-language")'>Who can see this?</p>
+          <p item-content (click)='showPermissions("primary_language")'>Who can see this?</p>
         </ion-item>
         <ion-item class="my-inset goeswithfollowing">
           <ion-label floating>Other languages</ion-label>
-          <ion-input (ionChange)="dirty = true" [(ngModel)]="person.other-languages"></ion-input>
+          <ion-input (ionChange)="dirty = true" [(ngModel)]="person.other_languages"></ion-input>
         </ion-item>
         <ion-item class="whocansee">
-          <p item-content (click)='showPermissions("other-languages")'>Who can see this?</p>
+          <p item-content (click)='showPermissions("other_languages")'>Who can see this?</p>
         </ion-item>
         <ion-item class="my-inset goeswithfollowing">
           <ion-label>Comfort level with English</ion-label>
-          <ion-select [(ngModel)]="person.comfort-level-with-english" (ionChange)="dirty = true">
+          <ion-select [(ngModel)]="person.comfort_level_with_english" (ionChange)="dirty = true">
             <ion-option value="None">None</ion-option>
             <ion-option value="Spoken">Spoken</ion-option>
             <ion-option value="Written">Written</ion-option>
@@ -147,11 +147,11 @@
           </ion-select>
           </ion-item>
         <ion-item class="whocansee">
-          <p item-content (click)='showPermissions("comfort-level-with-english")'>Who can see this?</p>
+          <p item-content (click)='showPermissions("comfort_level_with_english")'>Who can see this?</p>
         </ion-item>
         <ion-item class="my-inset goeswithfollowing">
             <ion-label>Issues of experience</ion-label>
-            <ion-select [(ngModel)]="person.issues-of-experience" (ionChange)="dirty = true" multiple="true">
+            <ion-select [(ngModel)]="person.issues_of_experience" (ionChange)="dirty = true" multiple="true">
               <ion-option>Apologetics-Truth-Pluralism</ion-option>
               <ion-option>Arts</ion-option>
               <ion-option>Bible Translation and Exposition</ion-option>
@@ -169,7 +169,7 @@
             </ion-select>
           </ion-item>
         <ion-item class="whocansee">
-          <p item-content (click)='showPermissions("issues-of-experience")'>Who can see this?</p>
+          <p item-content (click)='showPermissions("issues_of_experience")'>Who can see this?</p>
         </ion-item>
 </ion-item-group>
 </ion-content>
