@@ -171,5 +171,24 @@
         <ion-item class="whocansee">
           <p item-content (click)='showPermissions("issues_of_experience")'>Who can see this?</p>
         </ion-item>
+        <ion-item class="my-inset goeswithfollowing">
+            <ion-label>Regions</ion-label>
+            <ion-select [(ngModel)]="person.regions" (ionChange)="dirty = true" multiple="true">
+              <ion-option>Africa - French Speaking</ion-option>
+              <ion-option>Caribbean</ion-option>
+              <ion-option>East Asia</ion-option>
+              <ion-option>Eurasia</ion-option>
+              <ion-option>Europe</ion-option>
+              <ion-option>Latin America</ion-option>
+              <ion-option>Middle East / North Africa</ion-option>
+              <ion-option>North America</ion-option>
+              <ion-option>South Asia</ion-option>
+              <ion-option>South Pacific</ion-option>
+              <ion-option>Southeast Asia</ion-option>
+            </ion-select>
+          </ion-item>
+        <ion-item class="whocansee">
+          <p item-content (click)='showPermissions("regions")'>Who can see this?</p>
+        </ion-item>        
 </ion-item-group>
 </ion-content>
