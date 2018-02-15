@@ -14,7 +14,7 @@ export class Person {
   id: any;
   name: string;
   email: string;
-  preferred_contact: string[];
+  preferred_contact: string;
   intro_video: string;
   intro_bio: string;
   roles: string[];
@@ -22,12 +22,12 @@ export class Person {
   regions: string[];
   followed: boolean;
   affiliations: Affiliation[];
-  country: string[];
-  citizenship: string[];
-  gender: string[];
-  primary_language: string[];
+  country: string;
+  citizenship: string;
+  gender: string;
+  primary_language: string;
   other_languages: string
-  comfort_level_with_english: string[];
+  comfort_level_with_english: string;
   issues_of_experience: string[];
   annotation: any;
   field_permissions: FieldPermissions;
