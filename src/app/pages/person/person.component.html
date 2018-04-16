@@ -15,9 +15,10 @@
   <ion-list *ngIf="person">
     <ion-item>
         <ion-avatar item-left><img [src]="person?.picture | fromBase64"/></ion-avatar>
-        <span *ngFor="let role of person?.roles">
-          <ion-badge>{{role}}</ion-badge> </span>
-        <br>
+        <ion-badge *ngIf="person.catalyst">
+          Catalyst for {{person.catalyst}}
+        </ion-badge>
+
         <button ion-button (click)="messages(person.id)">
           <ion-icon name="mail-open"></ion-icon> Message
         </button>
@@ -29,26 +30,92 @@
         </span>
     </ion-item>
     <ion-item>
-      Preferred Method of Contact
-      <ion-note item-end>{{person?.preferred_contact}}</ion-note>
+      Events
+      <span *ngFor="let event of person?.events">
+          <ion-badge>{{event}}</ion-badge> </span>
     </ion-item>
+
+    <ion-item>
+      Preferred Method of Contact
+      <p item-end>{{person?.preferred_contact}}</p>
+    </ion-item>
+
+    <ion-item>
+      Languages Spoken
+      <p item-end><b>{{person?.primary_language}}</b>, {{person?.languages_spoken}}</p>
+    </ion-item>
+
+    <ion-item>
+      Gender
+      <p item-end>{{person.gender}}</p>
+    </ion-item>
+
+    <ion-item>
+      City
+      <p item-end>{{person.city}}</p>
+    </ion-item>
+
+    <ion-item>
+      Country of Residence
+      <p item-end>{{person.country}}</p>
+    </ion-item>
+
+    <ion-item>
+      Country of Citizenship
+      <p item-end>{{person.citizenship}}</p>
+    </ion-item>
+
+
+    <ion-item>
+      Intro video
+      <p item-end>{{person.intro_video}}</p>
+    </ion-item>
+
+    <ion-item>
+      Phone
+      <p item-end>{{person?.phone}}</p>
+    </ion-item>
+    <ion-item>
+      Skype
+      <p item-end>{{person?.skype_id}}</p>
+    </ion-item>
+    <ion-item>
+      Twitter
+      <p item-end>{{person?.twitter_id}}</p>
+    </ion-item>
+    <ion-item>
+      LinkedIn
+      <p item-end>{{person?.linkedin_id}}</p>
+    </ion-item>
+    <ion-item>
+      Facebook
+      <p item-end>{{person?.facebook_id}}</p>
+    </ion-item>
+
+    <ion-item>
+      Email
+      <p item-end>{{person?.email}}</p>
+    </ion-item>
+
     <ion-item>
       <h2>Bio</h2>
       <p>{{person?.intro_bio}}</p>
     </ion-item>
     <ion-item>
       <h2>Experience</h2>
-      <span  *ngFor="let e of person?.experience; let last = last">
+      <p item-end>
+        <span  *ngFor="let e of person?.experience; let last = last">
         <a (click)="peopleSearch({'experience':e})">{{e}}</a><span *ngIf="!last">, </span>
-      </span>
+        </span>
+      </p>
     </ion-item>
     <ion-item>
-      {{ 'PeopleRegions' | translate }} 
-      <ion-note item-end>
+      {{ 'PeopleRegions' | translate }}
+      <p item-end>
         <span  *ngFor="let r of person?.regions; let last = last">
-          <a (click)="peopleSearch({'region':r})">{{e}}</a><span *ngIf="!last">, </span>
+          <a (click)="peopleSearch({'region':r})">{{r}}</a><span *ngIf="!last">, </span>
         </span>
-      </ion-note>
+      </p>
     </ion-item>
 
   <ion-list-header>
@@ -56,10 +123,10 @@
   </ion-list-header>
     <div *ngFor="let affiliation of person?.affiliations; let i = index; ">
       <ion-item>
-        <h2>{{affiliation.position}}</h2>
-        <ion-note>
+        <h2 item-end>{{affiliation.position}}</h2>
+        <p item-end>
           <a href="" onclick="window.open(affiliation.website, '_system', 'location=yes')">{{affiliation.organisation}}</a>
-        </ion-note>
+        </p>
       </ion-item>
     </div>
 

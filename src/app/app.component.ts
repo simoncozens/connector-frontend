@@ -20,8 +20,8 @@ export class MyApp {
 
   rootPage: any = HomePage;
 
-  pages: Array<{title: string, segment: string, onlineOnly: boolean}>;
-  availablePages: Array<{title: string, segment: string, onlineOnly: boolean}>;
+  pages: Array<{title: string, segment: string, onlineOnly: boolean, disabled?:boolean}>;
+  availablePages: Array<{title: string, segment: string, onlineOnly: boolean, disabled?:boolean}>;
 
   constructor(public platform: Platform,
     private globalization: Globalization,
@@ -41,7 +41,7 @@ export class MyApp {
       { title: 'Starred Profiles', segment: "follows", onlineOnly: false },
       { title: 'Recently Visited', segment: "recent", onlineOnly: false },
       { title: 'Recommended', segment: "recommended", onlineOnly: true },
-      { title: 'Messages', segment: "inbox", onlineOnly: true }, // For now
+      { title: 'Messages', segment: "inbox", onlineOnly: true, disabled:true }, // For now
       { title: 'My Profile', segment: "editprofile", onlineOnly: true },
     ];
   }

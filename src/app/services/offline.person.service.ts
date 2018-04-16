@@ -42,7 +42,7 @@ export class OfflinePersonService extends PersonService {
   setLastSynced(synctime: string) { localStorage.setItem('lastSynced', synctime); }
   getLastSynced() : string { return localStorage.getItem('lastSynced'); }
 
-  openDb() :Promise<SQLiteObject> {
+  openDb() :Promise<void|SQLiteObject> {
     return this.sqlite.create({
         name: "connector.db",
         //key: this.key,
@@ -198,7 +198,11 @@ export class OfflinePersonService extends PersonService {
           })
         }
         return results
-      }, (e) => { console.log("Fail in getPeople"); console.log(e); })
+      }, (e) => {
+        console.log("Fail in getPeople"); console.log(e);
+        // Return something for the sake of type strictness
+        return { current_page: 0, total_entries: 0, entries: [] as Person[]}
+      })
     // XXX Search
   }
 
