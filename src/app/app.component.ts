@@ -127,4 +127,9 @@ export class MyApp {
     localStorage.setItem("lang", lang);
     this.translate.use(lang)
   }
+
+  logout() {
+    this.auth.logOut();
+    this.rootPage = LoginComponent;
+  }
 }
