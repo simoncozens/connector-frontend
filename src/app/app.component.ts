@@ -5,6 +5,7 @@ import { SplashScreen } from '@ionic-native/splash-screen';
 import { Network } from '@ionic-native/network';
 
 import { HomePage } from './pages/home/home';
+import { PeopleComponent } from './pages/people/people';
 import { LoginComponent } from './pages/login/login.component';
 import { AuthService } from './services/auth.service';
 import { OfflinePersonService } from './services/offline.person.service';
@@ -18,7 +19,7 @@ import { Globalization } from '@ionic-native/globalization';
 export class MyApp {
   @ViewChild(Nav) nav: Nav;
 
-  rootPage: any = HomePage;
+  rootPage: any = PeopleComponent;
 
   pages: Array<{title: string, segment: string, onlineOnly: boolean, disabled?:boolean}>;
   availablePages: Array<{title: string, segment: string, onlineOnly: boolean, disabled?:boolean}>;
