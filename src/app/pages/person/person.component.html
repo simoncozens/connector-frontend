@@ -1,31 +1,74 @@
 <ion-header no-border>
-  <ion-navbar *ngIf="person">
-      <button ion-button menuToggle>
-        <ion-icon name="menu"></ion-icon>
-      </button>
-      <ion-title>{{ isMe ? "Me" : person?.name }}</ion-title>
+  <!-- header for me -->
+  <ion-navbar *ngIf="person && isMe">
+      <button ion-button menuToggle><ion-icon name="menu"></ion-icon></button>
+      <ion-title>Me</ion-title>
+
       <ion-buttons end>
-        <button *ngIf="isMe" ion-button (click)="doSomething()">
+        <!-- if we're not editing, give the option to do so -->
+        <button *ngIf="!editing" ion-button (click)="this.editing=true">
           <ion-icon name="create"></ion-icon>
         </button>
-        <button *ngIf="!isMe && person?.followed" ion-button (click)="unfollow()"><ion-icon name="star"></ion-icon></button>
-        <button *ngIf="!isMe && person && !person.followed" ion-button  (click)="follow()"><ion-icon name="star-outline"></ion-icon></button>
+        <!-- if we are editing, give the option to save -->
+        <button ion-button *ngIf="editing && dirty"
+          (click)="save()" color="danger">
+          Save changes
+        </button>
+
+      </ion-buttons>
+
+  </ion-navbar>
+
+  <!-- header for notme -->
+  <ion-navbar *ngIf="person && !isMe">
+      <button ion-button menuToggle><ion-icon name="menu"></ion-icon></button>
+      <ion-title>{{person.name}}</ion-title>
+      <ion-buttons end>
+        <button *ngIf="person?.followed" ion-button (click)="unfollow()"><ion-icon name="star"></ion-icon></button>
+        <button *ngIf=" person && !person.followed" ion-button  (click)="follow()"><ion-icon name="star-outline"></ion-icon></button>
       </ion-buttons>
   </ion-navbar>
 </ion-header>
 
 <ion-content *ngIf="person">
   <ion-list>
+
+    <!-- Picture -->
     <p class="spacer"></p>
     <ion-avatar>
       <img class="medavatar" item-center [src]="person?.picture | fromBase64"/>
     </ion-avatar>
-    <ion-item>
-      <p text-center>Short Bio Goes Here</p>
-      <p text-center *ngIf="person.catalyst">
-        Catalyst for {{person.catalyst}}
-      </p>
+
+    <!-- Privacy settings if editing -->
+    <ion-item *ngIf="editing">
+      <ion-label>Who can see my profile?</ion-label>
+      <ion-select [(ngModel)]="person.field_permissions" multiple="true" (ionChange)="dirty = true">
+        <ion-option>Everyone</ion-option>
+        <ion-option>People at my events</ion-option>
+        <ion-option>My Issue Networks</ion-option>
+      </ion-select>
     </ion-item>
+
+    <ion-item>
+      <!-- short bio -->
+      <p text-center *ngIf="person.short_bio && !editing">
+        {{person.short_bio}}
+      </p>
+      <ion-input *ngIf="editing" placeholder="Short Bio"
+        (ionChange)="dirty = true" [(ngModel)]="person.short_bio">
+      </ion-input>
+
+      <!-- Why are you here? (not editable) -->
+      <p text-center *ngIf="person.lausanne_title && !editing">
+        Lausanne {{person.lausanne_title}}
+      </p>
+      <p text-center *ngIf="person.joined_lausanne && !editing">
+        Joined Lausanne {{person.joined_lausanne}}
+      </p>
+
+    </ion-item>
+
+    <!-- Phone and email contact -->
     <ion-item>
       <ion-grid>
         <ion-row>
@@ -52,31 +95,67 @@
         </ion-row>
       </ion-grid>
     </ion-item>
+
+    <!-- Full bio -->
     <ion-item>
-    <h3>Bio</h3>
-      <p text-wrap>{{person?.intro_bio}}</p>
+      <h3>Bio</h3>
+      <p text-wrap *ngIf="!editing">{{person?.intro_bio}}</p>
+      <ion-textarea *ngIf="editing" placeholder="Introduction Bio" (ionChange)="dirty = true" [(ngModel)]="person.intro_bio"></ion-textarea>
     </ion-item>
+
     <ion-item>
       <h3>Issue Networks</h3>
-        <ion-badge  *ngFor="let e of person?.experience; let last = last">
-        {{e}}</ion-badge>
+        <ion-badge *ngFor="let e of person?.experience">
+          {{e}}
+        </ion-badge>
     </ion-item>
-    <ion-item>
+
+    <!-- Workplaces -->
+    <ion-item *ngIf="!editing">
       <h3>Organisations</h3>
-      <p class="organisation" *ngFor="let affiliation of person?.affiliations; let i = index; ">
-            <a href="" float-end onclick="window.open(affiliation.website, '_system', 'location=yes')"><ion-icon name="link"></ion-icon></a>
+      <p class="organisation"
+        *ngFor="let affiliation of person?.affiliations">
+          <!-- External link to organisational web site -->
+          <a href="" float-end (click)="window.open(affiliation.website, '_system', 'location=yes')">
+              <ion-icon name="link"></ion-icon>
+          </a>
 
           {{affiliation.position}}<br/>
           {{affiliation.organisation}}
       </p>
     </ion-item>
+    <div *ngIf="editing">
+    <div *ngFor="let affiliation of person.affiliations; let idx = index; let last=last ">
+      <ion-item-divider>
+          <button ion-button color="danger"  item-end>
+            <ion-icon name="trash" (click)="killAffiliation(idx)"></ion-icon>
+          </button>
+          <button ion-button item-end *ngIf="last">
+            <ion-icon name="add" (click)="addAffiliation()"></ion-icon>
+          </button>
+          Organisation {{1+idx}}
+      </ion-item-divider>
+      <ion-item>
+        <ion-label floating>Organisation</ion-label>
+        <ion-input (ionChange)="dirty = true" [(ngModel)]="affiliation.organisation"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label floating>Position</ion-label>
+        <ion-input (ionChange)="dirty = true" [(ngModel)]="affiliation.position"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label floating>Website</ion-label>
+        <ion-input (ionChange)="dirty = true" [(ngModel)]="affiliation.website"></ion-input>
+      </ion-item>
+    </div>
+    </div>
+    <!-- Events attended -->
+    <ion-item *ngIf="!editing">
+      <h3>Lausanne Gatherings</h3>
 
-    <ion-item>
-      <h3>Lausanne Events</h3>
       <ion-grid>
         <ion-row>
-
-          <ion-col class="event" *ngFor="let event of person?.events">
+          <ion-col class="event" *ngFor="let event of person?.events.sort()">
               <img src="http://via.placeholder.com/100x100">
               <p>{{event}}</p>
           </ion-col>
@@ -84,32 +163,66 @@
       </ion-grid>
     </ion-item>
 
-    <ion-item>
+    <!-- Languages -->
+    <ion-item *ngIf="!editing">
       <h3>Languages Spoken</h3>
-      <p><i>{{person?.primary_language}}</i>, {{person?.languages_spoken}}</p>
+      <p>
+        <i>{{person.primary_language}}</i><span *ngIf="person.primary_language && person.languages_spoken">,</span>
+        {{person.languages_spoken}}
+      </p>
+    </ion-item>
+    <ion-item *ngIf="editing">
+      <ion-label>Primary language</ion-label>
+      <ion-select [(ngModel)]="person.primary_language" (ionChange)="dirty = true">
+        <ion-option value="English">English</ion-option>
+        <ion-option value="French">French</ion-option>
+        <ion-option value="Spanish">Spanish</ion-option>
+        <ion-option value="Portuguese">Portuguese</ion-option>
+        <ion-option value="Russian">Russian</ion-option>
+        <ion-option value="Korean">Korean</ion-option>
+        <ion-option value="Chinese">Chinese</ion-option>
+      </ion-select>
+      </ion-item>
+    <ion-item *ngIf="editing">
+      <ion-label floating>Other languages</ion-label>
+      <ion-input (ionChange)="dirty = true" [(ngModel)]="person.languages_spoken"></ion-input>
+    </ion-item>
+
+    <!-- Location -->
+    <ion-item>
+      <h3>Country of Residence</h3>
+      <p *ngIf="!editing">{{person.country}}</p>
+      <ion-select *ngIf="editing" [(ngModel)]="person.country" (ionChange)="dirty = true">
+        <ion-option *ngFor="let country of picklists.countries">{{country}}</ion-option>
+      </ion-select>
     </ion-item>
 
     <ion-item>
       <h3>City</h3>
-      <p>{{person.city}}</p>
+      <p *ngIf="!editing">{{person.city}}</p>
+      <ion-input *ngIf="editing"
+        (ionChange)="dirty = true" [(ngModel)]="person.city">
+      </ion-input>
     </ion-item>
 
-    <ion-item>
-      <h3>Country of Residence</h3>
-      <p>{{person.country}}</p>
-    </ion-item>
-
+    <!-- Regions -->
     <ion-item>
       <h3>{{ 'PeopleRegions' | translate }}</h3>
-      <p>
+      <p *ngIf="!editing">
         <span  *ngFor="let r of person?.regions; let last = last">
           <a (click)="peopleSearch({'region':r})">{{r}}</a><span *ngIf="!last">, </span>
         </span>
       </p>
+      <ion-select *ngIf="editing" [(ngModel)]="person.regions" (ionChange)="dirty = true" multiple="true">
+        <ion-option *ngFor="let issue of picklists.regions" [selected]="person.regions">{{issue}}</ion-option>
+      </ion-select>
     </ion-item>
 
-      <ion-item>
+    <!-- Notes about them -->
+    <ion-item *ngIf="!editing">
         <ion-textarea text-left placeholder="My notes" [(ngModel)]='annotation' (change)="saveAnnotation();false"></ion-textarea>
     </ion-item>
+
+    <!-- Add to my contact -->
   </ion-list>
 </ion-content>

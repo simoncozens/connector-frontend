@@ -3,10 +3,11 @@ import { Person } from '../../classes/person';
 import { Platform } from 'ionic-angular';
 import { PersonService } from '../../services/person.service';
 import { OfflinePersonService } from '../../services/offline.person.service';
-import { NavParams, IonicPage } from 'ionic-angular';
+import { NavController, NavParams, IonicPage } from 'ionic-angular';
 import { Network } from '@ionic-native/network';
 import { Contacts, Contact, ContactField, ContactName } from '@ionic-native/contacts';
 import { AuthService } from '../../services/auth.service';
+import { picklists } from "../../picklists";
 
 import 'rxjs/Rx';
 
@@ -23,8 +24,12 @@ export class PersonComponent implements OnInit {
   annotation: string;
   public id;
   public isMe = false;
+  public editing = false;
+  public dirty = false;
+  picklists = picklists;
   constructor(public personService: PersonService,
     public navParams: NavParams,
+    public navCtrl: NavController,
     public auth: AuthService,
     public ops: OfflinePersonService,
     private contacts: Contacts,
@@ -60,6 +65,10 @@ export class PersonComponent implements OnInit {
 
   saveAnnotation(): void {
     this.personService.annotate(this.person, this.annotation)
+  }
+
+  editProfile() {
+    this.navCtrl.push("editprofile")
   }
 
   addContact(): void {
