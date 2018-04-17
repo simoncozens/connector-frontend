@@ -38,7 +38,7 @@ export class PeopleComponent implements OnInit {
   }
 
   getPeople() {
-    return this.personService.getPeople(this._page, this.params)
+    return this.personService.getRecommended(this._page)
         .then(result => this.addMorePeople(result),
           error => this.dammit(error));
   }
@@ -104,15 +104,3 @@ export class PeopleComponent implements OnInit {
     alert.present();
   }
 }
-
-// @Component({
-//   selector : 'recent',
-//   templateUrl: './people.component.html',
-//   styleUrls: ['./people.component.sass']
-// })
-// export class RecentComponent extends PeopleComponent {
-//   getPeople() {
-//     this.personService.getRecent(this._page)
-//       .then(result => this.result = result);
-//   }
-// }
