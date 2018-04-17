@@ -26,6 +26,8 @@ export class AuthService {
     return p;
   }
 
+  myId() {return (this.loggedInUser() as any)._id.$oid }
+
   setLoggedInUser(p: Person) {
     console.log(p);
     localStorage.setItem('myself', JSON.stringify(p));

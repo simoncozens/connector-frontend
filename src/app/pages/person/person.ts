@@ -6,6 +6,7 @@ import { OfflinePersonService } from '../../services/offline.person.service';
 import { NavParams, IonicPage } from 'ionic-angular';
 import { Network } from '@ionic-native/network';
 import { Contacts, Contact, ContactField, ContactName } from '@ionic-native/contacts';
+import { AuthService } from '../../services/auth.service';
 
 import 'rxjs/Rx';
 
@@ -21,8 +22,10 @@ export class PersonComponent implements OnInit {
   person: Person;
   annotation: string;
   public id;
-  constructor(private personService: PersonService,
+  public isMe = false;
+  constructor(public personService: PersonService,
     public navParams: NavParams,
+    public auth: AuthService,
     public ops: OfflinePersonService,
     private contacts: Contacts,
     public platform: Platform,
@@ -36,6 +39,7 @@ export class PersonComponent implements OnInit {
     this.personService.getPerson(this.navParams.get('id'))
         .then((person: Person) => {
           this.person = person
+          this.isMe = person.id == this.auth.myId()
           this.annotation = person.annotation
         })
         .catch((error) => console.log(error));

@@ -21,36 +21,18 @@
     <h3>{{person?.name}}</h3>
   </ion-item>
   <ion-item-divider color="primary">Basic information</ion-item-divider>
-    <ion-item class="goeswithfollowing">
-      <ion-label>Preferred Method of Contact</ion-label>
-          <ion-select [(ngModel)]="person.preferred_contact" (ionChange)="dirty = true">
-            <ion-option value="Email">Email</ion-option>
-            <ion-option value="SMS">SMS</ion-option>
-            <ion-option value="Phone (Voice)">Phone (Voice)</ion-option>
-            <ion-option value="Skype">Skype</ion-option>
-            <ion-option value="Facebook">Facebook</ion-option>
-            <ion-option value="LinkedIn">LinkedIn</ion-option>
-            <ion-option value="Whatsapp">Whatsapp</ion-option>
-            <ion-option value="Other">Other</ion-option>
-          </ion-select>
+    <ion-item>
+      <ion-label>Who can see my profile?</ion-label>
+      <ion-select [(ngModel)]="person.field_permissions" multiple="true" (ionChange)="dirty = true">
+        <ion-option>Everyone</ion-option>
+        <ion-option>People at my events</ion-option>
+        <ion-option>My Issue Networks</ion-option>
+      </ion-select>
     </ion-item>
-    <ion-item class="whocansee">
-      <p item-content (click)='showPermissions("preferred_contact")'>Who can see this?</p>
-    </ion-item>
-    <ion-item class="goeswithfollowing">
-      <ion-label floating>Self-Introduction Video</ion-label>
-      <ion-input (ionChange)="dirty = true" [(ngModel)]="person.intro_video"></ion-input>
-    </ion-item>
-    <ion-item class="whocansee">
-      <p item-content (click)='showPermissions("intro_video")'>Who can see this?</p>
-    </ion-item>
-    <ion-item class="goeswithfollowing">
+    <ion-item>
       <ion-label>Intro Bio
       </ion-label>
       <ion-textarea (ionChange)="dirty = true" [(ngModel)]="person.intro_bio"></ion-textarea>
-    </ion-item>
-    <ion-item class="whocansee">
-      <p item-content (click)='showPermissions("intro_bio")'>Who can see this?</p>
     </ion-item>
     <ion-item-divider color="primary">Affiliations</ion-item-divider>
     <div *ngFor="let affiliation of person.affiliations; let idx = index; let last=last ">
@@ -63,58 +45,40 @@
             </button>
             Affiliation {{1+idx}}
         </ion-item-divider>
-      <ion-item class="my-inset goeswithfollowing">
+      <ion-item>
         <ion-label floating>Organisation</ion-label>
         <ion-input (ionChange)="dirty = true" [(ngModel)]="affiliation.organisation"></ion-input>
       </ion-item>
-      <ion-item class="whocansee">
-        <p item-content (click)='showPermissions("organisation")'>Who can see this?</p>
-      </ion-item>
-      <ion-item class="my-inset goeswithfollowing">
+      <ion-item>
         <ion-label floating>Position</ion-label>
         <ion-input (ionChange)="dirty = true" [(ngModel)]="affiliation.position"></ion-input>
       </ion-item>
-      <ion-item class="whocansee">
-        <p item-content (click)='showPermissions("position")'>Who can see this?</p>
-      </ion-item>
-      <ion-item class="my-inset goeswithfollowing">
+      <ion-item>
         <ion-label floating>Website</ion-label>
         <ion-input (ionChange)="dirty = true" [(ngModel)]="affiliation.website"></ion-input>
       </ion-item>
-      <ion-item class="whocansee">
-        <p item-content (click)='showPermissions("website")'>Who can see this?</p>
-      </ion-item>
     </div>
     <ion-item-divider color="primary">Personal Information</ion-item-divider>
-      <ion-item class="my-inset goeswithfollowing">
+      <ion-item>
       <ion-label>Country of Residence</ion-label>
           <ion-select [(ngModel)]="person.country" (ionChange)="dirty = true">
             <ion-option *ngFor="let country of picklists.countries">{{country}}</ion-option>
           </ion-select>
       </ion-item>
-      <ion-item class="whocansee">
-        <p item-content (click)='showPermissions("country")'>Who can see this?</p>
-      </ion-item>
-      <ion-item class="my-inset goeswithfollowing">
+      <ion-item>
       <ion-label>Country of Citizenship</ion-label>
           <ion-select [(ngModel)]="person.citizenship" (ionChange)="dirty = true">
             <ion-option *ngFor="let country of picklists.countries">{{country}}</ion-option>
           </ion-select>
       </ion-item>
-      <ion-item class="whocansee">
-        <p item-content (click)='showPermissions("citizenship")'>Who can see this?</p>
-      </ion-item>
-      <ion-item class="my-inset goeswithfollowing">
+      <ion-item>
         <ion-label>Gender</ion-label>
         <ion-select [(ngModel)]="person.gender" (ionChange)="dirty = true">
           <ion-option value="Male">Male</ion-option>
           <ion-option value="Female">Female</ion-option>
         </ion-select>
         </ion-item>
-        <ion-item class="whocansee">
-          <p item-content (click)='showPermissions("gender")'>Who can see this?</p>
-        </ion-item>
-        <ion-item class="my-inset goeswithfollowing">
+        <ion-item>
           <ion-label>Primary language</ion-label>
           <ion-select [(ngModel)]="person.primary_language" (ionChange)="dirty = true">
             <ion-option value="English">English</ion-option>
@@ -126,69 +90,41 @@
             <ion-option value="Chinese">Chinese</ion-option>  
           </ion-select>
           </ion-item>
-        <ion-item class="whocansee">
-          <p item-content (click)='showPermissions("primary_language")'>Who can see this?</p>
-        </ion-item>
-        <ion-item class="my-inset goeswithfollowing">
+        <ion-item>
           <ion-label floating>Other languages</ion-label>
           <ion-input (ionChange)="dirty = true" [(ngModel)]="person.other_languages"></ion-input>
         </ion-item>
-        <ion-item class="whocansee">
-          <p item-content (click)='showPermissions("other_languages")'>Who can see this?</p>
-        </ion-item>
-        <ion-item class="my-inset goeswithfollowing">
+        <ion-item>
           <ion-label>Comfort level with English</ion-label>
           <ion-select [(ngModel)]="person.comfort_level_with_english" (ionChange)="dirty = true">
             <ion-option value="None">None</ion-option>
             <ion-option value="Spoken">Spoken</ion-option>
             <ion-option value="Written">Written</ion-option>
             <ion-option value="Spoken & Written">Spoken & Written</ion-option>
-            <ion-option value="Native Fluency">Native Fluency</ion-option> 
+            <ion-option value="Native Fluency">Native Fluency</ion-option>
           </ion-select>
           </ion-item>
-        <ion-item class="whocansee">
-          <p item-content (click)='showPermissions("comfort_level_with_english")'>Who can see this?</p>
-        </ion-item>
-        <ion-item class="my-inset goeswithfollowing">
+        <ion-item>
             <ion-label>Issues of experience</ion-label>
-            <ion-select [(ngModel)]="person.issues_of_experience" (ionChange)="dirty = true" multiple="true">
-              <ion-option>Apologetics-Truth-Pluralism</ion-option>
-              <ion-option>Arts</ion-option>
-              <ion-option>Bible Translation and Exposition</ion-option>
-              <ion-option>Buddhism</ion-option>
-              <ion-option>Business as Mission</ion-option>
-              <ion-option>Children at Risk</ion-option>
-              <ion-option>Church Planting</ion-option>
-              <ion-option>Church Research</ion-option>
-              <ion-option>Cities</ion-option>
-              <ion-option>Creation Care</ion-option>
-              <ion-option>Diasporas</ion-option>
-              <ion-option>Disability Concerns</ion-option>
-              <ion-option>Evangelism among Children</ion-option>
-              <ion-option>Evangelism Training</ion-option>
+            <ion-select [(ngModel)]="person.experience" (ionChange)="dirty = true" multiple="true">
+              <ion-option *ngFor="let issue of picklists.issues" [selected]="person.experience">{{issue}}</ion-option>
             </ion-select>
           </ion-item>
-        <ion-item class="whocansee">
-          <p item-content (click)='showPermissions("issues_of_experience")'>Who can see this?</p>
+        <ion-item>
+          <ion-label>Regions</ion-label>
+          <ion-select [(ngModel)]="person.regions" (ionChange)="dirty = true" multiple="true">
+            <ion-option>Africa - French Speaking</ion-option>
+            <ion-option>Caribbean</ion-option>
+            <ion-option>East Asia</ion-option>
+            <ion-option>Eurasia</ion-option>
+            <ion-option>Europe</ion-option>
+            <ion-option>Latin America</ion-option>
+            <ion-option>Middle East / North Africa</ion-option>
+            <ion-option>North America</ion-option>
+            <ion-option>South Asia</ion-option>
+            <ion-option>South Pacific</ion-option>
+            <ion-option>Southeast Asia</ion-option>
+          </ion-select>
         </ion-item>
-        <ion-item class="my-inset goeswithfollowing">
-            <ion-label>Regions</ion-label>
-            <ion-select [(ngModel)]="person.regions" (ionChange)="dirty = true" multiple="true">
-              <ion-option>Africa - French Speaking</ion-option>
-              <ion-option>Caribbean</ion-option>
-              <ion-option>East Asia</ion-option>
-              <ion-option>Eurasia</ion-option>
-              <ion-option>Europe</ion-option>
-              <ion-option>Latin America</ion-option>
-              <ion-option>Middle East / North Africa</ion-option>
-              <ion-option>North America</ion-option>
-              <ion-option>South Asia</ion-option>
-              <ion-option>South Pacific</ion-option>
-              <ion-option>Southeast Asia</ion-option>
-            </ion-select>
-          </ion-item>
-        <ion-item class="whocansee">
-          <p item-content (click)='showPermissions("regions")'>Who can see this?</p>
-        </ion-item>        
 </ion-item-group>
 </ion-content>

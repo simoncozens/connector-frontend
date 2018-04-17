@@ -159,7 +159,7 @@ export class OfflinePersonService extends PersonService {
     return this.dbHandle.executeSql('SELECT jsonblob,followed FROM profiles WHERE id = ?',
     [ id ]).then( (rs) => {
       console.log(rs);
-      if (rs.rows.length < 1) { throw new Error("Person not found!") }
+      if (rs.rows.length < 1) { return Promise.reject("Person not found!") }
       let person = JSON.parse(rs.rows.item(0).jsonblob)
       if (rs.rows.item(0).followed) { person.followed = true; }
       return person
@@ -178,13 +178,15 @@ export class OfflinePersonService extends PersonService {
     // where we generate the SQL.
     if (params["fts"]) {
       clause = "jsonblob LIKE ?"
-      placevalues.push("%"+params["fts"]+"%"); // This isn't ideal, we should use FTS
+      placevalues.unshift("%"+params["fts"]+"%"); // This isn't ideal, we should use FTS
     }
     var sql = 'SELECT id,name,followed,jsonblob FROM profiles WHERE '+clause + ' LIMIT ? OFFSET ?'
-    console.log(sql)
+    console.log(sql, placevalues)
     return this.dbHandle.executeSql(sql, placevalues).then( (rs) => {
         console.log(rs);
-        if (rs.rows.length < 1) { throw new Error("Person not found!") }
+        if (rs.rows.length < 1) {
+          return {total_entries:0, entries:[],current_page:page};
+        }
         var cursor = Array.from(Array(rs.rows.length).keys())
         //           0, 1, 2, .., rs.rows.length
         cursor.map((n) => console.log(rs.rows.item(n).id, rs.rows.item(n).name))

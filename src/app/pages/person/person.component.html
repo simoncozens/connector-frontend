@@ -1,140 +1,115 @@
-<ion-header>
-  <ion-navbar>
+<ion-header no-border>
+  <ion-navbar *ngIf="person">
       <button ion-button menuToggle>
         <ion-icon name="menu"></ion-icon>
       </button>
-      {{person?.name}}
-      <a item-right *ngIf="person?.email && person?.preferred_contact == 'email'" href="mailto:{{person?.email}}" class="btn-lg"><ion-icon name="mail"></ion-icon></a>
-      <button item-right (click)="addContact()">
-        <ion-icon name="add"></ion-icon>
-      </button>
+      <ion-title>{{ isMe ? "Me" : person?.name }}</ion-title>
+      <ion-buttons end>
+        <button *ngIf="isMe" ion-button (click)="doSomething()">
+          <ion-icon name="create"></ion-icon>
+        </button>
+        <button *ngIf="!isMe && person?.followed" ion-button (click)="unfollow()"><ion-icon name="star"></ion-icon></button>
+        <button *ngIf="!isMe && person && !person.followed" ion-button  (click)="follow()"><ion-icon name="star-outline"></ion-icon></button>
+      </ion-buttons>
   </ion-navbar>
 </ion-header>
 
-<ion-content>
-  <ion-list *ngIf="person">
+<ion-content *ngIf="person">
+  <ion-list>
+    <p class="spacer"></p>
+    <ion-avatar>
+      <img class="medavatar" item-center [src]="person?.picture | fromBase64"/>
+    </ion-avatar>
     <ion-item>
-        <ion-avatar item-left><img [src]="person?.picture | fromBase64"/></ion-avatar>
-        <ion-badge *ngIf="person.catalyst">
-          Catalyst for {{person.catalyst}}
-        </ion-badge>
-
-        <button ion-button (click)="messages(person.id)">
-          <ion-icon name="mail-open"></ion-icon> Message
-        </button>
-        <span *ngIf="person.followed">
-          <button ion-button (click)="unfollow()">Unfollow</button>
-        </span>
-        <span *ngIf="!person.followed">
-          <button ion-button outline (click)="follow()">Follow</button>
-        </span>
-    </ion-item>
-    <ion-item>
-      Events
-      <span *ngFor="let event of person?.events">
-          <ion-badge>{{event}}</ion-badge> </span>
-    </ion-item>
-
-    <ion-item>
-      Preferred Method of Contact
-      <p item-end>{{person?.preferred_contact}}</p>
-    </ion-item>
-
-    <ion-item>
-      Languages Spoken
-      <p item-end><b>{{person?.primary_language}}</b>, {{person?.languages_spoken}}</p>
-    </ion-item>
-
-    <ion-item>
-      Gender
-      <p item-end>{{person.gender}}</p>
-    </ion-item>
-
-    <ion-item>
-      City
-      <p item-end>{{person.city}}</p>
-    </ion-item>
-
-    <ion-item>
-      Country of Residence
-      <p item-end>{{person.country}}</p>
-    </ion-item>
-
-    <ion-item>
-      Country of Citizenship
-      <p item-end>{{person.citizenship}}</p>
-    </ion-item>
-
-
-    <ion-item>
-      Intro video
-      <p item-end>{{person.intro_video}}</p>
-    </ion-item>
-
-    <ion-item>
-      Phone
-      <p item-end>{{person?.phone}}</p>
-    </ion-item>
-    <ion-item>
-      Skype
-      <p item-end>{{person?.skype_id}}</p>
-    </ion-item>
-    <ion-item>
-      Twitter
-      <p item-end>{{person?.twitter_id}}</p>
-    </ion-item>
-    <ion-item>
-      LinkedIn
-      <p item-end>{{person?.linkedin_id}}</p>
-    </ion-item>
-    <ion-item>
-      Facebook
-      <p item-end>{{person?.facebook_id}}</p>
-    </ion-item>
-
-    <ion-item>
-      Email
-      <p item-end>{{person?.email}}</p>
-    </ion-item>
-
-    <ion-item>
-      <h2>Bio</h2>
-      <p>{{person?.intro_bio}}</p>
-    </ion-item>
-    <ion-item>
-      <h2>Experience</h2>
-      <p item-end>
-        <span  *ngFor="let e of person?.experience; let last = last">
-        <a (click)="peopleSearch({'experience':e})">{{e}}</a><span *ngIf="!last">, </span>
-        </span>
+      <p text-center>Short Bio Goes Here</p>
+      <p text-center *ngIf="person.catalyst">
+        Catalyst for {{person.catalyst}}
       </p>
     </ion-item>
     <ion-item>
-      {{ 'PeopleRegions' | translate }}
-      <p item-end>
+      <ion-grid>
+        <ion-row>
+          <ion-col>
+            <a *ngIf="person?.phone" href="tel:{{person?.phone}}" class="btn-lg"><ion-icon text-center name="call"></ion-icon></a>
+          </ion-col>
+          <ion-col>
+            <a *ngIf="person?.phone" href="mailto:{{person?.phone}}" class="btn-lg"><ion-icon name="text"></ion-icon></a>
+          </ion-col>
+          <ion-col>
+            <a *ngIf="person?.email" href="mailto:{{person?.email}}" class="btn-lg"><ion-icon name="mail"></ion-icon></a>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col>
+            <a *ngIf="person?.phone" href="tel:{{person?.phone}}" class="btn-lg" text-center>Call</a>
+          </ion-col>
+          <ion-col>
+            <a *ngIf="person?.phone" href="mailto:{{person?.phone}}" class="btn-lg" text-center>Message</a>
+          </ion-col>
+          <ion-col>
+            <a *ngIf="person?.email" href="mailto:{{person?.email}}" class="btn-lg" text-center>Email</a>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-item>
+    <ion-item>
+    <h3>Bio</h3>
+      <p text-wrap>{{person?.intro_bio}}</p>
+    </ion-item>
+    <ion-item>
+      <h3>Issue Networks</h3>
+        <ion-badge  *ngFor="let e of person?.experience; let last = last">
+        {{e}}</ion-badge>
+    </ion-item>
+    <ion-item>
+      <h3>Organisations</h3>
+      <p class="organisation" *ngFor="let affiliation of person?.affiliations; let i = index; ">
+            <a href="" float-end onclick="window.open(affiliation.website, '_system', 'location=yes')"><ion-icon name="link"></ion-icon></a>
+
+          {{affiliation.position}}<br/>
+          {{affiliation.organisation}}
+      </p>
+    </ion-item>
+
+    <ion-item>
+      <h3>Lausanne Events</h3>
+      <ion-grid>
+        <ion-row>
+
+          <ion-col class="event" *ngFor="let event of person?.events">
+              <img src="http://via.placeholder.com/100x100">
+              <p>{{event}}</p>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-item>
+
+    <ion-item>
+      <h3>Languages Spoken</h3>
+      <p><i>{{person?.primary_language}}</i>, {{person?.languages_spoken}}</p>
+    </ion-item>
+
+    <ion-item>
+      <h3>City</h3>
+      <p>{{person.city}}</p>
+    </ion-item>
+
+    <ion-item>
+      <h3>Country of Residence</h3>
+      <p>{{person.country}}</p>
+    </ion-item>
+
+    <ion-item>
+      <h3>{{ 'PeopleRegions' | translate }}</h3>
+      <p>
         <span  *ngFor="let r of person?.regions; let last = last">
           <a (click)="peopleSearch({'region':r})">{{r}}</a><span *ngIf="!last">, </span>
         </span>
       </p>
     </ion-item>
 
-  <ion-list-header>
-    Affiliations
-  </ion-list-header>
-    <div *ngFor="let affiliation of person?.affiliations; let i = index; ">
       <ion-item>
-        <h2 item-end>{{affiliation.position}}</h2>
-        <p item-end>
-          <a href="" onclick="window.open(affiliation.website, '_system', 'location=yes')">{{affiliation.organisation}}</a>
-        </p>
-      </ion-item>
-    </div>
-
-  <ion-list-header>
-     My notes
-   </ion-list-header>
-      <ion-item>
-        <ion-textarea placeholder="My notes" [(ngModel)]='annotation' (change)="saveAnnotation();false"></ion-textarea>
+        <ion-textarea text-left placeholder="My notes" [(ngModel)]='annotation' (change)="saveAnnotation();false"></ion-textarea>
     </ion-item>
   </ion-list>
 </ion-content>

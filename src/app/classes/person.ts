@@ -15,6 +15,7 @@ export class Person {
   name: string;
   email: string;
   preferred_contact: string;
+  skype_id:string;
   intro_video: string;
   intro_bio: string;
   roles: string[];

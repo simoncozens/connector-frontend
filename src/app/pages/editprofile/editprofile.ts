@@ -71,7 +71,7 @@ export class EditProfileComponent implements OnInit {
     let alert = this.alertCtrl.create();
     alert.setTitle('Who can view this field?');
     let perms = (this.person.field_permissions || {})[field] || []
-    for (var n of ["Lausanne Leaders", "YLG", "YLGen"]) {
+    for (var n of ["Everyone", "People at my events", "My Issue Networks"]) {
       alert.addInput({
         type: 'checkbox', label: n, value: n, checked: perms.indexOf(n)>-1
       });

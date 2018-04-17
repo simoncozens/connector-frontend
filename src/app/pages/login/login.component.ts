@@ -5,7 +5,7 @@ import { AuthService } from '../../services/auth.service';
 import { Response } from '@angular/http';
 import 'rxjs/add/operator/toPromise';
 import { NavController, NavParams, LoadingController, AlertController } from 'ionic-angular';
-import { HomePage } from '../../pages/home/home';
+import { PeopleComponent } from '../../pages/people/people';
 import { OfflinePersonService } from '../../services/offline.person.service';
 import { NotificationService } from '../../services/notification.service';
 import { ToastController } from 'ionic-angular';
@@ -65,7 +65,7 @@ export class LoginComponent {
   }
 
   private gotoNext() {
-    this.navCtrl.setRoot( this.navParams.get("next") || HomePage)
+    this.navCtrl.setRoot( this.navParams.get("next") || PeopleComponent)
 
   }
 
