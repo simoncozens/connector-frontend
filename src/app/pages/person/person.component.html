@@ -1,29 +1,24 @@
 <ion-header no-border>
-  <!-- header for me -->
-  <ion-navbar *ngIf="person && isMe">
+  <ion-navbar>
       <button ion-button menuToggle><ion-icon name="menu"></ion-icon></button>
-      <ion-title>Me</ion-title>
+      <ion-title  *ngIf="isMe">Me</ion-title>
+      <ion-title *ngIf="person && !isMe">{{person.name}}</ion-title>
 
-      <ion-buttons end>
+      <!-- buttons for me -->
+      <ion-buttons end *ngIf="person && isMe">
         <!-- if we're not editing, give the option to do so -->
         <button *ngIf="!editing" ion-button (click)="this.editing=true">
           <ion-icon name="create"></ion-icon>
         </button>
-        <!-- if we are editing, give the option to save -->
-        <button ion-button *ngIf="editing && dirty"
-          (click)="save()" color="danger">
-          Save changes
+        <!-- if we are editing, give the option to go back -->
+        <button ion-button *ngIf="editing"
+          (click)="this.editing=false">
+          <ion-icon name="close"></ion-icon>
         </button>
-
       </ion-buttons>
 
-  </ion-navbar>
-
-  <!-- header for notme -->
-  <ion-navbar *ngIf="person && !isMe">
-      <button ion-button menuToggle><ion-icon name="menu"></ion-icon></button>
-      <ion-title>{{person.name}}</ion-title>
-      <ion-buttons end>
+      <!-- buttons for not me -->
+      <ion-buttons end *ngIf="person && !isMe">
         <button *ngIf="person?.followed" ion-button (click)="unfollow()"><ion-icon name="star"></ion-icon></button>
         <button *ngIf=" person && !person.followed" ion-button  (click)="follow()"><ion-icon name="star-outline"></ion-icon></button>
       </ion-buttons>
@@ -42,7 +37,7 @@
     <!-- Privacy settings if editing -->
     <ion-item *ngIf="editing">
       <ion-label>Who can see my profile?</ion-label>
-      <ion-select [(ngModel)]="person.field_permissions" multiple="true" (ionChange)="dirty = true">
+      <ion-select [(ngModel)]="person.field_permissions" multiple="true" (ionChange)="dirty($event)">
         <ion-option>Everyone</ion-option>
         <ion-option>People at my events</ion-option>
         <ion-option>My Issue Networks</ion-option>
@@ -55,7 +50,7 @@
         {{person.short_bio}}
       </p>
       <ion-input *ngIf="editing" placeholder="Short Bio"
-        (ionChange)="dirty = true" [(ngModel)]="person.short_bio">
+        (ionChange)="dirty($event)" [(ngModel)]="person.short_bio">
       </ion-input>
 
       <!-- Why are you here? (not editable) -->
@@ -100,7 +95,7 @@
     <ion-item>
       <h3>Bio</h3>
       <p text-wrap *ngIf="!editing">{{person?.intro_bio}}</p>
-      <ion-textarea *ngIf="editing" placeholder="Introduction Bio" (ionChange)="dirty = true" [(ngModel)]="person.intro_bio"></ion-textarea>
+      <ion-textarea *ngIf="editing" placeholder="Introduction Bio" (ionChange)="dirty($event)" [(ngModel)]="person.intro_bio"></ion-textarea>
     </ion-item>
 
     <ion-item>
@@ -137,15 +132,15 @@
       </ion-item-divider>
       <ion-item>
         <ion-label floating>Organisation</ion-label>
-        <ion-input (ionChange)="dirty = true" [(ngModel)]="affiliation.organisation"></ion-input>
+        <ion-input (ionChange)="dirty($event)" [(ngModel)]="affiliation.organisation"></ion-input>
       </ion-item>
       <ion-item>
         <ion-label floating>Position</ion-label>
-        <ion-input (ionChange)="dirty = true" [(ngModel)]="affiliation.position"></ion-input>
+        <ion-input (ionChange)="dirty($event)" [(ngModel)]="affiliation.position"></ion-input>
       </ion-item>
       <ion-item>
         <ion-label floating>Website</ion-label>
-        <ion-input (ionChange)="dirty = true" [(ngModel)]="affiliation.website"></ion-input>
+        <ion-input (ionChange)="dirty($event)" [(ngModel)]="affiliation.website"></ion-input>
       </ion-item>
     </div>
     </div>
@@ -173,7 +168,7 @@
     </ion-item>
     <ion-item *ngIf="editing">
       <ion-label>Primary language</ion-label>
-      <ion-select [(ngModel)]="person.primary_language" (ionChange)="dirty = true">
+      <ion-select [(ngModel)]="person.primary_language" (ionChange)="dirty($event)">
         <ion-option value="English">English</ion-option>
         <ion-option value="French">French</ion-option>
         <ion-option value="Spanish">Spanish</ion-option>
@@ -185,14 +180,14 @@
       </ion-item>
     <ion-item *ngIf="editing">
       <ion-label floating>Other languages</ion-label>
-      <ion-input (ionChange)="dirty = true" [(ngModel)]="person.languages_spoken"></ion-input>
+      <ion-input (ionChange)="dirty($event)" [(ngModel)]="person.languages_spoken"></ion-input>
     </ion-item>
 
     <!-- Location -->
     <ion-item>
       <h3>Country of Residence</h3>
       <p *ngIf="!editing">{{person.country}}</p>
-      <ion-select *ngIf="editing" [(ngModel)]="person.country" (ionChange)="dirty = true">
+      <ion-select *ngIf="editing" [(ngModel)]="person.country" (ionChange)="dirty($event)">
         <ion-option *ngFor="let country of picklists.countries">{{country}}</ion-option>
       </ion-select>
     </ion-item>
@@ -201,7 +196,7 @@
       <h3>City</h3>
       <p *ngIf="!editing">{{person.city}}</p>
       <ion-input *ngIf="editing"
-        (ionChange)="dirty = true" [(ngModel)]="person.city">
+        (ionChange)="dirty($event)" [(ngModel)]="person.city">
       </ion-input>
     </ion-item>
 
@@ -213,9 +208,37 @@
           <a (click)="peopleSearch({'region':r})">{{r}}</a><span *ngIf="!last">, </span>
         </span>
       </p>
-      <ion-select *ngIf="editing" [(ngModel)]="person.regions" (ionChange)="dirty = true" multiple="true">
+      <ion-select *ngIf="editing" [(ngModel)]="person.regions" (ionChange)="dirty($event)" multiple="true">
         <ion-option *ngFor="let issue of picklists.regions" [selected]="person.regions">{{issue}}</ion-option>
       </ion-select>
+    </ion-item>
+
+    <!-- Social contacts -->
+    <ion-item *ngIf="!editing">
+      <ion-grid>
+        <ion-row>
+          <ion-col>
+            <a *ngIf="person?.skype_id" href="skype:{{person?.skype_id}}" class="btn-lg"><ion-icon text-center name="logo-skype"></ion-icon></a>
+          </ion-col>
+          <ion-col>
+            <a *ngIf="person?.linkedin_id" (click)="window.open('http://www.linkedin.com/'+person?.linkedin_id, '_system', 'location=yes')"
+             class="btn-lg"><ion-icon name="logo-linkedin"></ion-icon></a>
+          </ion-col>
+          <ion-col>
+            <a *ngIf="person?.twitter_id" (click)="window.open('http://www.twitter.com/'+person?.twitter_id, '_system', 'location=yes')"
+             class="btn-lg"><ion-icon name="logo-twitter"></ion-icon></a>
+          </ion-col>
+          <ion-col>
+            <a *ngIf="person?.facebook_id" (click)="window.open('http://www.facebook.com/'+person?.facebook_id, '_system', 'location=yes')"
+             class="btn-lg"><ion-icon name="logo-facebook"></ion-icon></a>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-item>
+
+    <ion-item  *ngFor="let network of social_fields">
+      <h3 *ngIf="editing">{{network.name}}</h3>
+      <ion-input *ngIf="editing" (ionChange)="dirty($event)" [(ngModel)]="person[network.field]"></ion-input>
     </ion-item>
 
     <!-- Notes about them -->
@@ -224,5 +247,8 @@
     </ion-item>
 
     <!-- Add to my contact -->
+    <ion-icon *ngIf="!editing">
+    </ion-icon>
+
   </ion-list>
 </ion-content>
