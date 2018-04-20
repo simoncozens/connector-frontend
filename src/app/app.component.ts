@@ -43,7 +43,6 @@ export class MyApp {
       { title: 'Recently Visited', segment: "recent", onlineOnly: false },
       { title: 'Messages', segment: "inbox", onlineOnly: true, disabled:true }, // For now
       { title: 'My Profile', segment: "myprofile", onlineOnly: true },
-      { title: 'Edit My Profile', segment: "editprofile", onlineOnly: true },
     ];
   }
 

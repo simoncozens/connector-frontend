@@ -26,7 +26,11 @@ export class AuthService {
     return p;
   }
 
-  myId() {return (this.loggedInUser() as any)._id.$oid }
+  myId() {
+    var me = this.loggedInUser();
+    if ("id" in me && me.id) return me.id;
+    return ((me as any)._id.$oid);
+  }
 
   setLoggedInUser(p: Person) {
     console.log(p);

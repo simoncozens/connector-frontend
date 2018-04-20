@@ -1,9 +1,9 @@
-import { Component, OnInit, Input } from '@angular/core';
-import { Person } from '../../classes/person';
-import { Platform } from 'ionic-angular';
+import { Component, OnInit } from '@angular/core';
+import { Person, FieldPermissions } from '../../classes/person';
 import { PersonService } from '../../services/person.service';
 import { OfflinePersonService } from '../../services/offline.person.service';
-import { NavController, NavParams, IonicPage } from 'ionic-angular';
+import { NavController, NavParams, IonicPage, Platform, ToastController, AlertController } from 'ionic-angular';
+
 import { Network } from '@ionic-native/network';
 import { Contacts, Contact, ContactField, ContactName } from '@ionic-native/contacts';
 import { AuthService } from '../../services/auth.service';
@@ -25,8 +25,14 @@ export class PersonComponent implements OnInit {
   public id;
   public isMe = false;
   public editing = false;
-  public dirty = false;
   picklists = picklists;
+  social_fields = [
+    {name: "Skype", field: "skype_id"},
+    {name: "LinkedIn", field: "linkedin_id"},
+    {name: "Twitter", field: "twitter_id"},
+    {name: "Facebook", field: "facebook_id"},
+  ]
+
   constructor(public personService: PersonService,
     public navParams: NavParams,
     public navCtrl: NavController,
@@ -34,7 +40,8 @@ export class PersonComponent implements OnInit {
     public ops: OfflinePersonService,
     private contacts: Contacts,
     public platform: Platform,
-    private network: Network
+    public alertCtrl: AlertController,
+    public toastCtrl: ToastController
   ) {
     if (this.platform.is('cordova')) {
       this.personService = this.ops;
@@ -109,5 +116,90 @@ END:VCARD`
         var downloadUrl= window.URL.createObjectURL(blob);
         window.location.href = downloadUrl;
       }
+  }
+
+  /* Editing */
+  private _dirty: boolean = false;
+  public saveToast;
+  public dirty(el?) {
+    if (!this._dirty) {
+      this.saveToast = this.toastCtrl.create({
+          closeButtonText: "Save",
+          showCloseButton: true
+      })
+      this.saveToast.onDidDismiss((data,role) => {
+        if (role == "close") {
+          this.save()
+        }
+      })
+      this.saveToast.present().then( () => {
+        if (el) { el.setFocus(); }
+      })
+    }
+    this._dirty = true;
+  }
+  clean () {
+    this._dirty = false;
+    this.saveToast.dismiss({autoclose:true});
+  }
+
+  save() {
+    this.personService.saveProfile(this.person).then(
+      response => {
+        this.auth.setLoggedInUser(this.person);
+        const toast = this.toastCtrl.create({
+            message: 'Saved successfully',
+            duration: 3000,
+            position: 'bottom'
+          });
+        toast.present();
+        this.clean();
+        this.editing=false;
+      }
+    ).catch(() => {
+      const toast = this.toastCtrl.create({
+          message: 'Something went wrong',
+          duration: 3000,
+          position: 'bottom'
+        });
+      toast.present();
+    }
+
+    )
+  }
+
+  killAffiliation(n) {
+    this.person.affiliations.splice(n,1);
+    this.dirty();
+    if (this.person.affiliations.length == 0) {
+      this.addAffiliation()
+    }
+  }
+
+  addAffiliation() {
+    this.person.affiliations.push({ organisation:"", position:"", website:"" })
+    this.dirty();
+  }
+
+  showPermissions(field) { /* No! This should be a select! */
+    let alert = this.alertCtrl.create();
+    alert.setTitle('Who can view this field?');
+    let perms = (this.person.field_permissions || {})[field] || []
+    for (var n of ["Everyone", "People at my events", "My Issue Networks"]) {
+      alert.addInput({
+        type: 'checkbox', label: n, value: n, checked: perms.indexOf(n)>-1
+      });
+    }
+
+    alert.addButton('Cancel');
+    alert.addButton({
+      text: 'OK',
+      handler: data => {
+        if (!this.person.field_permissions) this.person.field_permissions = {} as FieldPermissions
+        this.person.field_permissions[field] = data
+        this.dirty()
+      }
+    });
+    alert.present();
   }
 }
