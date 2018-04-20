@@ -13,7 +13,7 @@ import { PeopleComponent } from './people';
 })
 export class FollowsComponent extends PeopleComponent {
   getPeople() {
-    return this.personService.getFollows(this._page)
+    return this.personService.getFollows(this._page, this.params)
         .then(result => this.addMorePeople(result),
           error => this.dammit(error));
   }

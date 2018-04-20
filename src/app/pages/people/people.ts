@@ -38,7 +38,8 @@ export class PeopleComponent implements OnInit {
   }
 
   getPeople() {
-    return this.personService.getRecommended(this._page)
+
+    return this.personService.getRecommended(this._page, this.params)
         .then(result => this.addMorePeople(result),
           error => this.dammit(error));
   }

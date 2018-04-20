@@ -31,14 +31,14 @@ export class PersonService {
       .catch(this.handleError);
   }
 
-  getFollows(page: number = 1) :Promise<PagedResults<Person>> {
-    return this.getPeople(page, {}, this.followUrl);
+  getFollows(page: number = 1, params = {}) :Promise<PagedResults<Person>> {
+    return this.getPeople(page, params, this.followUrl);
   }
-  getRecent(page: number = 1) :Promise<PagedResults<Person>> {
-    return this.getPeople(page, {}, this.recentUrl);
+  getRecent(page: number = 1, params = {}) :Promise<PagedResults<Person>> {
+    return this.getPeople(page, params, this.recentUrl);
   }
-  getRecommended(page: number = 1) :Promise<PagedResults<Person>> {
-    return this.getPeople(page, {}, this.recommendedUrl);
+  getRecommended(page: number = 1, params = {}) :Promise<PagedResults<Person>> {
+    return this.getPeople(page, params, this.recommendedUrl);
   }
 
   getPerson(id: string): Promise<Person> {
