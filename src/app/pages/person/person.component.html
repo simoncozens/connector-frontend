@@ -36,7 +36,7 @@
 
     <!-- Privacy settings if editing -->
     <ion-item *ngIf="editing">
-      <ion-label>Who can see my profile?</ion-label>
+      <h3>Who can see my profile?</h3>
       <ion-select [(ngModel)]="person.field_permissions" multiple="true" (ionChange)="dirty($event)">
         <ion-option>Everyone</ion-option>
         <ion-option>People at my events</ion-option>
@@ -64,7 +64,7 @@
     </ion-item>
 
     <!-- Phone and email contact -->
-    <ion-item>
+    <ion-item *ngIf="!editing">
       <ion-grid>
         <ion-row>
           <ion-col>
@@ -89,6 +89,10 @@
           </ion-col>
         </ion-row>
       </ion-grid>
+    </ion-item>
+    <ion-item *ngIf="editing">
+      <h3>Phone Number</h3>
+      <ion-input (ionChange)="dirty($event)" [(ngModel)]="person.phone"></ion-input>
     </ion-item>
 
     <!-- Full bio -->
@@ -131,15 +135,15 @@
           Organisation {{1+idx}}
       </ion-item-divider>
       <ion-item>
-        <ion-label floating>Organisation</ion-label>
+        <h3 floating>Organisation</h3>
         <ion-input (ionChange)="dirty($event)" [(ngModel)]="affiliation.organisation"></ion-input>
       </ion-item>
       <ion-item>
-        <ion-label floating>Position</ion-label>
+        <h3 floating>Position</h3>
         <ion-input (ionChange)="dirty($event)" [(ngModel)]="affiliation.position"></ion-input>
       </ion-item>
       <ion-item>
-        <ion-label floating>Website</ion-label>
+        <h3 floating>Website</h3>
         <ion-input (ionChange)="dirty($event)" [(ngModel)]="affiliation.website"></ion-input>
       </ion-item>
     </div>
@@ -167,7 +171,7 @@
       </p>
     </ion-item>
     <ion-item *ngIf="editing">
-      <ion-label>Primary language</ion-label>
+      <h3>Primary language</h3>
       <ion-select [(ngModel)]="person.primary_language" (ionChange)="dirty($event)">
         <ion-option value="English">English</ion-option>
         <ion-option value="French">French</ion-option>
@@ -179,8 +183,8 @@
       </ion-select>
       </ion-item>
     <ion-item *ngIf="editing">
-      <ion-label floating>Other languages</ion-label>
-      <ion-input (ionChange)="dirty($event)" [(ngModel)]="person.languages_spoken"></ion-input>
+      <h3 floating>Other languages</h3>
+      <ion-input ion-right (ionChange)="dirty($event)" [(ngModel)]="person.languages_spoken"></ion-input>
     </ion-item>
 
     <!-- Location -->
@@ -195,7 +199,7 @@
     <ion-item>
       <h3>City</h3>
       <p *ngIf="!editing">{{person.city}}</p>
-      <ion-input *ngIf="editing"
+      <ion-input ion-right *ngIf="editing"
         (ionChange)="dirty($event)" [(ngModel)]="person.city">
       </ion-input>
     </ion-item>
@@ -236,10 +240,12 @@
       </ion-grid>
     </ion-item>
 
-    <ion-item  *ngFor="let network of social_fields">
-      <h3 *ngIf="editing">{{network.name}}</h3>
-      <ion-input *ngIf="editing" (ionChange)="dirty($event)" [(ngModel)]="person[network.field]"></ion-input>
-    </ion-item>
+    <div *ngIf="editing">
+      <ion-item *ngFor="let network of social_fields">
+        <h3 >{{network.name}}</h3>
+        <ion-input *ngIf="editing" (ionChange)="dirty($event)" [(ngModel)]="person[network.field]"></ion-input>
+      </ion-item>
+    </div>
 
     <!-- Notes about them -->
     <ion-item *ngIf="!editing">
