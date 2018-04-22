@@ -255,10 +255,11 @@
 
     <!-- Add to my contact -->
     <ion-item *ngIf="!editing">
-      <button *ngIf="!editing" ion-button (click)="addContact()">
-        Add to my contacts <br>
-        <ion-icon name="person-add"></ion-icon>
-      </button>
+      <p text-center *ngIf="!editing" (click)="addContact()">
+        <ion-icon class="icon-large" name="person-add"></ion-icon>
+        <br>
+        Add to my contacts
+      </p>
     </ion-item>
   </ion-list>
 </ion-content>
