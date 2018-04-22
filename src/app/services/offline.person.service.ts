@@ -222,7 +222,7 @@ export class OfflinePersonService extends PersonService {
 
 
   follow(id: string) {
-    this.dbHandle.executeSql(
+    return this.dbHandle.executeSql(
       "UPDATE profiles SET followed = 1 WHERE id = ?", [id])
     .then( () => {
       var url = '/people/' + id + '/follow'
@@ -232,7 +232,7 @@ export class OfflinePersonService extends PersonService {
   }
 
   unfollow(id: string) {
-    this.dbHandle.executeSql(
+    return this.dbHandle.executeSql(
       "UPDATE profiles SET followed = NULL WHERE id = ?", [id])
     .then( () => {
       var url = '/people/' + id + '/unfollow'

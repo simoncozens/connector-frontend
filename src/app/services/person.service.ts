@@ -50,7 +50,7 @@ export class PersonService {
   }
 
   follow(id: string) {
-    this.http.get(this.personUrl + id + '/follow')
+    return this.http.get(this.personUrl + id + '/follow')
       .toPromise().then( response => {
          var r = response;
          if (r["ok"]) { return true; }
@@ -59,7 +59,16 @@ export class PersonService {
   }
 
   unfollow(id: string) {
-    this.http.get(this.personUrl + id + '/unfollow')
+    return this.http.get(this.personUrl + id + '/unfollow')
+      .toPromise().then( response => {
+         var r = response;
+         if (r["ok"]) { return true; }
+         throw new Error()
+      })
+  }
+
+  addToNetwork(id: string) {
+    return this.http.get(this.personUrl + id + '/add_to_network')
       .toPromise().then( response => {
          var r = response;
          if (r["ok"]) { return true; }

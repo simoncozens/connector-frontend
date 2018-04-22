@@ -107,6 +107,7 @@
         <ion-badge *ngFor="let e of person?.experience">
           {{e}}
         </ion-badge>
+      <button ion-button *ngIf="canAddToMyNetwork()" (click)="addToMyNetwork()">+ {{me().catalyst}} Network</button>
     </ion-item>
 
     <!-- Workplaces -->

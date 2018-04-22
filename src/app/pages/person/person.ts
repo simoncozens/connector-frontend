@@ -56,6 +56,24 @@ export class PersonComponent implements OnInit {
         .catch((error) => console.log(error));
   }
 
+  public me():Person { return this.auth.loggedInUser() }
+
+  public canAddToMyNetwork() :boolean {
+    var network = this.me().catalyst;
+    if (!network) { return false; }
+    // Are they already in?
+    if (this.person.experience && this.person.experience.indexOf(network) >-1) { return false; }
+    return true;
+  }
+
+  public addToMyNetwork() {
+    this.personService.addToNetwork(this.person.id).then(() => {
+      var network = this.me().catalyst;
+      if (!this.person.experience) { this.person.experience = [] }
+      this.person.experience.push(network)
+    }).catch( (e) => dammit(e));
+  }
+
   follow(): void {
     this.person.followed = true;
     this.personService.follow(this.person.id);
@@ -198,6 +216,16 @@ END:VCARD`
         this.person.field_permissions[field] = data
         this.dirty()
       }
+    });
+    alert.present();
+  }
+  
+  dammit(e) {
+    console.log(e);
+    const alert = this.alertCtrl.create({
+      title: 'Something went wrong',
+      subTitle: 'Error' + JSON.stringify(e),
+      buttons: ['Dismiss']
     });
     alert.present();
   }

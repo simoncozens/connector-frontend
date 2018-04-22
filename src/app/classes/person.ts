@@ -36,4 +36,5 @@ export class Person {
   lausanne_title: string;
   joined_lausanne: string;
   field_permissions: FieldPermissions;
+  catalyst: string;
 }
