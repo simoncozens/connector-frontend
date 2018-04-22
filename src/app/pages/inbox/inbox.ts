@@ -1,6 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { Message } from '../../classes/message';
-import { IonicPage, Platform } from 'ionic-angular';
+import { IonicPage } from 'ionic-angular';
 import { MessageService } from '../../services/message.service';
 import { PagedResults } from '../../classes/pagedresults';
 import { NavController } from 'ionic-angular';

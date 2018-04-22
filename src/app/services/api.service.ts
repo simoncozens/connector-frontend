@@ -1,19 +1,23 @@
-import { AuthHttp, AuthConfig } from 'angular2-jwt';
 import 'rxjs/add/operator/toPromise';
 import { Injectable } from '@angular/core';
-
-import { AppSettings } from '../app.settings';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable()
 export class APIService {
-  constructor(public authHttp: AuthHttp) { }
+  constructor(public http: HttpClient) { }
 
   apiCall(url: string,
           method: string = "GET",
           params = {}): Promise<any> {
-    return this.authHttp
-      .get(url, {method: method, params: params } )
-      .toPromise()
+    if (method == "GET") {
+      return this.http
+        .get(url, {params: params } )
+        .toPromise()
+    } else {
+      return this.http
+        .post(url, {params: params } )
+        .toPromise()
+    }
   }
 
 }

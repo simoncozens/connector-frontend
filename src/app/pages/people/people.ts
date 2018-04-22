@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { Person } from '../../classes/person';
 import { IonicPage, Platform } from 'ionic-angular';
 import { OfflinePersonService } from '../../services/offline.person.service';

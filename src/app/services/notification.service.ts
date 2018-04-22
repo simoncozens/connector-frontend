@@ -1,15 +1,15 @@
 import { Device } from '@ionic-native/device';
 import { Push, PushObject, PushOptions } from '@ionic-native/push';
 import { AppSettings } from '../app.settings';
-import { AuthHttp } from 'angular2-jwt';
 import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable()
 export class NotificationService {
   private addDeviceUrl = AppSettings.API_ENDPOINT + '/people/add_device';
 
   constructor (
-    public authHttp: AuthHttp,
+    public http: HttpClient,
     public push: Push,
     public device: Device
     ) { }
@@ -33,8 +33,8 @@ export class NotificationService {
         token: token
     };
     console.log("Sending token ", token)
-    return this.authHttp
-      .post(this.addDeviceUrl, {device: device} )
+    return this.http
+      .post(this.addDeviceUrl, {params: { device: device}} )
       .toPromise()
   }
 }

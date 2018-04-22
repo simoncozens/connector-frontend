@@ -4,7 +4,6 @@ import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { Network } from '@ionic-native/network';
 
-import { HomePage } from './pages/home/home';
 import { PeopleComponent } from './pages/people/people';
 import { LoginComponent } from './pages/login/login.component';
 import { AuthService } from './services/auth.service';
@@ -12,6 +11,8 @@ import { OfflinePersonService } from './services/offline.person.service';
 import { NotificationService } from './services/notification.service';
 import {TranslateService} from '@ngx-translate/core';
 import { Globalization } from '@ionic-native/globalization';
+
+import { JwtHelperService } from '@auth0/angular-jwt';
 
 @Component({
   templateUrl: 'app.html'
@@ -30,6 +31,7 @@ export class MyApp {
     public splashScreen: SplashScreen,
     public loadingCtrl: LoadingController,
     public alertCtrl: AlertController,
+    public jwtHelper: JwtHelperService,
     private network: Network,
     public ops: OfflinePersonService,
     public notificationService: NotificationService,
@@ -54,6 +56,9 @@ export class MyApp {
       this.splashScreen.hide();
       this.setupPages()
       this.ops.openDb().then( () => {
+        var token = localStorage.getItem('token');
+        console.log("Token",this.jwtHelper.decodeToken(token)); // token
+        console.log("Expires",this.jwtHelper.getTokenExpirationDate(token)); // token
         if (!this.auth.loggedIn()) {
           this.rootPage = LoginComponent;
         } else if (this.platform.is('cordova')) {

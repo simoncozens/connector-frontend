@@ -2,6 +2,13 @@ import { BrowserModule } from '@angular/platform-browser';
 import { ErrorHandler, NgModule } from '@angular/core';
 import { IonicApp, IonicErrorHandler, IonicModule } from 'ionic-angular';
 import { Http, HttpModule } from '@angular/http';
+import { JwtModule } from '@auth0/angular-jwt';
+import { HttpClientModule } from '@angular/common/http';
+
+export function tokenGetter() {
+  return localStorage.getItem('token');
+}
+
 import { Network } from '@ionic-native/network';
 import { Push } from '@ionic-native/push';
 import { Device } from '@ionic-native/device';
@@ -16,7 +23,6 @@ import { RecentModule } from './pages/people/recent.module';
 import { PersonModule } from './pages/person/person.module';
 import { MyProfileModule } from './pages/person/myprofile.module';
 import { InboxModule } from './pages/inbox/inbox.module';
-import { EditProfileModule } from './pages/editprofile/editprofile.module';
 import { MessagesWithModule } from './pages/messages-with/messages-with.module';
 
 import { StatusBar } from '@ionic-native/status-bar';
@@ -31,6 +37,7 @@ import { AuthModule } from './services/auth.module';
 import { AuthService } from './services/auth.service';
 import { AuthGuard } from './services/auth-guard.service';
 import { SQLite } from '@ionic-native/sqlite';
+import { UniqueDeviceID } from '@ionic-native/unique-device-id';
 
 import { TranslateModule, TranslateService, TranslateLoader } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
@@ -54,6 +61,13 @@ export function createTranslateLoader(http: Http) {
     BrowserModule,
     IonicModule.forRoot(MyApp),
     HttpModule,
+    HttpClientModule,
+    JwtModule.forRoot({
+      config: {
+        tokenGetter: tokenGetter,
+        whitelistedDomains: [/^null$/ , /localhost/, /127.0.0.1/, 'connector-dev.herokuapp.com'],
+      }
+    }),
     AuthModule,
     PeopleModule,
     PersonModule,
@@ -61,7 +75,6 @@ export function createTranslateLoader(http: Http) {
     FollowsModule,
     RecentModule,
     InboxModule,
-    EditProfileModule,
     MessagesWithModule,
     PipesModule,
     TranslateModule.forRoot({
@@ -87,7 +100,7 @@ export function createTranslateLoader(http: Http) {
     SplashScreen,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
     TranslateModule, TranslateService, TranslateStore,
-    SQLite, Contacts
+    SQLite, Contacts, UniqueDeviceID
   ]
 })
 export class AppModule {}

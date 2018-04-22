@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
-import { AuthHttp } from 'angular2-jwt';
+import { HttpClient } from '@angular/common/http';
+
 import { AppSettings } from '../app.settings';
 import { PagedResults } from '../classes/pagedresults';
 
@@ -16,18 +17,18 @@ export class PersonService {
   private recentUrl = AppSettings.API_ENDPOINT + '/people/recent';
   private recommendedUrl = AppSettings.API_ENDPOINT + '/people/recommended';
 
-  constructor(public authHttp: AuthHttp) { }
+  constructor(public http: HttpClient) { }
 
   getPeople(page: number = 1, params = {}, url = this.peopleListUrl) :Promise<PagedResults<Person>> {
     const myParams: any = Object.assign({'page': page}, params);
-    return this.authHttp
+    return this.http
       .get(url,
-        {method: 'GET',
+        {
         params: myParams
         }
       )
       .toPromise()
-      .then(response => response.json() as PagedResults<Person>)
+      .then(response => response as PagedResults<Person>)
       .catch(this.handleError);
   }
 
@@ -42,40 +43,40 @@ export class PersonService {
   }
 
   getPerson(id: string): Promise<Person> {
-    return this.authHttp
+    return this.http
       .get(this.personUrl + id)
       .toPromise()
-      .then(response => response.json() as Person)
+      .then(response => response as Person)
   }
 
   follow(id: string) {
-    this.authHttp.get(this.personUrl + id + '/follow')
+    this.http.get(this.personUrl + id + '/follow')
       .toPromise().then( response => {
-         var r = response.json()
+         var r = response;
          if (r["ok"]) { return true; }
-         throw new Error(r)
+         throw new Error()
       })
   }
 
   unfollow(id: string) {
-    this.authHttp.get(this.personUrl + id + '/unfollow')
+    this.http.get(this.personUrl + id + '/unfollow')
       .toPromise().then( response => {
-         var r = response.json()
+         var r = response;
          if (r["ok"]) { return true; }
-         throw new Error(r)
+         throw new Error()
       })
   }
 
   saveProfile(profileData) {
-    return this.authHttp
-      .put(this.personUrl, profileData)
+    return this.http
+      .put(this.personUrl, {person: profileData })
       .toPromise()
   }
 
   annotate(p: Person, content: string) {
-    this.authHttp.post(this.personUrl + p.id + '/annotate', { content: content})
+    this.http.post(this.personUrl + p.id + '/annotate', { params: { content: content }})
       .toPromise()
-      .then(response => response.json() as Person)
+      .then(response => response as Person)
       .catch(this.handleError);
   }
 

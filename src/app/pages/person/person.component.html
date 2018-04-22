@@ -253,8 +253,11 @@
     </ion-item>
 
     <!-- Add to my contact -->
-    <ion-icon *ngIf="!editing">
-    </ion-icon>
-
+    <ion-item *ngIf="!editing">
+      <button *ngIf="!editing" ion-button (click)="addContact()">
+        Add to my contacts <br>
+        <ion-icon name="person-add"></ion-icon>
+      </button>
+    </ion-item>
   </ion-list>
 </ion-content>

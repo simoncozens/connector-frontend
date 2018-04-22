@@ -4,7 +4,6 @@ import { PersonService } from '../../services/person.service';
 import { OfflinePersonService } from '../../services/offline.person.service';
 import { NavController, NavParams, IonicPage, Platform, ToastController, AlertController } from 'ionic-angular';
 
-import { Network } from '@ionic-native/network';
 import { Contacts, Contact, ContactField, ContactName } from '@ionic-native/contacts';
 import { AuthService } from '../../services/auth.service';
 import { picklists } from "../../picklists";

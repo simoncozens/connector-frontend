@@ -1,5 +1,5 @@
-import { Component, OnInit, Input } from '@angular/core';
-import { IonicPage, Platform } from 'ionic-angular';
+import { Component } from '@angular/core';
+import { IonicPage } from 'ionic-angular';
 
 import { PeopleComponent } from './people';
 

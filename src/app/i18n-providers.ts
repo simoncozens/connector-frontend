@@ -19,7 +19,6 @@ export function getTranslationProviders(): Promise<Object[]> {
   debugger;
   return provider;
 }
-declare var System: any;
 function getTranslationsWithSystemJs(file: string) {
 // changes Start here 
   var text = "";

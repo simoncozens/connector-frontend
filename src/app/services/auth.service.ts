@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
-import { tokenNotExpired } from 'angular2-jwt';
+import { JwtHelperService } from '@auth0/angular-jwt';
+
 import { Http, Headers } from '@angular/http';
 import 'rxjs/add/operator/toPromise';
 import { Person } from '../classes/person';
@@ -14,10 +15,10 @@ export class AuthService {
     'Content-Type': 'application/json'
   });
 
-  constructor(public http: Http) { }
+  constructor(public http: Http, public jwtHelper: JwtHelperService) { }
 
   loggedIn() {
-    return tokenNotExpired();
+    return this.jwtHelper.decodeToken()
   }
 
   loggedInUser(): Person {

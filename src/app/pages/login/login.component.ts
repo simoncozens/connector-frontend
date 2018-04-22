@@ -1,4 +1,4 @@
-import { Component, Input, ViewChild } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { Platform } from 'ionic-angular';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { AuthService } from '../../services/auth.service';

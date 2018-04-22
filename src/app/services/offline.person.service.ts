@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { AuthHttp } from 'angular2-jwt';
 import { Platform } from 'ionic-angular';
 
 import { AppSettings } from '../app.settings';
@@ -7,6 +6,8 @@ import { PagedResults } from '../classes/pagedresults';
 import { SQLite, SQLiteObject } from '@ionic-native/sqlite';
 import { PersonService } from './person.service';
 import { Network } from '@ionic-native/network';
+import { UniqueDeviceID } from '@ionic-native/unique-device-id';
+import { HttpClient } from '@angular/common/http';
 
 import 'rxjs/add/operator/toPromise';
 
@@ -25,13 +26,15 @@ export class OfflinePersonService extends PersonService {
   // with a unique device ID.
   private key = "7326A638-3BB5-4E2C-B85F-B2DB4B4AFEF1"
 
-  constructor(public authHttp: AuthHttp,
+  constructor(public http: HttpClient,
     private network: Network,
     private platform: Platform,
+    private uniqueDeviceID: UniqueDeviceID,
     private sqlite: SQLite) {
-    super(authHttp);
+    super(http);
     this.platform.ready().then(() => {
       if (this.platform.is('cordova')) {
+        this.uniqueDeviceID.get().then((uuid)=> this.key = uuid+this.key)
         this.network.onConnect().subscribe(() => {
             setTimeout(() => this.miniSync(), 3000);
         })
@@ -45,7 +48,7 @@ export class OfflinePersonService extends PersonService {
   openDb() :Promise<void|SQLiteObject> {
     return this.sqlite.create({
         name: "connector.db",
-        //key: this.key,
+        key: this.key,
         location: "default"
       }).then((db: SQLiteObject) => {
         this.dbHandle = db;
@@ -68,9 +71,9 @@ export class OfflinePersonService extends PersonService {
 
   sendWorkQueueItem(url: string, payload: string): Promise<any> {
     if(payload.length >0) {
-        return this.authHttp.post(AppSettings.API_ENDPOINT +  url, JSON.parse(payload)).toPromise()
+        return this.http.post(AppSettings.API_ENDPOINT +  url, JSON.parse(payload)).toPromise()
       } else {
-        return this.authHttp.get(AppSettings.API_ENDPOINT +  url).toPromise()
+        return this.http.get(AppSettings.API_ENDPOINT +  url).toPromise()
       }
   }
 
@@ -105,7 +108,7 @@ export class OfflinePersonService extends PersonService {
       // But it makes the compiler go mental. I think this code is wrong.
       console.log("Sending to server")
       console.log(ids)
-      this.authHttp.put(this.updateVisitsUrl, { ids: ids }).toPromise()
+      this.http.put(this.updateVisitsUrl, { ids: ids }).toPromise()
     },(e) => { console.log("Oops in SQL"); console.log(e)})
   }
 
@@ -115,9 +118,9 @@ export class OfflinePersonService extends PersonService {
     var syncUrl = this.bulkUpdateUrl
     var lastSynced = this.getLastSynced()
     if (lastSynced) { syncUrl += "?since=" + lastSynced }
-    return this.authHttp.get(syncUrl)
+    return this.http.get(syncUrl)
       .toPromise()
-      .then(response => response.json())
+      .then(response => response as Array<any>)
       .then(response => {
         // First one is a count, drop it
         response.shift()
