@@ -16,7 +16,7 @@ import { NavController, NavParams, AlertController } from 'ionic-angular';
   selector: 'people',
   templateUrl: './people.component.html'
 })
-export class PeopleComponent implements OnInit {
+export class PeopleComponent {
   result: PagedResults<Person>;
   _page = 1;
   params = {};
@@ -44,7 +44,7 @@ export class PeopleComponent implements OnInit {
           error => this.dammit(error));
   }
 
-  ngOnInit(): void {
+  ionViewWillEnter(): void {
     // this.route.params.subscribe(params => {
       this.result = null
       this.params = this.navParams.get("params")
