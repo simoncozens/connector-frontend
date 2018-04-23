@@ -66,7 +66,7 @@ export function createTranslateLoader(http: Http) {
     JwtModule.forRoot({
       config: {
         tokenGetter: tokenGetter,
-        whitelistedDomains: [/^null$/ , /localhost/, /127.0.0.1/, 'connector-dev.herokuapp.com'],
+        whitelistedDomains: ["localhost:3000", "127.0.0.1:3000", 'connector-dev.herokuapp.com'],
       }
     }),
     AuthModule,
