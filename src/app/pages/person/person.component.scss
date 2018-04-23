@@ -40,3 +40,17 @@ ion-textarea {
 p.organisation {
   margin-bottom: 1em;
 }
+
+.editable-image {
+  margin: auto;
+  display: block;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border: 2px solid #ddd;
+  padding: 6px;
+  position: relative;
+  left: 40px;
+  top: -35px;
+  background: #fff;
+}

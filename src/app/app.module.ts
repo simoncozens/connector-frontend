@@ -9,6 +9,7 @@ export function tokenGetter() {
   return localStorage.getItem('token');
 }
 
+import { Camera } from '@ionic-native/camera';
 import { Network } from '@ionic-native/network';
 import { Push } from '@ionic-native/push';
 import { Device } from '@ionic-native/device';
@@ -96,7 +97,7 @@ export function createTranslateLoader(http: Http) {
     PersonService, AuthService, AuthGuard, OfflinePersonService,
     MessageService, InterComponentMessageService,
     StatusBar, Network, Push, Device, NotificationService,
-    Globalization,
+    Globalization, Camera,
     SplashScreen,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
     TranslateModule, TranslateService, TranslateStore,

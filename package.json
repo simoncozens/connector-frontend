@@ -21,6 +21,7 @@
     "@angular/platform-browser": "^5.2.10",
     "@angular/platform-browser-dynamic": "^5.2.10",
     "@auth0/angular-jwt": "^1.1.0",
+    "@ionic-native/camera": "^4.7.0",
     "@ionic-native/contacts": "^4.3.2",
     "@ionic-native/core": "^4.2.0",
     "@ionic-native/device": "^4.3.3",
@@ -37,6 +38,7 @@
     "angular2-moment": "^1.8.0",
     "cordova-android": "^6.3.0",
     "cordova-ios": "~4.5.4",
+    "cordova-plugin-camera": "^4.0.3",
     "cordova-plugin-compat": "^1.2.0",
     "cordova-plugin-contacts": "^3.0.0",
     "cordova-plugin-device": "^1.1.4",
@@ -79,7 +81,8 @@
         "FCM_VERSION": "11.0.1"
       },
       "cordova-plugin-globalization": {},
-      "cordova-plugin-uniquedeviceid": {}
+      "cordova-plugin-uniquedeviceid": {},
+      "cordova-plugin-camera": {}
     },
     "platforms": [
       "android",

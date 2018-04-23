@@ -30,13 +30,14 @@
 
     <!-- Picture -->
     <p class="spacer"></p>
-    <ion-avatar>
+    <ion-avatar (click)="takePicture()">
       <img class="medavatar" item-center [src]="person?.picture | fromBase64"/>
+      <ion-icon class="editable-image" *ngIf="editing && platform.is('cordova')" name="md-create"></ion-icon>
     </ion-avatar>
 
     <!-- Privacy settings if editing -->
     <ion-item *ngIf="editing">
-      <h3>Who can see my profile?</h3>
+      <ion-label>Who can see my profile?</ion-label>
       <ion-select [(ngModel)]="person.field_permissions" multiple="true" (ionChange)="dirty($event)">
         <ion-option>Everyone</ion-option>
         <ion-option>People at my events</ion-option>
@@ -44,23 +45,25 @@
       </ion-select>
     </ion-item>
 
-    <ion-item>
-      <!-- short bio -->
-      <p text-center *ngIf="person.short_bio && !editing">
+    <!-- short bio and Lausanne Connection -->
+    <ion-item *ngIf="!editing">
+      <p text-center *ngIf="person.short_bio">
         {{person.short_bio}}
       </p>
-      <ion-input *ngIf="editing" placeholder="Short Bio"
-        (ionChange)="dirty($event)" [(ngModel)]="person.short_bio">
-      </ion-input>
 
       <!-- Why are you here? (not editable) -->
-      <p text-center *ngIf="person.lausanne_title && !editing">
+      <p text-center *ngIf="person.lausanne_title">
         Lausanne {{person.lausanne_title}}
       </p>
-      <p text-center *ngIf="person.joined_lausanne && !editing">
+      <p text-center *ngIf="person.joined_lausanne">
         Joined Lausanne {{person.joined_lausanne}}
       </p>
-
+    </ion-item>
+    <ion-item *ngIf="editing">
+      <h3>Short bio</h3>
+      <ion-input ion-right placeholder="Short Bio"
+        (ionChange)="dirty($event)" [(ngModel)]="person.short_bio">
+      </ion-input>
     </ion-item>
 
     <!-- Phone and email contact -->
@@ -102,7 +105,7 @@
       <ion-textarea *ngIf="editing" placeholder="Introduction Bio" (ionChange)="dirty($event)" [(ngModel)]="person.intro_bio"></ion-textarea>
     </ion-item>
 
-    <ion-item>
+    <ion-item *ngIf="!editing">
       <h3>Issue Networks</h3>
         <ion-badge *ngFor="let e of person?.experience">
           {{e}}

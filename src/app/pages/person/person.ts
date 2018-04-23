@@ -3,6 +3,7 @@ import { Person, FieldPermissions } from '../../classes/person';
 import { PersonService } from '../../services/person.service';
 import { OfflinePersonService } from '../../services/offline.person.service';
 import { NavController, NavParams, IonicPage, Platform, ToastController, AlertController } from 'ionic-angular';
+import { Camera, CameraOptions } from '@ionic-native/camera';
 
 import { Contacts, Contact, ContactField, ContactName } from '@ionic-native/contacts';
 import { AuthService } from '../../services/auth.service';
@@ -40,7 +41,8 @@ export class PersonComponent implements OnInit {
     private contacts: Contacts,
     public platform: Platform,
     public alertCtrl: AlertController,
-    public toastCtrl: ToastController
+    public toastCtrl: ToastController,
+    private camera: Camera
   ) {
     if (this.platform.is('cordova')) {
       this.personService = this.ops;
@@ -71,7 +73,7 @@ export class PersonComponent implements OnInit {
       var network = this.me().catalyst;
       if (!this.person.experience) { this.person.experience = [] }
       this.person.experience.push(network)
-    }).catch( (e) => dammit(e));
+    }).catch( (e) => this.dammit(e));
   }
 
   follow(): void {
@@ -93,6 +95,22 @@ export class PersonComponent implements OnInit {
 
   editProfile() {
     this.navCtrl.push("editprofile")
+  }
+
+  takePicture() {
+    if (!this.editing) return;
+    if (!this.platform.is('cordova')) return;
+    const options: CameraOptions = {
+      destinationType: this.camera.DestinationType.DATA_URL,
+      encodingType: this.camera.EncodingType.JPEG,
+      mediaType: this.camera.MediaType.PICTURE,
+      targetHeight: 200,
+      targetWidth: 200,
+      cameraDirection: this.camera.Direction.BACK
+    };
+    this.camera.getPicture(options).then((imageData) => {
+      console.log(imageData);
+    });
   }
 
   addContact(): void {
