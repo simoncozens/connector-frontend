@@ -67,6 +67,7 @@ export function createTranslateLoader(http: Http) {
       config: {
         tokenGetter: tokenGetter,
         whitelistedDomains: ["localhost:3000", "127.0.0.1:3000", 'connector-dev.herokuapp.com'],
+        blacklistedRoutes: ["localhost:3000/api/login", "127.0.0.1:3000/api/login", "connector-dev.herokuapp.com/api/login" ]
       }
     }),
     AuthModule,

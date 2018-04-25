@@ -20,7 +20,7 @@ import { JwtHelperService } from '@auth0/angular-jwt';
 export class MyApp {
   @ViewChild(Nav) nav: Nav;
 
-  rootPage: any = PeopleComponent;
+  rootPage: any = LoginComponent;
 
   pages: Array<{title: string, segment: string, onlineOnly: boolean, disabled?:boolean}>;
   availablePages: Array<{title: string, segment: string, onlineOnly: boolean, disabled?:boolean}>;
@@ -57,16 +57,21 @@ export class MyApp {
       this.setupPages()
       this.ops.openDb().then( () => {
         var token = localStorage.getItem('token');
-        console.log("Token",this.jwtHelper.decodeToken(token)); // token
-        console.log("Expires",this.jwtHelper.getTokenExpirationDate(token)); // token
-        if (!this.auth.loggedIn()) {
+        if (token) {
+          console.log("Token",this.jwtHelper.decodeToken(token)); // token
+          console.log("Expires",this.jwtHelper.getTokenExpirationDate(token)); // token
+        }
+        if (!token || !this.auth.loggedIn()) {
           this.rootPage = LoginComponent;
-        } else if (this.platform.is('cordova')) {
-          console.log("Hello!")
+        } else {
+          this.rootPage = PeopleComponent;
+          if (this.platform.is('cordova')) {
+            console.log("Hello!")
             if (this.network.type != "none") {
               this.notificationService.init()
               this.sync();
             }
+          }
         }
       });
       if (this.platform.is("cordova")) {
