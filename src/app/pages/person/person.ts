@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Person, FieldPermissions } from '../../classes/person';
+import { Person, Affiliation, FieldPermissions } from '../../classes/person';
 import { PersonService } from '../../services/person.service';
 import { OfflinePersonService } from '../../services/offline.person.service';
 import { NavController, NavParams, IonicPage, Platform, ToastController, AlertController } from 'ionic-angular';
@@ -120,34 +120,13 @@ export class PersonComponent implements OnInit {
   addContact(): void {
     console.log("Add contact")
     if (this.platform.is('cordova')) {
-      let contact: Contact = this.contacts.create();
-      contact.displayName = this.person.name;
-      contact.nickName = this.person.name;
-      contact.name = new ContactName();
-      contact.name.formatted = this.person.name;
-      contact.emails = [new ContactField('home', this.person.email)];
+      let contact: Contact = this.personToContact(this.person)
       contact.save().then(
         () => console.log('Contact saved!', contact),
         (error: any) => console.error('Error saving contact.', error)
       );
     } else {
-        var vcf = `BEGIN:VCARD
-VERSION:3.0
-N:${this.person.name}
-FN:${this.person.name}
-ORG:${this.person.affiliations[0] && this.person.affiliations[0].organisation}
-EMAIL;type=INTERNET;type=WORK;type=pref:${this.person.email}
-TEL;type=WORK;type=pref:+1 617 555 1212
-TEL;type=WORK:+1 (617) 555-1234
-TEL;type=CELL:+1 781 555 1212
-TEL;type=HOME:+1 202 555 1212
-item1.ADR;type=WORK:;;2 Enterprise Avenue;Worktown;NY;01111;USA
-item1.X-ABADR:us
-item2.ADR;type=HOME;type=pref:;;3 Acacia Avenue;Hoemtown;MA;02222;USA
-item2.X-ABADR:us
-item3.URL;type=pref:${this.person.affiliations[0] && this.person.affiliations[0].website}
-item3.X-ABLabel:_$!<HomePage>!$_
-END:VCARD`
+      var vcf = this.personToVcard(this.person);
         var blob = new Blob([vcf], {
           type: 'text/vcard'
         });
@@ -155,6 +134,63 @@ END:VCARD`
         var downloadUrl= window.URL.createObjectURL(blob);
         window.location.href = downloadUrl;
       }
+  }
+
+  private personToVcard(person: Person) {
+    var vcf= `BEGIN:VCARD
+VERSION:3.0
+N:${person.name}
+FN:${person.name}
+ORG:${person.affiliations[0] && person.affiliations[0].organisation}
+EMAIL;type=INTERNET;type=WORK;type=pref:${person.email}
+TEL;type=pref:${person.phone}
+`;
+
+    if (person.skype_id) {
+      vcf = vcf + `IMPP;TYPE=home;PREF=1:skype:${person.skype_id}\n`
+    }
+    if (person.facebook_id) {
+      vcf = vcf+ `X-SOCIALPROFILE;type=facebook;x-displayname=${person.name}:https://www.facebook.com/profile.php?id=${person.facebook_id}\n`
+    }
+
+    if (person.twitter_id) {
+      vcf = vcf+ `X-SOCIALPROFILE;type=twitter;x-displayname=${person.twitter_id}:https://www.twitter.com/${person.twitter_id}\n`
+    }
+
+    if (person.linkedin_id) {
+      vcf = vcf+ `X-SOCIALPROFILE;type=linkedin;x-displayname=${person.linkedin_id}:https://www.linkedin.com/${person.linkedin_id}\n`
+    }
+    if (person.picture) {
+      var pic = person.picture.replace(/^.*?image\/([^;]+).*?,/, "ENCODING=b;TYPE=$1:")
+      vcf = vcf+ `PHOTO;${pic}\n`;
+    }
+
+    vcf = vcf+"END:VCARD\n"
+    return vcf;
+  }
+
+  private personToContact(person: Person) {
+    let contact: Contact = this.contacts.create();
+    contact.displayName = person.name;
+    contact.nickName = person.name;
+    contact.name = new ContactName();
+    contact.name.formatted = person.name;
+    contact.emails = [new ContactField('home', person.email)];
+    if (person.phone) {
+      contact.phoneNumbers = [new ContactField('mobile', person.phone)];
+    }
+    contact.organizations = []
+    for (var o of person.affiliations) {
+      contact.organizations.push({ name: o.organisation, title: o.position })
+    }
+    contact.ims = []
+    person.skype_id && contact.ims.push(new ContactField("skype", person.skype_id));
+    person.twitter_id && contact.ims.push(new ContactField("twitter", person.twitter_id));
+    person.facebook_id && contact.ims.push(new ContactField("facebook", person.facebook_id));
+    contact.addresses =[
+      {locality: person.city, country: person.country}
+    ]
+    return contact;
   }
 
   /* Editing */

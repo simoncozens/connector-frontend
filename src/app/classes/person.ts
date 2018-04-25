@@ -14,9 +14,13 @@ export class Person {
   id: any;
   name: string;
   email: string;
+  phone: string;
   preferred_contact: string;
   picture: string;
   skype_id:string;
+  twitter_id:string;
+  facebook_id:string;
+  linkedin_id:string;
   intro_video: string;
   intro_bio: string;
   short_bio: string;
