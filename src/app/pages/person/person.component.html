@@ -107,9 +107,14 @@
 
     <ion-item *ngIf="!editing">
       <h3>Issue Networks</h3>
-        <ion-badge *ngFor="let e of person?.experience">
-          {{e}}
-        </ion-badge>
+      <ion-grid *ngIf="this.person.experience">
+        <ion-row>
+          <ion-col class="network" *ngFor="let network of networkBadges()">
+              <img src="{{network.badge_url}}" [ngStyle]="{'background-color': network.color}">
+              <p class="network">{{network.name}}</p>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
       <button ion-button *ngIf="canAddToMyNetwork()" (click)="addToMyNetwork()">+ {{me().catalyst}} Network</button>
     </ion-item>
 
@@ -159,8 +164,8 @@
       <ion-grid>
         <ion-row>
           <ion-col class="event" *ngFor="let event of person?.events.sort()">
-              <img src="http://via.placeholder.com/100x100">
-              <p>{{event}}</p>
+              <img src="/assets/gatherings/ylg2016.png">
+              <p class="event">{{event}}</p>
           </ion-col>
         </ion-row>
       </ion-grid>

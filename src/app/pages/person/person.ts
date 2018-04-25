@@ -8,7 +8,7 @@ import { Camera, CameraOptions } from '@ionic-native/camera';
 import { Contacts, Contact, ContactField, ContactName } from '@ionic-native/contacts';
 import { AuthService } from '../../services/auth.service';
 import { picklists } from "../../picklists";
-
+import { NetworkMap } from "./networkmap";
 import 'rxjs/Rx';
 
 @IonicPage({
@@ -95,6 +95,19 @@ export class PersonComponent implements OnInit {
 
   editProfile() {
     this.navCtrl.push("editprofile")
+  }
+
+  networkBadges() {
+    var badges = []
+    for (var network of this.person.experience) {
+      var n = NetworkMap[network];
+      badges.push({
+        badge_url: (n ? "/assets/networks/"+n.icon+".png" : ""),
+        color: (n ? n.color : ""),
+        name: network
+      })
+    }
+    return badges
   }
 
   takePicture() {

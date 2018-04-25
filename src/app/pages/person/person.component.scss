@@ -57,3 +57,11 @@ p.organisation {
 p.spacer {
   margin-top:80px;
 }
+
+.network img {
+  background-color: #fcda3f;
+  width:75px;
+}
+
+ion-col p.network { text-align: center; width:75px; overflow-wrap: normal; white-space: normal;}
+ion-col p.event { text-align: center; width:100px; overflow-wrap: normal; white-space: normal;}
