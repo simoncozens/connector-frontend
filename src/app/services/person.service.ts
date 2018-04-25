@@ -15,11 +15,11 @@ export class PersonService {
   private personUrl = AppSettings.API_ENDPOINT + '/people/';
   private followUrl = AppSettings.API_ENDPOINT + '/people/following';
   private recentUrl = AppSettings.API_ENDPOINT + '/people/recent';
-  private recommendedUrl = AppSettings.API_ENDPOINT + '/people/recommended';
+  public recommendedUrl = AppSettings.API_ENDPOINT + '/people/recommended';
 
   constructor(public http: HttpClient) { }
 
-  getPeople(page: number = 1, params = {}, url = this.peopleListUrl) :Promise<PagedResults<Person>> {
+  _getPeople(page: number = 1, params = {}, url = this.peopleListUrl) :Promise<PagedResults<Person>> {
     const myParams: any = Object.assign({'page': page}, params);
     return this.http
       .get(url,
@@ -30,6 +30,9 @@ export class PersonService {
       .toPromise()
       .then(response => response as PagedResults<Person>)
       .catch(this.handleError);
+  }
+  getPeople(page: number = 1, params = {}, url = this.peopleListUrl) {
+    return this._getPeople(page,params,url);
   }
 
   getFollows(page: number = 1, params = {}) :Promise<PagedResults<Person>> {
