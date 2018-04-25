@@ -104,12 +104,16 @@ export class PersonComponent implements OnInit {
       destinationType: this.camera.DestinationType.DATA_URL,
       encodingType: this.camera.EncodingType.JPEG,
       mediaType: this.camera.MediaType.PICTURE,
-      targetHeight: 200,
+      quality: 50,
+      targetHeight: 200, // We'll square-crop it on the backend
       targetWidth: 200,
-      cameraDirection: this.camera.Direction.BACK
+      correctOrientation: true,
+      cameraDirection: this.camera.Direction.FRONT
     };
     this.camera.getPicture(options).then((imageData) => {
-      console.log(imageData);
+      imageData = "data:image/jpeg;base64,"+imageData;
+      this.person.picture = imageData;
+      return this.save(true)
     });
   }
 
@@ -178,8 +182,13 @@ END:VCARD`
     this.saveToast.dismiss({autoclose:true});
   }
 
-  save() {
-    this.personService.saveProfile(this.person).then(
+  save(sendPicture?) {
+    var toSave = this.person
+    if (!sendPicture) { // Save space and processing
+      toSave = Object.assign({}, this.person);
+      delete toSave["person"]
+    }
+    this.personService.saveProfile(toSave).then(
       response => {
         this.auth.setLoggedInUser(this.person);
         const toast = this.toastCtrl.create({

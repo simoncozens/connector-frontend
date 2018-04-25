@@ -75,14 +75,17 @@
       "ionic-plugin-keyboard": {},
       "cordova-plugin-network-information": {},
       "cordova-plugin-contacts": {
-        "CONTACTS_USAGE_DESCRIPTION": " "
+        "CONTACTS_USAGE_DESCRIPTION": "Add profile to user contacts"
       },
       "phonegap-plugin-push": {
         "FCM_VERSION": "11.0.1"
       },
       "cordova-plugin-globalization": {},
       "cordova-plugin-uniquedeviceid": {},
-      "cordova-plugin-camera": {}
+      "cordova-plugin-camera": {
+        "CAMERA_USAGE_DESCRIPTION": "Take user profile photo",
+        "PHOTOLIBRARY_USAGE_DESCRIPTION": "Submit photo as user profile photo"
+      }
     },
     "platforms": [
       "android",

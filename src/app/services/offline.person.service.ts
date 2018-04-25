@@ -70,9 +70,12 @@ export class OfflinePersonService extends PersonService {
   }
 
   sendWorkQueueItem(url: string, payload: string): Promise<any> {
+    console.log("Sending work queue")
     if(payload.length >0) {
+        console.log ("post "+url+" "+payload)
         return this.http.post(AppSettings.API_ENDPOINT +  url, JSON.parse(payload)).toPromise()
       } else {
+        console.log ("get "+url)
         return this.http.get(AppSettings.API_ENDPOINT +  url).toPromise()
       }
   }
@@ -89,7 +92,7 @@ export class OfflinePersonService extends PersonService {
       cursor.reduce((p : Promise<any>, i : number ) => {
           var row = rs.rows.item(i)
           return p.then(() => {
-            this.sendWorkQueueItem(row.url, row.payload)
+            return this.sendWorkQueueItem(row.url, row.payload)
           })
         }, Promise.resolve())
     })
@@ -101,15 +104,22 @@ export class OfflinePersonService extends PersonService {
     .then( (rs) => {
       console.log("Last profiles visited:")
       console.log(rs)
-      if (rs.rows.length < 1) { return Promise.resolve() }
+      if (rs.rows.length < 1) {
+        // I don't really care what the result is, I just want to make
+        // sure it doesn't throw.
+        return Promise.resolve({ok:1})
+      }
       var cursor = Array.from(Array(rs.rows.length).keys())
       var ids = cursor.map((n) => rs.rows.item(n).id )
-      // XXX I should probably return this promise?
-      // But it makes the compiler go mental. I think this code is wrong.
       console.log("Sending to server")
       console.log(ids)
-      this.http.put(this.updateVisitsUrl, { ids: ids }).toPromise()
-    },(e) => { console.log("Oops in SQL"); console.log(e)})
+      return this.http.put(this.updateVisitsUrl, { ids: ids }).toPromise()
+    }).catch(
+      (e) => {
+        console.log("Oops in SQL");
+        console.log(e);
+      }
+    )
   }
 
   // This should eventually move to a streaming-aware HTTP API,
@@ -118,6 +128,7 @@ export class OfflinePersonService extends PersonService {
     var syncUrl = this.bulkUpdateUrl
     var lastSynced = this.getLastSynced()
     if (lastSynced) { syncUrl += "?since=" + lastSynced }
+    console.log("Doing a sync "+syncUrl)
     return this.http.get(syncUrl)
       .toPromise()
       .then(response => response as Array<any>)
@@ -132,19 +143,20 @@ export class OfflinePersonService extends PersonService {
         }, Promise.resolve())
       }).then( () => {
         this.setLastSynced((new Date()).toISOString())
-        this.miniSync()
+        return this.miniSync()
       })
   }
 
   miniSync (): Promise<any> {
+    console.log("minisync")
     if (!this.dbHandle) { Promise.reject( new Error("No DB connection"))}
     if (this.network.type == "none") { return Promise.resolve() }
     return this.sendWorkQueue().then( () => {
         console.log("Emptying work queue")
-        this.emptyWorkQueue()
+        return this.emptyWorkQueue()
       }).then( () => {
         console.log("Sending last visited")
-        this.sendLastVisited()
+        return this.sendLastVisited()
       })
   }
 
@@ -153,7 +165,7 @@ export class OfflinePersonService extends PersonService {
     return this.dbHandle.executeSql(
       'UPDATE profiles SET last_viewed = ? WHERE id = ?',
       [(new Date()).toISOString(), id]
-    ).then( () => this.miniSync() )
+    ).then( () => { this.miniSync() }) // Just do it, don't hold me up.
   }
 
   _getPerson(id: string): Promise<Person> {
@@ -220,6 +232,14 @@ export class OfflinePersonService extends PersonService {
     // Did you really name your son "Robert'); DROP TABLE Students;--"?
   }
 
+  getRecommended(page: number = 1, params = {}) :Promise<PagedResults<Person>> {
+    // We would prefer to do this online
+    if (this.network.type == "none") {
+      return this._getPeople(page, params, this.recommendedUrl);
+    } else {
+      return this.getPeople(page, params) // We can't so use DB.
+    }
+  }
 
   follow(id: string) {
     return this.dbHandle.executeSql(
@@ -242,8 +262,11 @@ export class OfflinePersonService extends PersonService {
   }
 
   saveProfile(profileData): Promise<any> {
-    // You can't do this offline
-    throw new Error("Offline")
+    var url = '/people';
+    return this.updateUser(profileData).then( () => {
+      console.log("Adding update profile job to work queue");
+      return this.dbHandle.executeSql("INSERT INTO workqueue (url, payload) VALUES (?,?)", [url,JSON.stringify(profileData)])
+    }).then( () => this.miniSync());
   }
 
 
