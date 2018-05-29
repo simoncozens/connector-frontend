@@ -60,7 +60,7 @@
       </p>
     </ion-item>
     <ion-item *ngIf="editing">
-      <h3>Short bio</h3>
+      <ion-label>Short bio</ion-label>
       <ion-input ion-right placeholder="Short Bio"
         (ionChange)="dirty($event)" [(ngModel)]="person.short_bio">
       </ion-input>
@@ -94,7 +94,7 @@
       </ion-grid>
     </ion-item>
     <ion-item *ngIf="editing">
-      <h3>Phone Number</h3>
+      <ion-label>Phone Number</ion-label>
       <ion-input (ionChange)="dirty($event)" [(ngModel)]="person.phone"></ion-input>
     </ion-item>
 
