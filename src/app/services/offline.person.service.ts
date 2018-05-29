@@ -150,7 +150,10 @@ export class OfflinePersonService extends PersonService {
   miniSync (): Promise<any> {
     console.log("minisync")
     if (!this.dbHandle) { Promise.reject( new Error("No DB connection"))}
-    if (this.network.type == "none") { return Promise.resolve() }
+    if (this.network.type == "none" || this.network.type == "unknown") {
+      return Promise.resolve()
+    }
+
     return this.sendWorkQueue().then( () => {
         console.log("Emptying work queue")
         return this.emptyWorkQueue()
@@ -234,7 +237,8 @@ export class OfflinePersonService extends PersonService {
 
   getRecommended(page: number = 1, params = {}) :Promise<PagedResults<Person>> {
     // We would prefer to do this online
-    if (this.network.type == "none") {
+    console.log("OPS get recommended, network is "+this.network.type)
+    if (this.network.type != "none" && this.network.type != "unknown") {
       return this._getPeople(page, params, this.recommendedUrl);
     } else {
       return this.getPeople(page, params) // We can't so use DB.

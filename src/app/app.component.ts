@@ -67,7 +67,7 @@ export class MyApp {
           this.rootPage = PeopleComponent;
           if (this.platform.is('cordova')) {
             console.log("Hello!")
-            if (this.network.type != "none") {
+            if (this.network.type != "none" && this.network.type != "unknown") {
               this.notificationService.init()
               this.sync();
             }
@@ -81,7 +81,8 @@ export class MyApp {
   }
 
   setupPages() {
-    var online = (!this.platform.is('cordova')) || this.network.type != "none"
+    var online = (!this.platform.is('cordova') ||
+    (this.network.type != "none" && this.network.type != "unknown"))
     if (online) { this.pages = this.availablePages }
     else { this.pages = this.availablePages.filter((p) => !p.onlineOnly) }
   }
