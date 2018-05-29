@@ -102,7 +102,7 @@ export class PersonComponent implements OnInit {
     for (var network of this.person.experience) {
       var n = NetworkMap[network];
       badges.push({
-        badge_url: (n ? "/assets/networks/"+n.icon+".png" : ""),
+        badge_url: (n ? "./assets/networks/"+n.icon+".png" : ""),
         color: (n ? n.color : ""),
         name: network
       })
