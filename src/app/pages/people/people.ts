@@ -45,13 +45,15 @@ export class PeopleComponent {
   }
 
   ionViewWillEnter(): void {
-    // this.route.params.subscribe(params => {
-      this.result = null
-      this.params = this.navParams.get("params")
-      // console.log(this.params)
-      // this.params = params
-      this.page = 1
-    // })
+    this.platform.ready().then(() => {
+      // this.route.params.subscribe(params => {
+        this.result = null
+        this.params = this.navParams.get("params")
+        // console.log(this.params)
+        // this.params = params
+        this.page = 1
+      // })
+    })
   }
 
   doSearch(ev: any) {
