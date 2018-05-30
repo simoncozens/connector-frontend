@@ -31,7 +31,8 @@
     <!-- Picture -->
     <p class="spacer"></p>
     <ion-avatar (click)="takePicture()">
-      <img class="medavatar" item-center [src]="person?.picture | fromBase64"/>
+      <img class="medavatar" item-center *ngIf="person?.picture" [src]="person?.picture | fromBase64">
+      <ion-icon  class="medavatar" *ngIf="!person.picture" name="person"></ion-icon>
       <ion-icon class="editable-image" *ngIf="editing && platform.is('cordova')" name="md-create"></ion-icon>
     </ion-avatar>
 

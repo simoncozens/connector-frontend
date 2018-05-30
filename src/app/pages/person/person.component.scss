@@ -1,10 +1,16 @@
-ion-avatar img.medavatar {
+ion-avatar .medavatar {
   width: 120px !important;
   height: 120px !important;
   margin: auto;
   display: block;
   border-radius: 50%;
 overflow: hidden;
+}
+ion-avatar ion-icon.medavatar {
+  font-size: 14rem;
+  border: 1px solid #eee;
+  padding-left:6px;
+  color: #aaa;
 }
 a { text-decoration: none }
 h3 {
