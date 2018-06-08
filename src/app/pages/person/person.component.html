@@ -5,7 +5,7 @@
       <ion-title *ngIf="person && !isMe">{{person.name}}</ion-title>
 
       <!-- buttons for me -->
-      <ion-buttons end *ngIf="person && isMe">
+      <ion-buttons end *ngIf="person && (isMe||admin)">
         <!-- if we're not editing, give the option to do so -->
         <button *ngIf="!editing" ion-button (click)="this.editing=true">
           <ion-icon name="create"></ion-icon>
@@ -18,7 +18,7 @@
       </ion-buttons>
 
       <!-- buttons for not me -->
-      <ion-buttons end *ngIf="person && !isMe">
+      <ion-buttons end *ngIf="person && !(isMe||admin)">
         <button *ngIf="person?.followed" ion-button (click)="unfollow()"><ion-icon name="star"></ion-icon></button>
         <button *ngIf=" person && !person.followed" ion-button  (click)="follow()"><ion-icon name="star-outline"></ion-icon></button>
       </ion-buttons>
@@ -26,10 +26,36 @@
 </ion-header>
 
 <ion-content *ngIf="person">
+  <p class="spacer"></p>
+
   <ion-list>
+    <ion-item *ngIf="editing && admin">
+      <ion-label>Name</ion-label>
+      <ion-input ion-right placeholder="Name"
+        (ionChange)="dirty($event)" [(ngModel)]="person.name">
+      </ion-input>
+    </ion-item>
+    <ion-item *ngIf="editing && admin">
+      <ion-label>Email</ion-label>
+      <ion-input ion-right placeholder="Email" type="email"
+        (ionChange)="dirty($event)" [(ngModel)]="person.email">
+      </ion-input>
+    </ion-item>
+
+    <ion-item *ngIf="editing && admin">
+      <ion-label>Password</ion-label>
+      <ion-input ion-right placeholder="Password" type="password"
+        (ionChange)="dirty($event)" [(ngModel)]="person.password">
+      </ion-input>
+    </ion-item>
+    <ion-item *ngIf="editing && admin">
+      <ion-label>Password Confirmation</ion-label>
+      <ion-input ion-right placeholder="Password Confirmation" type="password"
+        (ionChange)="dirty($event)" [(ngModel)]="person.password_confirmation">
+      </ion-input>
+    </ion-item>
 
     <!-- Picture -->
-    <p class="spacer"></p>
     <ion-avatar (click)="takePicture()">
       <img class="medavatar" item-center *ngIf="person?.picture" [src]="person?.picture | fromBase64">
       <ion-icon  class="medavatar" *ngIf="!person.picture" name="person"></ion-icon>
@@ -174,14 +200,14 @@
 
     <!-- Languages -->
     <ion-item *ngIf="!editing">
-      <h3>Languages Spoken</h3>
+      <ion-label>Languages Spoken</ion-label>
       <p>
         <i>{{person.primary_language}}</i><span *ngIf="person.primary_language && person.languages_spoken">,</span>
         {{person.languages_spoken}}
       </p>
     </ion-item>
     <ion-item *ngIf="editing">
-      <h3>Primary language</h3>
+      <ion-label>Primary language</ion-label>
       <ion-select [(ngModel)]="person.primary_language" (ionChange)="dirty($event)">
         <ion-option value="English">English</ion-option>
         <ion-option value="French">French</ion-option>
@@ -193,7 +219,7 @@
       </ion-select>
       </ion-item>
     <ion-item *ngIf="editing">
-      <h3 floating>Other languages</h3>
+      <ion-label floating>Other languages</ion-label>
       <ion-input ion-right (ionChange)="dirty($event)" [(ngModel)]="person.languages_spoken"></ion-input>
     </ion-item>
 
@@ -252,8 +278,8 @@
 
     <div *ngIf="editing">
       <ion-item *ngFor="let network of social_fields">
-        <h3 >{{network.name}}</h3>
-        <ion-input *ngIf="editing" (ionChange)="dirty($event)" [(ngModel)]="person[network.field]"></ion-input>
+        <ion-label >{{network.name}}</ion-label>
+        <ion-input ion-right (ionChange)="dirty($event)" [(ngModel)]="person[network.field]"></ion-input>
       </ion-item>
     </div>
 

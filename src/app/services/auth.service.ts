@@ -33,6 +33,13 @@ export class AuthService {
     return ((me as any)._id.$oid);
   }
 
+  adminUser():boolean {
+    const p:Person = this.loggedInUser();
+    if (!p) { return false; }
+    if (p.roles && p.roles.indexOf("admin") >= 0) { return true; }
+    return false;
+  }
+
   setLoggedInUser(p: Person) {
     console.log(p);
     localStorage.setItem('myself', JSON.stringify(p));
@@ -44,6 +51,7 @@ export class AuthService {
 
   logOut() {
     localStorage.removeItem('token');
+    localStorage.removeItem('myself');
   }
 
   makeLoginAttempt(credentials: any): Promise<any> {

@@ -23,6 +23,7 @@ import { FollowsModule } from './pages/people/follows.module';
 import { RecentModule } from './pages/people/recent.module';
 import { PersonModule } from './pages/person/person.module';
 import { MyProfileModule } from './pages/person/myprofile.module';
+import { RegisterModule } from './pages/person/register.module';
 import { InboxModule } from './pages/inbox/inbox.module';
 import { MessagesWithModule } from './pages/messages-with/messages-with.module';
 
@@ -74,6 +75,7 @@ export function createTranslateLoader(http: Http) {
     PeopleModule,
     PersonModule,
     MyProfileModule,
+    RegisterModule,
     FollowsModule,
     RecentModule,
     InboxModule,

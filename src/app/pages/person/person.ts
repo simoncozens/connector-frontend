@@ -25,6 +25,7 @@ export class PersonComponent implements OnInit {
   public id;
   public isMe = false;
   public editing = false;
+  public admin = false;
   picklists = picklists;
   social_fields = [
     {name: "Skype", field: "skype_id"},
@@ -54,6 +55,7 @@ export class PersonComponent implements OnInit {
           this.person = person
           this.isMe = person.id == this.auth.myId()
           this.annotation = person.annotation
+          this.admin = this.auth.adminUser()
         })
         .catch((error) => console.log(error));
   }
@@ -231,15 +233,19 @@ TEL;type=pref:${person.phone}
     this.saveToast.dismiss({autoclose:true});
   }
 
+  sendSave(toSave) :Promise<any>{
+    return this.personService.saveProfile(toSave)
+  }
+
   save(sendPicture?) {
     var toSave = this.person
     if (!sendPicture) { // Save space and processing
       toSave = Object.assign({}, this.person);
       delete toSave["person"]
     }
-    this.personService.saveProfile(toSave).then(
+    this.sendSave(toSave).then(
       response => {
-        this.auth.setLoggedInUser(this.person);
+        if (this.isMe) { this.auth.setLoggedInUser(this.person); }
         const toast = this.toastCtrl.create({
             message: 'Saved successfully',
             duration: 3000,

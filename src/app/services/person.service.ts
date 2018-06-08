@@ -16,6 +16,7 @@ export class PersonService {
   private followUrl = AppSettings.API_ENDPOINT + '/people/following';
   private recentUrl = AppSettings.API_ENDPOINT + '/people/recent';
   public recommendedUrl = AppSettings.API_ENDPOINT + '/people/recommended';
+  public registerUserUrl = AppSettings.API_ENDPOINT + '/people/new';
 
   constructor(public http: HttpClient) { }
 
@@ -82,6 +83,12 @@ export class PersonService {
   saveProfile(profileData) {
     return this.http
       .put(this.personUrl, {person: profileData })
+      .toPromise()
+  }
+
+  registerUser(profileData) {
+    return this.http
+      .post(this.registerUserUrl, {person: profileData })
       .toPromise()
   }
 

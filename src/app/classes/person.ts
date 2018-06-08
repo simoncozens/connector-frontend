@@ -26,6 +26,7 @@ export class Person {
   short_bio: string;
   roles: string[];
   experience: string[];
+  events: string[];
   regions: string[];
   followed: boolean;
   affiliations: Affiliation[];

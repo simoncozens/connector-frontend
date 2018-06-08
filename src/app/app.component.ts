@@ -11,9 +11,13 @@ import { OfflinePersonService } from './services/offline.person.service';
 import { NotificationService } from './services/notification.service';
 import {TranslateService} from '@ngx-translate/core';
 import { Globalization } from '@ionic-native/globalization';
+import { Events } from 'ionic-angular';
 
 import { JwtHelperService } from '@auth0/angular-jwt';
 
+interface MenuPage {
+  title: string, segment: string, adminOnly?:boolean, onlineOnly: boolean, disabled?:boolean
+}
 @Component({
   templateUrl: 'app.html'
 })
@@ -22,8 +26,8 @@ export class MyApp {
 
   rootPage: any = LoginComponent;
 
-  pages: Array<{title: string, segment: string, onlineOnly: boolean, disabled?:boolean}>;
-  availablePages: Array<{title: string, segment: string, onlineOnly: boolean, disabled?:boolean}>;
+  pages: Array<MenuPage>;
+  availablePages: Array<MenuPage>;
 
   constructor(public platform: Platform,
     private globalization: Globalization,
@@ -36,6 +40,7 @@ export class MyApp {
     public ops: OfflinePersonService,
     public notificationService: NotificationService,
     public translate: TranslateService,
+    public events: Events,
     private auth: AuthService) {
     this.initializeApp();
     this.setupLanguage();
@@ -44,8 +49,10 @@ export class MyApp {
       { title: 'Starred Profiles', segment: "follows", onlineOnly: false },
       { title: 'Recently Visited', segment: "recent", onlineOnly: false },
       { title: 'Messages', segment: "inbox", onlineOnly: true, disabled:true }, // For now
+      { title: 'Register User', segment: "register", onlineOnly: true, adminOnly:true },
       { title: 'My Profile', segment: "myprofile", onlineOnly: true },
     ];
+    events.subscribe('loggedIn', () => this.setupPages());
   }
 
   initializeApp() {
@@ -83,8 +90,16 @@ export class MyApp {
   setupPages() {
     var online = (!this.platform.is('cordova') ||
     (this.network.type != "none" && this.network.type != "unknown"))
-    if (online) { this.pages = this.availablePages }
-    else { this.pages = this.availablePages.filter((p) => !p.onlineOnly) }
+    this.pages = this.availablePages;
+    if (!online) {
+      this.pages = this.pages.filter((p) => !p.onlineOnly)
+    }
+    console.log("Testing if admin")
+    if (!this.auth.adminUser()) {
+      console.log("Not admin!")
+      this.pages = this.pages.filter((p) => !p.adminOnly)
+    }
+    console.log(this.pages)
   }
 
   sync() {
@@ -142,5 +157,6 @@ export class MyApp {
   logout() {
     this.auth.logOut();
     this.rootPage = LoginComponent;
+    this.setupPages();
   }
 }

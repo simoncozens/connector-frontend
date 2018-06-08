@@ -8,7 +8,7 @@ import { NavController, NavParams, LoadingController, AlertController } from 'io
 import { PeopleComponent } from '../../pages/people/people';
 import { OfflinePersonService } from '../../services/offline.person.service';
 import { NotificationService } from '../../services/notification.service';
-import { ToastController } from 'ionic-angular';
+import { ToastController, Events } from 'ionic-angular';
 
 @Component({
   selector: 'login',
@@ -23,6 +23,7 @@ export class LoginComponent {
     public ops: OfflinePersonService,
     public loadingCtrl: LoadingController,
     public alertCtrl: AlertController,
+    public events: Events,
     fb: FormBuilder,
     private toastCtrl: ToastController,
     public platform: Platform,
@@ -56,6 +57,7 @@ export class LoginComponent {
     const parsed = response.json();
     this.auth.stashJWT(parsed['token']);
     this.auth.setLoggedInUser(parsed);
+    this.events.publish('loggedIn');
     if (this.platform.is('cordova')) {
       this.notificationService.init()
       this.sync()
